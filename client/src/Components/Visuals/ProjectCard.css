@@ -1,0 +1,102 @@
+.project-card {
+    margin-bottom: 60px;
+    cursor: default;
+    display: flex;
+    align-self: center;
+    width: 95%;
+  }
+  
+  .project-card:hover .project-card-image {
+    transform: translateY(-10px);
+  }
+  
+  @media (min-width: 1024px) {
+    .project-card {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .project-card {
+      flex-direction: column;
+      align-items: center;
+      border-radius: 20px;
+      overflow: none;
+    }
+  }
+  
+  @media (min-width: 800px) {
+    .project-card-image {
+      height: 400px;
+      border-radius: 20px;
+    }
+    .project-card-title {
+        margin-bottom: 20px;
+        font-size: 40px;
+      }
+      
+    .project-card-description {
+        font-size: 25px;
+        color: rgb(210, 210, 210);
+    }
+  }
+  
+  @media (max-width: 800px) {
+    .project-card {
+      width: 95%;
+      background-color: #363b51;
+    }
+    .project-card-image {
+      width: 100%;
+      margin: 0 auto;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+    .project-card-info {
+      padding: 10px;
+    }
+    .project-card-title {
+        margin-bottom: 20px;
+        font-size: 25px;
+      }
+      
+    .project-card-description {
+        font-size: 15px;
+        color: rgb(210, 210, 210);
+    }
+  }
+  
+  .project-card-image {
+    object-fit: contain;
+    transition: transform .25s ease;
+  }
+  
+  .project-card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 700px;
+    color: white;
+  }
+  
+  .project-card-button {
+    width: 170px;
+    margin-top: 20px;
+    align-self: center;
+    font-size: 25px;
+    font-family: monospace;
+    background-image: linear-gradient(to left, #ff3366, #ff3366 50%, #fff 50%);
+    background-size: 200% 100%;
+    background-position: 0%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border: none;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .project-card:hover .project-card-button {
+    background-position: -100%;
+  }

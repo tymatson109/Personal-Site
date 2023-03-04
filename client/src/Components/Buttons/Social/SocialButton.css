@@ -1,0 +1,48 @@
+@media (min-width: 900px) {
+    .social-button {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .social-button-icon {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 900px) {
+    .social-button {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .social-button-icon {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+.social-button {
+    transition: transform .25s ease-in;
+    overflow: hidden;
+    border: none;
+    background-color: rgb(225, 225, 225);
+    border-radius: 20px;
+}
+
+.social-button:hover {
+    transform: scale(0.95, 0.95);
+}
+
+.social-button-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .25s ease-in;
+}
+
+.social-button:hover .social-button-container {
+    transform: translateY(-100%);
+}

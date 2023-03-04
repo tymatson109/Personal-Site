@@ -1,0 +1,90 @@
+.button {
+    // FONT
+    font-family: monospace;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: 2px solid white;
+    border-radius: 10px;
+    color: black;
+    letter-spacing: 3px;
+    scale:calc(1.5);
+    font: {
+      weight: lighter;
+      size: 14px;
+    }
+  
+    // BLOCK
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    z-index: 1;
+  
+    // EFFECTS
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25,0.1,0.2,1);
+  
+    &:before, &:after {
+      // POSITION
+      position: absolute;
+  
+      // BLOCK
+      content: '';
+      display: block;
+    }
+  
+    &:before {
+      // POSITION
+      top: -120px;
+      left: 50px;
+      z-index: -1;
+  
+      // BLOCK
+      width: calc(100% + 140px);
+      height: 100px;
+  
+      // EFFECTS
+      transition: all 0.4s cubic-bezier(0.25,0.1,0.2,1);
+      transform: skew(70deg);
+      background: #ff3366;
+    }
+  
+    &:after {
+      // POSITION
+      top: 0;
+      left: 0;
+      z-index: -2;
+  
+      // BLOCK
+      width: calc(100% - 2px);
+      height: calc(100% - 2px);
+  
+      // EFFECTS
+      border: 1px solid #fff;
+    }
+  
+    &:hover {
+      color: white;
+      &:before {
+        left: -50px;
+        top: -20px;
+      }
+    }
+  }
+
+.bounce {
+    animation-name: bounce;
+    animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-delay: 20s;
+}
+
+@keyframes bounce {
+    0%   { transform: scale(1,1)      translateY(0); }
+    .5%  { transform: scale(1.1,.9)   translateY(0); }
+    1.5%  { transform: scale(.9,1.1)   translateY(-20px); }
+    2.5%  { transform: scale(1.05,.95) translateY(0); }
+    3%  { transform: scale(1,1)      translateY(-7px); }
+    4%  { transform: scale(1,1)      translateY(0); }
+    5% { transform: scale(1,1)      translateY(0); }
+}

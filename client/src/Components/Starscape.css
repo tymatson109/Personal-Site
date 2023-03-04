@@ -1,0 +1,7 @@
+.canvas {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, #0A1026, #242B4B);
+    z-index: -1;
+}

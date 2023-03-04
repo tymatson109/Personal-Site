@@ -1,0 +1,21 @@
+.intro-text {
+    font-weight: 700;
+    color: white;
+    cursor: default;
+}
+
+.title-active {
+    pointer-events: none;
+}
+
+@media (max-width: 650px) {
+    h1 {
+        font-size: 3rem;
+    }
+}
+
+@media (min-width: 650px) {
+    h1 {
+        font-size: 5rem;
+    }
+}
