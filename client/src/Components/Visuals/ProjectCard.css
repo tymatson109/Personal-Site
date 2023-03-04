@@ -1,9 +1,9 @@
 .project-card {
-    margin-bottom: 60px;
+  margin-top: 20px;
     cursor: default;
     display: flex;
     align-self: center;
-    width: 95%;
+    width: 98%;
     transition: transform .25s ease-in;
 }
   
@@ -32,10 +32,10 @@
     }
     .project-card-title {
         margin-bottom: 20px;
-        font-size: 40px;
+        font-size: 45px;
     }
     .project-card-description {
-        font-size: 25px;
+        font-size: 20px;
         color: rgb(210, 210, 210);
     }
 }
@@ -74,14 +74,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 700px;
+    max-width: 600px;
     color: white;
 }
   
 .project-card-button {
     width: 170px;
     margin-top: 20px;
-    align-self: center;
     font-size: 25px;
     font-family: monospace;
     background-image: linear-gradient(to left, #ff3366, #ff3366 50%, #fff 50%);
@@ -100,5 +99,5 @@
 }
 
 .project-card:hover {
-  transform: scale(0.98, 0.98) translateY(-10px);
+  transform: scale(0.99, 0.99) translateY(-3px);
 }
