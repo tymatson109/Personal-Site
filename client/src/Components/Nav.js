@@ -14,6 +14,9 @@ export const Nav = ({onClick}) => {
         document.querySelector('.nav-mini-menu-item-three').onmouseover = e => {
             nameScramble(e);
         }
+        document.querySelector('.nav-mini-menu-item-four').onmouseover = e => {
+            nameScramble(e);
+        }
     }, [])
 
     const handleOpenMiniMenu = () => {
@@ -56,6 +59,9 @@ export const Nav = ({onClick}) => {
                 </button>
                 <button data-value="Portfolio" onClick={() => handleCloseMiniMenu('projects')} className='nav-mini-menu-item nav-mini-menu-item-three'>
                     Portfolio
+                </button>
+                <button data-value="Contact" onClick={() => handleCloseMiniMenu('contact')} className='nav-mini-menu-item nav-mini-menu-item-four'>
+                    Contact
                 </button>
             </div>
             </div>

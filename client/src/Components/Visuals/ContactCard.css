@@ -1,0 +1,76 @@
+.contact-card {
+    background-color: #363b51;
+    width: 96%;
+    height: 96%;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 25px;
+}
+
+.contact-card h1 {
+    color: white;
+    text-align: center;
+    margin: 10px !important;
+}
+
+.contact-card p {
+    color: rgb(215, 215, 215);
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.contact-card-form {
+    display: flex;
+    flex-direction: column;
+    width: clamp(300px, 800px, 90%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-card-input {
+    font-family: monospace;
+    border: none;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 1rem;
+}
+
+.contact-card-input:focus {
+    outline: none;
+}
+
+.contact-card-textarea {
+    resize: none;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 1rem;
+}
+
+.contact-card-textarea:focus {
+    outline: none;
+}
+
+.contact-card-button {
+    font-family: monospace;
+    margin-top: 40px;
+    width: 180px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 1.5rem;
+    align-self: center;
+    border-radius: 6px;
+    border: none;
+    color: rgb(120, 120, 120);
+    transition: transform .25s ease-in, background-color .25s ease-in, color .25s ease-in;
+}
+
+.contact-card-button:hover {
+    transform: scale(0.95, 0.95);
+    background-color: #ff3366;
+    color: white;
+}
