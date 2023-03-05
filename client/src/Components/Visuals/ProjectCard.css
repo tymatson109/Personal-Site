@@ -93,6 +93,11 @@
     overflow: hidden;
     transition: all 0.3s ease-in-out;
 }
+
+.project-card-button:hover::after {
+  text-decoration: underline;
+
+}
   
 .project-card:hover .project-card-button {
     background-position: -100%;
