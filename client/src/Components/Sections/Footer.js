@@ -9,13 +9,13 @@ export const Footer = () => {
             <div className='footer-name'>Ty Matson</div>
             <div className='footer-container'>
                 <div className='footer-button-container'>
-                    <LinkedInButton mini={true} />
+                    <LinkedInButton mini={true} link={'http://linkedin.com/in/tymatson'} />
                 </div>
                 <div className='footer-button-container'>
-                    <InstagramButton mini={true} />
+                    <InstagramButton mini={true} link={'http://instagram.com/tymatson5'} />
                 </div>
                 <div className='footer-button-container'>
-                    <GitHubButton mini={true} />
+                    <GitHubButton mini={true} link={'http://github.com/tymatson109'} />
                 </div>
             </div>
         </div>
