@@ -64,11 +64,21 @@ export const Nav = ({onClick}) => {
     return (
         <div className='nav'>
             <button onClick={handleOpenMiniMenu} className='nav-menu-button'>
-                <span>Menu</span>
+                <div className='nav-menu-button-container'>
+                    <div className='nav-menu-button-text'>Menu</div>
+                </div>
+                <div className='nav-menu-button-container'>
+                    <div className='nav-menu-button-text'>Menu</div>
+                </div>            
             </button>
             <div className='nav-menu-mini-overlay'>
                 <button onClick={handleCloseMiniMenu} className='nav-menu-button'>
-                    <span>Exit</span>
+                    <div className='nav-menu-button-container'>
+                        <div className='nav-menu-button-text'>Exit</div>
+                    </div>
+                    <div className='nav-menu-button-container'>
+                        <div className='nav-menu-button-text'>Exit</div>
+                    </div>                   
                 </button>
                 <div className='nav-mini-menu'>
                 <button data-value="Home" onClick={() => handleCloseMiniMenu('home')} className='nav-mini-menu-item nav-mini-menu-item-one'>

@@ -32,26 +32,35 @@
 .nav-menu-button {
     position: absolute;
     top: 10px;
-    right: 5px;
-    background-color: transparent;
+    right: 10px;
     border: none;
-    height: fit-content;
     font-family: monospace;
+    width: 110px;
+    height: 50px;
+    overflow: hidden;
+    background-color: rgb(210, 210, 210);
+    border-radius: 10px;
+    box-shadow: 1px 6px 10px -4px rgba(0,0,0,0.75);
 }
 
-.nav-menu-button span {
-    color: black;
-    font-size: 2.5rem;
+.nav-menu-button-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-menu-button-text {
+    font-size: 40px;
 }
 
 .nav-menu-button:focus {
     outline: none;
 }
 
-.nav-menu-button:hover {
-    animation-name: bounce-menu;
-    animation-timing-function: cubic-bezier(0.280, 0.840, 0.420, 1);
-    animation-duration: 1.2s;
+.nav-menu-button:hover .nav-menu-button-text {
+    animation: move-down .2s ease-in;
 }
 
 .nav-mini-menu {
@@ -94,12 +103,11 @@
     }
 }
 
-@keyframes bounce-menu {
-    0%   { transform: scale(1,1)      translateY(0); }
-    10%  { transform: scale(1.1,.9)   translateY(0); }
-    30%  { transform: scale(.9,1.1)   translateY(-10px); }
-    50%  { transform: scale(1.05,.95) translateY(0); }
-    60%  { transform: scale(1,1)      translateY(-4px); }
-    80%  { transform: scale(1,1)      translateY(0); }
-    100% { transform: scale(1,1)      translateY(0); }
+@keyframes move-down {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-300%);
+    }
 }
