@@ -27,7 +27,7 @@
     overflow: hidden;
     border: none;
     background-color: rgb(225, 225, 225);
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .social-button:hover {
@@ -59,8 +59,8 @@
 
 @media (min-width: 900px) {
     .social-button-mini {
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
     }
     
     .social-button-icon-mini {
@@ -82,15 +82,17 @@
 }
 
 .social-button-mini {
-    transition: transform .25s ease-in;
+    transition: transform .25s ease-in, background-color .25s ease-in;
     overflow: hidden;
     border: none;
     background-color: rgb(225, 225, 225);
-    border-radius: 20px;
+    border-radius: 10px;
+    box-shadow: 1px 6px 10px -4px rgba(0,0,0,0.75);
 }
 
 .social-button-mini:hover {
     transform: scale(0.95, 0.95);
+    background-color: #ff3366;
 }
 
 .social-button-container-mini {

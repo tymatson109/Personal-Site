@@ -15,8 +15,8 @@ function App() {
   const home = useRef();
   const contact = useRef();
 
-
   const handleNav = (e) => {
+
     if (e === 'home') {
       home.current?.scrollIntoView({behavior: 'smooth'})
     }
@@ -33,20 +33,22 @@ function App() {
   return (
     <div className='app'>
       <Nav onClick={handleNav} />
-      <div ref={home} className="app-home">
+      <div ref={home} className="app-home section">
         <Intro />
         <HomeButton onClick={() => handleNav('about')} title="About Me"/>
       </div>
-      <div id="main" ref={main} className='app-main'>
+      <div id="about" ref={main} className='app-about section'>
         <About />
       </div>
-      <div id='projects' ref={projects} className='app-projects'>
+      <div id='projects' ref={projects} className='app-projects section'>
         <Portfolio />
       </div>
-      <div id='contact' ref={contact} className='app-contact'>
+      <div id='contact' ref={contact} className='app-contact section'>
         <Contact />
       </div>
-      <Footer />
+      <div id='footer' className='section'>
+        <Footer />
+      </div>
       <Starscape />
     </div>
   );

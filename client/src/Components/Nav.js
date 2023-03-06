@@ -1,8 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { nameScramble } from './Functions/CssFunctions';
+import { respondToVisibility } from './Functions/Misc';
 import './Nav.css';
 
 export const Nav = ({onClick}) => {
+    // const [active, setActive] = useState();
+
+    // useEffect(() => {
+    //   const about = document.querySelector('.app-about')
+    //   const home = document.querySelector('.app-home')
+    //   const projects = document.querySelector('.app-projects')
+    //   const contact = document.querySelector('.app-contact')
+    //   respondToVisibility(home, handleFocus)
+    //   respondToVisibility(about, handleFocus)
+    //   respondToVisibility(projects, handleFocus)
+    //   respondToVisibility(contact, handleFocus)
+    // }, [])
+  
+    // const handleFocus = (bool, element) => {
+    //     if (bool === true) {
+    //         setActive(element.id)
+    //     }
+    // }
+
 
     useEffect(() => {
         document.querySelector('.nav-mini-menu-item-one').onmouseover = e => {

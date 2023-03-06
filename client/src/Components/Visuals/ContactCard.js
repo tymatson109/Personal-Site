@@ -5,9 +5,26 @@ export const ContactCard = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
 
-    const handleSubmit = () => {
-        
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!name) {
+            setError('Please enter your name!');
+            return;
+        }
+        if (!email) {
+            setError('Please enter your email!');
+            return;
+        }
+        if (!message) {
+            setError('Please enter a message!');
+            return;
+        }
+        setName('')
+        setEmail('')
+        setMessage('');
+        setError('');
     }
 
     return (
@@ -34,6 +51,7 @@ export const ContactCard = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                 />
+                <div className='contact-card-error'>{error}</div>
                 <button
                     type='submit'
                     className='contact-card-button'

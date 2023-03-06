@@ -6,7 +6,7 @@ import './Footer.css';
 export const Footer = () => {
     return (
         <div className='footer'>
-            <div className='footer-name'>Ty Matson</div>
+            <div className='footer-name'>Connect with me!</div>
             <div className='footer-container'>
                 <div className='footer-button-container'>
                     <LinkedInButton mini={true} link={'http://linkedin.com/in/tymatson'} />

@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import './Starscape.css';
 
 export const Starscape = ({
-    densityRatio = 2,
+    densityRatio = 4,
     sizeLimit = 2,
     defaultAlpha = 0.5,
     scaleLimit = 2,
