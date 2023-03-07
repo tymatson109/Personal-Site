@@ -46,7 +46,7 @@ export const ContactCard = () => {
                 />
                 <textarea 
                     className='contact-card-textarea' 
-                    rows={16}
+                    rows={10}
                     placeholder='Message...'
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
