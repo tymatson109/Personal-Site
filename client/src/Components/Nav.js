@@ -75,19 +75,18 @@ export const Nav = ({onClick}) => {
 
     return (
         <div className='nav'>
-            {width < 800 ? (
+            {width < 650 ? (
                 <button onClick={handleOpenMiniMenu} className='nav-menu-button'>
                     <div className='nav-menu-button-container'>
-                        <div className='nav-menu-button-text'>{active}</div>
+                        <div className='nav-menu-button-text'>Menu</div>
                     </div>
                     <div className='nav-menu-button-container'>
                         <div className='nav-menu-button-text'>Menu</div>
                     </div>            
                 </button>
             ) : !active ? (
-                <div>
-                </div>
-            ) : (
+                <div />            
+                ) : (
                 <div className='nav-container'>
                     <div onClick={() => handleCloseMiniMenu('home')} className='nav-container-logo'>TM</div>
                     <div className='nav-container-list'>
