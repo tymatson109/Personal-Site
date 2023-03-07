@@ -1,17 +1,47 @@
-.project-card {
-  margin-top: 20px;
-  cursor: default;
-  transition: transform .25s ease-in;
-  height: 400px;
-  overflow: hidden;
-  border-radius: 20px;
-  position: relative;
-  box-shadow: 1px 6px 10px -4px rgba(0,0,0,0.75);}
-  
-.project-card-image {
-  max-height: 400px;
-  object-fit: contain;
-  transition: transform .25s ease;
+@media (min-width: 975px) {
+  .project-card {
+    margin-top: 20px;
+    cursor: default;
+    transition: transform .25s ease-in;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 1px 6px 10px -4px rgba(0,0,0,0.75);
+  }
+  .project-card-image {
+    height: 400px;
+    object-fit: contain;
+    transition: transform .25s ease;
+  }
+  .project-card-title {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 975px) {
+  .project-card {
+    margin-top: 20px;
+    cursor: default;
+    transition: transform .25s ease-in;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 1px 6px 10px -4px rgba(0,0,0,0.75);
+  }
+  .project-card-image {
+    height: 300px;
+    object-fit: contain;
+    transition: transform .25s ease;
+  }
+  .project-card-title {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 25px;
+  }
 }
 
 .project-card::after {
@@ -49,12 +79,6 @@
 .project-card:hover::after {
   opacity: 1;
 }
-
-.project-card-title {
-    color: white;
-    margin-bottom: 20px;
-    font-size: 35px;
-}
 .project-card-description {
     font-size: 16px;
     color: rgb(230, 230, 230);
@@ -89,11 +113,7 @@
     border: none;
     overflow: hidden;
     transition: all 0.3s ease-in-out;
-}
-
-.project-card-button:hover::after {
-  text-decoration: underline;
-
+    transition-delay: .15s;
 }
   
 .project-card:hover .project-card-button {

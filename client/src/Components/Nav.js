@@ -8,6 +8,7 @@ export const Nav = ({onClick}) => {
     const [width, setWidth] = useState();
 
     useEffect(() => {
+        getWidth()
         const about = document.querySelector('.app-about')
         const home = document.querySelector('.app-home')
         const projects = document.querySelector('.app-projects')
@@ -75,7 +76,7 @@ export const Nav = ({onClick}) => {
 
     return (
         <div className='nav'>
-            {width < 650 ? (
+            {width < 725 ? (
                 <button onClick={handleOpenMiniMenu} className='nav-menu-button'>
                     <div className='nav-menu-button-container'>
                         <div className='nav-menu-button-text'>Menu</div>

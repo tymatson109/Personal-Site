@@ -4,9 +4,20 @@
     padding-bottom: 80px;
     display: grid;
     gap: 1rem;  
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     overflow: auto;
     justify-items: center;
+}
+
+@media (min-width: 975px) {
+    .portfolio {
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    }
+}
+
+@media (max-width: 975px) {
+    .portfolio {
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
 }
 
 @media (min-width: 600px) {
@@ -21,8 +32,8 @@
 @media (max-width: 600px) {
     .portfolio-title {
         font-size: 45px;
-        color: white;
         margin-bottom: 20px;
         text-align: center;
+        padding-top: 70px !important;
     }
 }

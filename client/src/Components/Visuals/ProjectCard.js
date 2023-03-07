@@ -11,7 +11,7 @@ export const ProjectCard = ({image, title, description, link}) => {
                 {link ? (
                     <a href={link} target={'_blank'} className='project-card-button' rel="noreferrer">Learn More</a>
                 ) : (
-                    <div className='project-card-button'>No Longer Available</div>
+                    <div className='project-card-button'>Not Available</div>
                 )}
             </div>
         </div>
