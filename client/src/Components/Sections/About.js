@@ -5,7 +5,7 @@ export const About = () => {
     return (
         <div className='about'>
             <div className='about-info-card'>
-                <h2>Meet Ty Matson</h2>
+                <h2 className='about-info-card-title'>Meet Ty Matson</h2>
                 <div>
                     I am a self taught software developer. Digging into my new passion, I focused on learning the basics of HTML, CSS, and JavaScript before putting it all together by learning React.<br /><br />
                     At my first start up, <p>MunchkinLabs</p> I was hired to join a small team of developers, responsible for a majority of the front end code and quickly learned what I needed to contribute to a fast growing environment. <br /><br />

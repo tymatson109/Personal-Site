@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.16ec4d1c.css",
-    "main.js": "/static/js/main.397281a6.js",
+    "main.css": "/static/css/main.c7550725.css",
+    "main.js": "/static/js/main.2190655f.js",
     "static/media/Maxum.png": "/static/media/Maxum.85fc9cfa86a5dd5d4a05.png",
     "static/media/Groupify.png": "/static/media/Groupify.0661ef748c835169902c.png",
     "static/media/Maxumapp.png": "/static/media/Maxumapp.95103c1d4e15d353fd1a.png",
     "static/media/ColdCallCrushers.png": "/static/media/ColdCallCrushers.f1c6022edccd609d0c59.png",
     "index.html": "/index.html",
-    "main.16ec4d1c.css.map": "/static/css/main.16ec4d1c.css.map",
-    "main.397281a6.js.map": "/static/js/main.397281a6.js.map"
+    "main.c7550725.css.map": "/static/css/main.c7550725.css.map",
+    "main.2190655f.js.map": "/static/js/main.2190655f.js.map"
   },
   "entrypoints": [
-    "static/css/main.16ec4d1c.css",
-    "static/js/main.397281a6.js"
+    "static/css/main.c7550725.css",
+    "static/js/main.2190655f.js"
   ]
 }

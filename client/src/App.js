@@ -35,7 +35,7 @@ function App() {
       <Nav onClick={handleNav} />
       <div ref={home} className="app-home section">
         <Intro />
-        <HomeButton onClick={() => handleNav('about')} title="About Me"/>
+        <HomeButton onClick={() => handleNav('about')}/>
       </div>
       <div id="about" ref={main} className='app-about section'>
         <About />

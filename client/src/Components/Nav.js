@@ -4,25 +4,26 @@ import { respondToVisibility } from './Functions/Misc';
 import './Nav.css';
 
 export const Nav = ({onClick}) => {
-    // const [active, setActive] = useState();
+    const [active, setActive] = useState();
+    const [width, setWidth] = useState();
 
-    // useEffect(() => {
-    //   const about = document.querySelector('.app-about')
-    //   const home = document.querySelector('.app-home')
-    //   const projects = document.querySelector('.app-projects')
-    //   const contact = document.querySelector('.app-contact')
-    //   respondToVisibility(home, handleFocus)
-    //   respondToVisibility(about, handleFocus)
-    //   respondToVisibility(projects, handleFocus)
-    //   respondToVisibility(contact, handleFocus)
-    // }, [])
-  
-    // const handleFocus = (bool, element) => {
-    //     if (bool === true) {
-    //         setActive(element.id)
-    //     }
-    // }
+    useEffect(() => {
+        const about = document.querySelector('.app-about')
+        const home = document.querySelector('.app-home')
+        const projects = document.querySelector('.app-projects')
+        const contact = document.querySelector('.app-contact')
+        respondToVisibility(home, handleFocus)
+        respondToVisibility(about, handleFocus)
+        respondToVisibility(projects, handleFocus)
+        respondToVisibility(contact, handleFocus)
 
+        window.addEventListener('resize',   getWidth)
+
+        return () => {
+            window.removeEventListener('resize', getWidth)
+        }
+
+    }, [])
 
     useEffect(() => {
         document.querySelector('.nav-mini-menu-item-one').onmouseover = e => {
@@ -38,6 +39,17 @@ export const Nav = ({onClick}) => {
             nameScramble(e);
         }
     }, [])
+
+    const getWidth = () => {
+        const windowWidth = window.innerWidth
+        setWidth(windowWidth);
+    }
+  
+    const handleFocus = (bool, element) => {
+        if (bool === true) {
+            setActive(element.id)
+        }
+    }
 
     const handleOpenMiniMenu = () => {
         const menu = document.querySelector('.nav-menu-mini-overlay')
@@ -63,14 +75,28 @@ export const Nav = ({onClick}) => {
 
     return (
         <div className='nav'>
-            <button onClick={handleOpenMiniMenu} className='nav-menu-button'>
-                <div className='nav-menu-button-container'>
-                    <div className='nav-menu-button-text'>Menu</div>
+            {width < 800 ? (
+                <button onClick={handleOpenMiniMenu} className='nav-menu-button'>
+                    <div className='nav-menu-button-container'>
+                        <div className='nav-menu-button-text'>{active}</div>
+                    </div>
+                    <div className='nav-menu-button-container'>
+                        <div className='nav-menu-button-text'>Menu</div>
+                    </div>            
+                </button>
+            ) : !active ? (
+                <div>
                 </div>
-                <div className='nav-menu-button-container'>
-                    <div className='nav-menu-button-text'>Menu</div>
-                </div>            
-            </button>
+            ) : (
+                <div className='nav-container'>
+                    <div onClick={() => handleCloseMiniMenu('home')} className='nav-container-logo'>TM</div>
+                    <div className='nav-container-list'>
+                        <button onClick={() => handleCloseMiniMenu('about')} style={{ color: active === 'about' ? '#ff3366' : 'black' }} className='nav-container-item'>About</button>
+                        <button onClick={() => handleCloseMiniMenu('projects')} style={{ color: active === 'projects' ? '#ff3366' : 'black' }} className='nav-container-item'>Projects</button>
+                        <button onClick={() => handleCloseMiniMenu('contact')} style={{ color: active === 'contact' ? '#ff3366' : 'black' }} className='nav-container-item'>Contact</button>
+                    </div>
+                </div>
+            )}
             <div className='nav-menu-mini-overlay'>
                 <button onClick={handleCloseMiniMenu} className='nav-menu-button'>
                     <div className='nav-menu-button-container'>

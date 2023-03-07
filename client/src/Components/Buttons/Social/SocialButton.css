@@ -57,28 +57,14 @@
 
 /* mini icon */
 
-@media (min-width: 900px) {
-    .social-button-mini {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .social-button-icon-mini {
-        width: 40px;
-        height: 40px;
-    }
+.social-button-mini {
+    width: 60px;
+    height: 60px;
 }
 
-@media (max-width: 900px) {
-    .social-button-mini {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .social-button-icon-mini {
-        width: 45px;
-        height: 45px;
-    }
+.social-button-icon-mini {
+    width: 40px;
+    height: 40px;
 }
 
 .social-button-container-mini {
