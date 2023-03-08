@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import './ContactCard.css';
 import emailjs from '@emailjs/browser';
+import { delay } from '../Functions/Misc';
+import LoadingIcon from '../../Assets/LoadingIcon.svg';
 
 export const ContactCard = () => {
     const [name, setName] = useState('');
@@ -8,6 +10,8 @@ export const ContactCard = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const form = useRef();
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -23,12 +27,19 @@ export const ContactCard = () => {
             setError('Please enter a message!');
             return;
         }
+        setLoading(true);
         emailjs.sendForm('service_32pwjhl', 'template_3fzno9d', form.current, 'cRqQ9TqCxKatFK9te')
-      .then((result) => {
-          console.log(result.text);
-      }, (error) => {
-          console.log(error.text);
-      });
+            .then(() => {
+                setSuccess(true);
+                setLoading(false);
+                delay(1000).then(() => {
+                    setSuccess(false);
+                })
+            }, () => {
+                setError("Could not send message");
+                setLoading(false);
+                return;
+            });
         setName('')
         setEmail('')
         setMessage('');
@@ -63,12 +74,22 @@ export const ContactCard = () => {
                     onChange={(e) => setMessage(e.target.value)}
                 />
                 <div className='contact-card-error'>{error}</div>
-                <button
-                    type='submit'
-                    className='contact-card-button'
-                >
-                    Submit
-                </button>
+                {!success ? (
+                    !loading ? (
+                        <button
+                            type='submit'
+                            className='contact-card-button'
+                        >
+                            Submit
+                        </button>
+                    ) : (
+                        <div className='contact-card-button contact-card-loading'>
+                            <img src={LoadingIcon} alt="Loading..." />
+                        </div>
+                    )
+                ) : (
+                    <div className='contact-card-button contact-card-success'>Success!</div>
+                )}
             </form>
         </div>
     )

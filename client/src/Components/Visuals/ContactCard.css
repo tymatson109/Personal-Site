@@ -64,13 +64,16 @@
     background-color: rgb(220, 220, 220);
     margin-top: 40px;
     width: 180px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    height: 60px;
     margin-bottom: 20px;
     font-size: 1.5rem;
     align-self: center;
     border-radius: 6px;
     border: none;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
     color: rgb(120, 120, 120);
     transition: transform .25s ease-in, background-color .25s ease-in, color .25s ease-in;
 }
