@@ -1,5 +1,5 @@
 .about {
-    height: 100svh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     margin-left: auto;
