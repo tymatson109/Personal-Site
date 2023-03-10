@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.b2900bf2.css",
+    "main.css": "/static/css/main.134b939b.css",
     "main.js": "/static/js/main.df78cd81.js",
     "static/media/Maxum.png": "/static/media/Maxum.85fc9cfa86a5dd5d4a05.png",
     "static/media/Groupify.png": "/static/media/Groupify.0661ef748c835169902c.png",
@@ -8,11 +8,11 @@
     "static/media/ColdCallCrushers.png": "/static/media/ColdCallCrushers.f1c6022edccd609d0c59.png",
     "index.html": "/index.html",
     "static/media/LoadingIcon.svg": "/static/media/LoadingIcon.cba4b45bfbcb22a4e4f667631e518117.svg",
-    "main.b2900bf2.css.map": "/static/css/main.b2900bf2.css.map",
+    "main.134b939b.css.map": "/static/css/main.134b939b.css.map",
     "main.df78cd81.js.map": "/static/js/main.df78cd81.js.map"
   },
   "entrypoints": [
-    "static/css/main.b2900bf2.css",
+    "static/css/main.134b939b.css",
     "static/js/main.df78cd81.js"
   ]
 }
