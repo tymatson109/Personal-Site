@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.86cd8383.css",
+    "main.css": "/static/css/main.7e01ea8c.css",
     "main.js": "/static/js/main.df78cd81.js",
     "static/media/Maxum.png": "/static/media/Maxum.85fc9cfa86a5dd5d4a05.png",
     "static/media/Groupify.png": "/static/media/Groupify.0661ef748c835169902c.png",
@@ -8,11 +8,11 @@
     "static/media/ColdCallCrushers.png": "/static/media/ColdCallCrushers.f1c6022edccd609d0c59.png",
     "index.html": "/index.html",
     "static/media/LoadingIcon.svg": "/static/media/LoadingIcon.cba4b45bfbcb22a4e4f667631e518117.svg",
-    "main.86cd8383.css.map": "/static/css/main.86cd8383.css.map",
+    "main.7e01ea8c.css.map": "/static/css/main.7e01ea8c.css.map",
     "main.df78cd81.js.map": "/static/js/main.df78cd81.js.map"
   },
   "entrypoints": [
-    "static/css/main.86cd8383.css",
+    "static/css/main.7e01ea8c.css",
     "static/js/main.df78cd81.js"
   ]
 }

@@ -1,6 +1,6 @@
 .app {
   font-family: monospace;
-  width: 100%;
+  width: 100svw;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
