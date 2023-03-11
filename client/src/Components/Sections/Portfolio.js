@@ -4,6 +4,7 @@ import ColdCallCrushers from '../../Assets/ColdCallCrushers.png';
 import Maxum from '../../Assets/Maxum.png';
 import Groupify from '../../Assets/Groupify.png';
 import Maxumapp from '../../Assets/Maxumapp.png';
+import TyMatson from '../../Assets/TyMatson.png';
 
 export const Portfolio = () => {
     return (
@@ -21,6 +22,12 @@ export const Portfolio = () => {
                     title={'Maxum'}
                     description={'Maxum is a full stack mobile app for pick up athletes. Users can share where they are playing their sports with anyone else near them and create local communities around their sport!'}
                     link={'https://apps.apple.com/us/app/maxum/id1593452715?platform=iphone'}
+                />
+                <ProjectCard
+                    image={TyMatson}
+                    title={'TyMatson.dev'}
+                    description={'TyMatson.dev is my personal portfolio website build to both show off my skills as a front-end developer, and showcase myself and my recent projects.'}
+                    link={'http://tymatson.dev'}
                 />
                 <ProjectCard
                     image={Maxumapp}
