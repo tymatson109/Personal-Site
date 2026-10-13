@@ -25,9 +25,12 @@ export function sectionFilter(sections: readonly Section[], value: unknown): str
   return sections.find((s) => s.slug === value)?.slug;
 }
 
-/** Entries in the list newest first, and the recently deleted ones (newest deletion first) that can still come back. */
-export function adminView(items: readonly AdminEntry[], section: string | undefined, now: Date) {
-  const inSection = items.filter((i) => !section || i.entry.section === section);
+/**
+ * Entries in the list newest first, and the recently deleted ones (newest deletion first) that can still come back.
+ * Entries of a removed section are left out of both; they come back when the section is restored.
+ */
+export function adminView(items: readonly AdminEntry[], section: string | undefined, now: Date, sections: readonly Section[]) {
+  const inSection = items.filter((i) => (section ? i.entry.section === section : sections.some((s) => s.slug === i.entry.section)));
   const current = inSection
     .filter((i) => i.deletedAt === null)
     .map((i) => i.entry)

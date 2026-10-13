@@ -68,5 +68,26 @@ select pg_temp.check(pg_temp.rejected($$insert into public.entries (section, slu
 select pg_temp.check(pg_temp.rejected($$insert into public.media (url) values ('http://x.test/a.png')$$), 'media URLs must be https');
 select pg_temp.check(pg_temp.rejected($$delete from public.sections where slug = 'projects'$$), 'a section with entries cannot be dropped out from under them');
 
+-- Removing a section, as the admin does it: one transaction stamps the section and its entries with the same time
+set role site_admin;
+begin;
+update public.sections set deleted_at = now() where slug = 'projects';
+update public.entries set deleted_at = now() where section = 'projects' and deleted_at is null;
+commit;
+reset role;
+set role site_reader;
+select pg_temp.check((select count(*) from public.sections where slug = 'projects') = 0, 'a visitor no longer sees a removed section');
+select pg_temp.check((select count(*) from public.entries where section = 'projects') = 0, 'a visitor no longer sees the entries of a removed section');
+reset role;
+set role site_admin;
+select pg_temp.check((select deleted_at is not null from public.sections where slug = 'projects'), 'the admin still sees a removed section, so it can be restored');
+update public.entries e set deleted_at = null from public.sections s
+  where s.slug = 'projects' and e.section = s.slug and e.deleted_at = s.deleted_at;
+update public.sections set deleted_at = null where slug = 'projects';
+reset role;
+set role site_reader;
+select pg_temp.check((select count(*) from public.entries where section = 'projects') = 1, 'restoring a section brings back its live entry');
+reset role;
+
 update public.entries set updated_at = '2000-01-01', title = 'Touched' where slug = 'live-one';
 select pg_temp.check((select updated_at > '2001-01-01' from public.entries where slug = 'live-one'), 'editing an entry stamps updated_at');

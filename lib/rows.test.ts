@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toAdminEntry, toBlocks, toEntry, toFacts, toMedia, toPage, toSection } from "./rows";
+import { toAdminEntry, toAdminSection, toBlocks, toEntry, toFacts, toMedia, toPage, toSection } from "./rows";
 
 const ENTRY_ROW = {
   id: "0b6c5c1e-3c1a-4d55-9d4e-1f7f8c2f3a10",
@@ -137,5 +137,17 @@ describe("toBlocks with media", () => {
 
   it("drops files attached to a text block", () => {
     expect(toBlocks([{ type: "p", text: "Hi", media: [PHOTO] }])).toEqual([{ type: "p", text: "Hi" }]);
+  });
+});
+
+describe("toAdminSection", () => {
+  it("keeps the section with its entry count and removal time", () => {
+    expect(
+      toAdminSection({ slug: "talks", name: "Talks", layout: "grid", order: 3, entries: 2, deletedAt: "2026-10-12T09:00:00Z" }),
+    ).toEqual({ slug: "talks", name: "Talks", layout: "grid", order: 3, entries: 2, deletedAt: "2026-10-12T09:00:00Z" });
+  });
+
+  it("reads a missing count as none and a missing removal time as not removed", () => {
+    expect(toAdminSection({ slug: "talks", name: "Talks", layout: "grid", order: 3 })).toMatchObject({ entries: 0, deletedAt: null });
   });
 });

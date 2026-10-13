@@ -63,17 +63,23 @@ describe("adminView", () => {
   ];
 
   it("lists drafts and live entries together, newest first", () => {
-    expect(adminView(items, undefined, NOW).current.map((e) => e.id)).toEqual(["post", "new", "old"]);
+    expect(adminView(items, undefined, NOW, SECTIONS).current.map((e) => e.id)).toEqual(["post", "new", "old"]);
   });
 
   it("narrows both lists to one section", () => {
-    const view = adminView(items, "writing", NOW);
+    const view = adminView(items, "writing", NOW, SECTIONS);
     expect(view.current.map((e) => e.id)).toEqual(["post"]);
     expect(view.deleted).toEqual([]);
   });
 
   it("shows recently deleted entries, newest deletion first, and hides ones past the restore window", () => {
-    expect(adminView(items, undefined, NOW).deleted.map((e) => e.id)).toEqual(["gone", "gone-earlier"]);
+    expect(adminView(items, undefined, NOW, SECTIONS).deleted.map((e) => e.id)).toEqual(["gone", "gone-earlier"]);
+  });
+
+  it("leaves out entries of a removed section, which come back with it", () => {
+    const talk = item({ id: "talk", section: "talks" }, "2026-10-12T09:00:00Z");
+    const view = adminView([...items, talk], undefined, NOW, SECTIONS);
+    expect(view.deleted.map((e) => e.id)).not.toContain("talk");
   });
 });
 

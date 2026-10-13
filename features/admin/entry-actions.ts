@@ -47,8 +47,14 @@ export async function deleteEntry(id: string) {
   await updateEntry(id, "deleted_at = now()", [], "and deleted_at is null");
 }
 
+// An entry of a removed section comes back only with its section
 export async function restoreEntry(id: string) {
-  await updateEntry(id, "deleted_at = null", [RESTORE_DAYS], "and deleted_at > now() - make_interval(days => $2)");
+  await updateEntry(
+    id,
+    "deleted_at = null",
+    [RESTORE_DAYS],
+    "and deleted_at > now() - make_interval(days => $2) and section in (select slug from public.sections where deleted_at is null)",
+  );
 }
 
 /** Starts an untitled draft in a section and opens it in the editor. */
@@ -57,8 +63,13 @@ export async function createEntry(section: string) {
   if (!isSlug(section)) throw new Error("Unknown section");
   const slug = `untitled-${randomBytes(3).toString("hex")}`;
   const { rows } = await asAdmin(admin, (db) =>
-    db.query(`insert into public.entries (section, slug) values ($1, $2) returning id`, [section, slug]),
+    db.query(
+      `insert into public.entries (section, slug)
+       select slug, $2 from public.sections where slug = $1 and deleted_at is null returning id`,
+      [section, slug],
+    ),
   );
+  if (!rows.length) throw new Error("Unknown section");
   redirect(`/admin/entries/${rows[0].id}`);
 }
 
@@ -68,7 +79,7 @@ export async function saveEntry(id: string, value: unknown): Promise<SaveResult>
   if (!isEntryId(id)) return { ok: false, error: "This entry no longer exists." };
   try {
     const result = await asAdmin(admin, async (db) => {
-      const { rows } = await db.query(`select slug from public.sections`);
+      const { rows } = await db.query(`select slug from public.sections where deleted_at is null`);
       const parsed = parseEntryInput(value, rows.map((r) => String(r.slug)));
       if (!parsed.ok) return parsed;
       const e = parsed.input;
