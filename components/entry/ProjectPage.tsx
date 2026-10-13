@@ -41,7 +41,7 @@ export function ProjectPage({ entry, section }: { entry: Entry; section: Section
               {formatDate(entry.date, "month")} · {entry.tags.join(" · ")}
             </Label>
           </div>
-          {media.kind === "phone" && <PhoneFrame block={media.block} />}
+          {media.kind === "phone" && <PhoneFrame block={media.block} live />}
         </header>
         {media.kind === "image" && (
           <div className={styles.cover}>

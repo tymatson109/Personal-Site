@@ -9,7 +9,7 @@ export type Media = { url: string; alt: string; width: number; height: number };
 
 /**
  * One piece of a story. Text blocks hold their words in `text`.
- * Image, gallery and phone recording blocks hold their files in `media` and their caption in `text`; a demo's `text` names the app.
+ * Image, gallery and phone recording blocks hold their files in `media` and their caption in `text`; a live demo's `text` is the https address of the app's demo build.
  */
 export type Block = { type: BlockType; text: string; media?: Media[] };
 

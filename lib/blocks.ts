@@ -1,4 +1,5 @@
 import type { Block, BlockType } from "@/types/entry";
+import { demoSrc } from "./demos";
 import { isUploadBlockType } from "./media";
 
 export const MEDIA_BLOCKS: readonly BlockType[] = ["image", "gallery", "demo", "video"];
@@ -12,8 +13,9 @@ export function isMediaBlock(block: Block): boolean {
   return MEDIA_BLOCKS.includes(block.type);
 }
 
-/** An image, gallery or recording appears on the page only once it has a file; until then it lives only in the editor. */
+/** An image, gallery or recording appears once it has a file, and a live demo once it has an address; until then they live only in the editor. */
 export function isShown(block: Block): boolean {
+  if (block.type === "demo") return demoSrc(block) !== null;
   return !isUploadBlockType(block.type) || Boolean(block.media?.length);
 }
 
@@ -36,8 +38,8 @@ export function isTextBlock(block: Block): block is Block & { type: TextBlockTyp
   return TEXT_BLOCKS.some((t) => t === block.type);
 }
 
-/** What a "/" command can turn a block into: the text kinds, then the kinds that hold uploaded files. */
-export const MENU_BLOCKS = [...TEXT_BLOCKS, "image", "gallery", "video"] as const satisfies readonly BlockType[];
+/** What a "/" command can turn a block into: the text kinds, then the kinds that hold files or a demo. */
+export const MENU_BLOCKS = [...TEXT_BLOCKS, "image", "gallery", "video", "demo"] as const satisfies readonly BlockType[];
 export type MenuBlockType = (typeof MENU_BLOCKS)[number];
 
 /** The block types a "/" command offers, narrowed by what follows the slash. */

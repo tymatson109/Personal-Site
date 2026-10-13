@@ -58,8 +58,8 @@ const PHOTO: Media = { url: "https://a.public.blob.vercel-storage.com/media/x.jp
 
 describe("entryMedia", () => {
   it("prefers a live demo over a recording", () => {
-    const e = testEntry({ blocks: [{ type: "video", text: "", media: [PHOTO] }, { type: "demo", text: "app" }] });
-    expect(entryMedia(e)).toEqual({ kind: "phone", block: { type: "demo", text: "app" } });
+    const e = testEntry({ blocks: [{ type: "video", text: "", media: [PHOTO] }, { type: "demo", text: "https://app.example.com" }] });
+    expect(entryMedia(e)).toEqual({ kind: "phone", block: { type: "demo", text: "https://app.example.com" } });
   });
 
   it("uses a recording when there is no demo", () => {

@@ -71,3 +71,29 @@
 .caption b {
   font-weight: var(--w-bold);
 }
+
+/* The demo's tap target fills the screen and wears the accent, so it reads as the one thing to press */
+.start {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+}
+
+.startLabel {
+  font-size: var(--t-sm);
+  font-weight: var(--w-medium);
+  color: var(--on-accent-fixed);
+  background: var(--accent-fixed);
+  border-radius: var(--r-pill);
+  padding: var(--s2) var(--s4);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.start:hover .startLabel,
+.start:focus-visible .startLabel {
+  transform: scale(var(--grow));
+}
+
+.video:is(iframe) {
+  border: 0;
+}

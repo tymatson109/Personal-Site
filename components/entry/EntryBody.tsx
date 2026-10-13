@@ -44,7 +44,7 @@ export function EntryBody({ blocks, skip, pull }: Props) {
           return (
             <div key={piece.key} className={styles.phones} data-reveal>
               {piece.blocks.map((b, i) => (
-                <PhoneFrame key={i} block={b} />
+                <PhoneFrame key={i} block={b} live />
               ))}
             </div>
           );

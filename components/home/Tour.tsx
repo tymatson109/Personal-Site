@@ -7,6 +7,7 @@ import { Chip, ChipRow } from "@/components/ui/Chip";
 import { Label } from "@/components/ui/Label";
 import { EntryVisual } from "@/components/media/EntryVisual";
 import { entryHref } from "@/lib/content";
+import { demoSrc } from "@/lib/demos";
 import { pad2 } from "@/lib/format-date";
 import { activeStop, stopFrame, stopProgress, tourTarget, type TourMove } from "@/lib/tour";
 import styles from "./Tour.module.css";
@@ -124,7 +125,7 @@ export function Tour({ stops }: Props) {
                 </ChipRow>
               </div>
               <Button href={entryHref(entry)} variant="primary">
-                {entry.blocks.some((b) => b.type === "demo") ? "Try the live app →" : "See the project →"}
+                {entry.blocks.some((b) => demoSrc(b)) ? "Try the live app →" : "See the project →"}
               </Button>
             </div>
             <div className={styles.media} data-media>
