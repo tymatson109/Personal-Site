@@ -1,0 +1,17 @@
+.filters {
+  margin-bottom: var(--s4);
+}
+
+.empty {
+  color: var(--muted);
+  padding-block: var(--s3);
+}
+
+.deleted {
+  margin-top: var(--s7);
+}
+
+.subtitle {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+}
