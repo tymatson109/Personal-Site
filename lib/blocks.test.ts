@@ -17,9 +17,13 @@ describe("block kinds", () => {
 describe("isShown", () => {
   const photo = { url: "https://a.public.blob.vercel-storage.com/media/x.jpg", alt: "", width: 4, height: 3 };
 
-  it("shows text blocks and demos as they are", () => {
+  it("shows text blocks as they are", () => {
     expect(isShown({ type: "p", text: "" })).toBe(true);
-    expect(isShown({ type: "demo", text: "app" })).toBe(true);
+  });
+
+  it("shows a live demo only once it has an https address", () => {
+    expect(isShown({ type: "demo", text: "https://roomwise-demo.vercel.app" })).toBe(true);
+    expect(isShown({ type: "demo", text: "Roomwise" })).toBe(false);
   });
 
   it("shows an image, gallery or recording only once it has a file", () => {
@@ -30,13 +34,14 @@ describe("isShown", () => {
 });
 
 describe("blockMenu", () => {
-  it("offers every text block and then every upload block for a bare slash", () => {
-    expect(blockMenu("/")).toEqual(["p", "h", "quote", "code", "image", "gallery", "video"]);
+  it("offers every text block, then every upload block and the live demo, for a bare slash", () => {
+    expect(blockMenu("/")).toEqual(["p", "h", "quote", "code", "image", "gallery", "video", "demo"]);
   });
 
   it("finds the upload blocks by name", () => {
     expect(blockMenu("/im")).toEqual(["image"]);
     expect(blockMenu("/phone")).toEqual(["video"]);
+    expect(blockMenu("/live")).toEqual(["demo"]);
   });
 
   it("narrows by the start of the block's name, ignoring case", () => {

@@ -21,6 +21,7 @@
   --app-card: #ffffff;
   --app-line: #dfe2e8;
   --accent-fixed: #1f4bff;
+  --on-accent-fixed: #ffffff;
 
   /* The hero backdrop is dark in both themes, so text on it stays light */
   --image-bg: #0b0d14;
@@ -147,6 +148,8 @@
   --cursor-big: 56px;
   --rise: 8px;
   --rise-far: 24px;
+  /* How much a pressable thing swells on hover */
+  --grow: 1.04;
 
   /* Layers */
   --z-head: 20;

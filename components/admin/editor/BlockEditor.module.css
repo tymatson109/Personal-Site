@@ -64,14 +64,6 @@
   overflow-x: auto;
 }
 
-.media {
-  color: var(--muted);
-  font-size: var(--t-sm);
-  padding: var(--s3);
-  border: var(--hairline) dashed var(--line);
-  border-radius: var(--r1);
-}
-
 .menu,
 .options {
   display: flex;

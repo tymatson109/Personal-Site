@@ -4,7 +4,7 @@ import { bodyPieces } from "./body";
 
 const p1: Block = { type: "p", text: "One" };
 const p2: Block = { type: "p", text: "Two" };
-const demo: Block = { type: "demo", text: "app" };
+const demo: Block = { type: "demo", text: "https://app.example.com" };
 const video: Block = {
   type: "video",
   text: "",

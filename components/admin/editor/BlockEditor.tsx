@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent } from "react";
 import type { Block } from "@/types/entry";
-import { Label } from "@/components/ui/Label";
 import { BLOCK_LABELS, blockMenu, isSlashCommand, isTextBlock, TEXT_BLOCKS, type MenuBlockType, type TextBlockType } from "@/lib/blocks";
 import { isUploadBlockType } from "@/lib/media";
 import { insertAt, moveItem, removeAt, replaceAt } from "@/lib/list-ops";
 import { looksLikeMarkdown, markdownToBlocks } from "@/lib/markdown";
 import { AutoTextarea } from "./AutoTextarea";
+import { DemoEditor } from "./DemoEditor";
 import { MediaEditor, type BlockUpdate } from "./MediaEditor";
 import styles from "./BlockEditor.module.css";
 import controls from "./controls.module.css";
@@ -157,9 +157,7 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
             ) : isUploadBlockType(block.type) ? (
               <MediaEditor block={{ ...block, type: block.type }} update={update(key)} onUploading={onUploading} />
             ) : (
-              <p className={styles.media}>
-                <Label>{BLOCK_LABELS[block.type]}</Label> Shown on the page as it is. Live demos are set up with the app demos.
-              </p>
+              <DemoEditor address={block.text} update={update(key)} />
             )}
             {slash.length > 0 && (
               <ul className={styles.menu} role="listbox" aria-label="Turn into">
