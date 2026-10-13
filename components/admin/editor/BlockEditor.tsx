@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent } from "react";
 import type { Block } from "@/types/entry";
-import { BLOCK_LABELS, blockMenu, isSlashCommand, isTextBlock, TEXT_BLOCKS, type MenuBlockType, type TextBlockType } from "@/lib/blocks";
+import { BLOCK_LABELS, blockMenu, isSlashCommand, isTextBlock, MENU_BLOCKS, TEXT_BLOCKS, type MenuBlockType, type TextBlockType } from "@/lib/blocks";
 import { isUploadBlockType } from "@/lib/media";
 import { insertAt, moveItem, removeAt, replaceAt } from "@/lib/list-ops";
 import { looksLikeMarkdown, markdownToBlocks } from "@/lib/markdown";
@@ -38,6 +38,19 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
   const inputs = useRef(new Map<string, HTMLTextAreaElement>());
   const pendingFocus = useRef<Focus | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
+
+  // A tap anywhere outside an open menu closes it without choosing anything
+  useEffect(() => {
+    if (!openMenu && !adding) return;
+    const close = (event: PointerEvent) => {
+      if (event.target instanceof Element && event.target.closest("[data-popup]")) return;
+      setOpenMenu(null);
+      setAdding(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [openMenu, adding]);
 
   // Moves the caret only after React has rendered the block it belongs to
   useEffect(() => {
@@ -70,10 +83,11 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
     onChange(moveItem(blocks, i, i + by));
     setOpenMenu(null);
   };
-  const add = () => {
-    const block = keyed({ type: "p", text: "" });
+  const add = (type: MenuBlockType) => {
+    const block = keyed({ type, text: "" });
     onChange([...blocks, block]);
-    setFocus({ key: block.key, caret: 0 });
+    setAdding(false);
+    if (isTextBlock(block.block)) setFocus({ key: block.key, caret: 0 });
   };
 
   function onKeyDown(i: number, event: KeyboardEvent<HTMLTextAreaElement>) {
@@ -128,7 +142,7 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
         const slash = isTextBlock(block) && isSlashCommand(block.text) ? blockMenu(block.text) : [];
         return (
           <div key={key} className={styles.block} data-type={block.type}>
-            <div className={styles.gutter}>
+            <div className={styles.gutter} data-popup>
               <button
                 type="button"
                 className={`${controls.legend} ${styles.kind}`}
@@ -171,7 +185,7 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
               </ul>
             )}
             {menuOpen && (
-              <div className={styles.options}>
+              <div className={styles.options} data-popup>
                 {isTextBlock(block) && (
                   <div className={styles.row} role="group" aria-label="Turn into">
                     {TEXT_BLOCKS.map((type) => (
@@ -197,9 +211,22 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
           </div>
         );
       })}
-      <button type="button" className={controls.quiet} onClick={add}>
-        + Add block
-      </button>
+      <div className={styles.add} data-popup>
+        <button type="button" className={controls.quiet} aria-expanded={adding} onClick={() => setAdding(!adding)}>
+          + Add block
+        </button>
+        {adding && (
+          <ul className={styles.menu} aria-label="Add a block">
+            {MENU_BLOCKS.map((type) => (
+              <li key={type}>
+                <button type="button" onClick={() => add(type)}>
+                  {BLOCK_LABELS[type]}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
