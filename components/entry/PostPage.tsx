@@ -8,6 +8,7 @@ import { readMinutes } from "@/lib/read-time";
 import { BackLink } from "./BackLink";
 import { EntryBody } from "./EntryBody";
 import motion from "@/components/ui/motion.module.css";
+import { RiseWords } from "@/components/ui/RiseWords";
 import styles from "./PostPage.module.css";
 
 /** A post to read: title, lede, the story with its highlighted line pulled out, and Substack's subscribe for synced posts. */
@@ -21,7 +22,9 @@ export function PostPage({ entry, section }: { entry: Entry; section: Section })
           <Label as="p">
             {formatDate(entry.date)} · {entry.tags.join(" · ")}
           </Label>
-          <h1 className={styles.title}>{entry.title}</h1>
+          <h1 className={styles.title}>
+            <RiseWords text={entry.title} />
+          </h1>
           <p className={styles.lede}>{entry.summary}</p>
           <Label as="p">
             {readMinutes(entry.blocks)} min read{fromSubstack && " · First published on Substack"}

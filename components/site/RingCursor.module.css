@@ -1,0 +1,21 @@
+.ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--z-cursor);
+  width: var(--cursor);
+  height: var(--cursor);
+  border: var(--phone-rim-w) solid var(--accent);
+  border-radius: var(--r-pill);
+  pointer-events: none;
+  transition:
+    width var(--dur-fast) var(--ease),
+    height var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.ring[data-big="true"] {
+  width: var(--cursor-big);
+  height: var(--cursor-big);
+  background: var(--accent-soft);
+}

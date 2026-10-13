@@ -39,6 +39,7 @@ UI follows the `app-ui-design-audit` skill: the one home for Ty's design rules. 
 - Reduced motion zeroes `--dur`, `--dur-fast` and `--rise` in the tokens, so CSS motion built on them needs no extra check. JavaScript motion still checks `prefers-reduced-motion` itself.
 - Look: minimal editorial, monochrome with one electric-blue accent, Geist for text and Geist Mono for labels, light and dark following the system.
 - Motion is expressive but always honors `prefers-reduced-motion`.
+- Page headlines use `RiseWords`; blocks that should rise in as they scroll into view get `data-reveal` (handled once by `ScrollReveal` in the site layout). Never hide content that is already on the first screen.
 
 ## Code quality
 

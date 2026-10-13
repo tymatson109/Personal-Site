@@ -24,21 +24,6 @@
   font-weight: var(--w-bold);
 }
 
-.word {
-  display: inline-block;
-  animation: word var(--dur-slow) var(--ease) both;
-}
-
-.word + .word {
-  animation-delay: var(--dur-fast);
-}
-
-@keyframes word {
-  from {
-    opacity: 0;
-    transform: translateY(var(--rise-far));
-  }
-}
 
 .role > * {
   color: var(--on-image-muted);

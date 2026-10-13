@@ -11,7 +11,7 @@ import styles from "./ProjectCard.module.css";
 export function ProjectCard({ entry }: { entry: Entry }) {
   const media = entryMedia(entry);
   return (
-    <Link href={entryHref(entry)} className={styles.card}>
+    <Link href={entryHref(entry)} className={styles.card} data-reveal>
       <div className={styles.preview}>
         {media.kind === "phone" ? (
           <div className={styles.peek}>

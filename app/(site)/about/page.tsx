@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { Label } from "@/components/ui/Label";
 import motion from "@/components/ui/motion.module.css";
+import { RiseWords } from "@/components/ui/RiseWords";
 import { mailto, SITE_LINKS } from "@/lib/links";
 import styles from "./page.module.css";
 
@@ -22,11 +23,13 @@ export default function AboutPage() {
       <article className={styles.article}>
         <header className={`${styles.head} ${motion.rise}`}>
           <Label as="p">About</Label>
-          <h1 className={styles.title}>Hi, I’m Ty.</h1>
+          <h1 className={styles.title}>
+            <RiseWords text="Hi, I’m Ty." />
+          </h1>
           <p className={styles.lede}>I build iPhone apps and the web tools around them. This site holds everything I make and write.</p>
         </header>
         <p>Sample about text. It becomes editable from the admin like any other page.</p>
-        <section id="contact" className={styles.contact}>
+        <section id="contact" className={styles.contact} data-reveal>
           <h2 className={styles.subtitle}>Get in touch</h2>
           <ul className={styles.rows}>
             {CONTACTS.map((c) => (
