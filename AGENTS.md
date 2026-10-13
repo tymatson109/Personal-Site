@@ -10,23 +10,23 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Ty Matson's personal site
 
-Next.js (App Router) on Vercel with Supabase for content, media and the admin login. Public pages are static and refresh when content is published. The admin at `/admin` is for Ty only.
+Next.js (App Router) on Vercel. Content lives in Neon Postgres, images in Vercel Blob, and the admin signs in with GitHub through Auth.js. Public pages are static and refresh when content is published. The admin at `/admin` is for Ty only.
 
 ## Hard rules
 
-- **Ty merges.** Work on a branch (`feature/*`, `fix/*`, `chore/*`), open a pull request into `master`, and stop. Never push to `master`, never merge, never change production settings, Vercel or Supabase dashboards.
+- **Ty merges.** Work on a branch (`feature/*`, `fix/*`, `chore/*`), open a pull request into `master`, and stop. Never push to `master`, never merge, never change production settings, Vercel or Neon dashboards.
 - **One PR, one concern.** Follow the numbered PR plan; queue new requests until the current PR is up.
 - **Ty checks on a phone.** Do not verify UI in a browser or emulator. Verify with typecheck, lint, tests and build, and say plainly what was not seen running.
 
 ## Invariants
 
 - **One content contract.** `types/entry.ts` (`Entry`, `Block`, `Section`) is the only shape for content. The editor, the Substack sync and every page convert into or read from it. Never a second shape.
-- **`lib/` logic is pure** where it decides things (read time, formatting, ordering, feed parsing): no React, no Supabase, no network, no `Date.now()` (time is a parameter). Every pure module has a test file next to it.
-- **Server authority.** Every admin write goes through a server action or route that checks the session and the admin allowlist. The browser never holds a service-role key. Only `NEXT_PUBLIC_*` public values reach the client.
-- **Row-level security on every table.** Visitors can read published content only. Writes are admin-only, enforced in the database, not just the UI.
+- **`lib/` logic is pure** where it decides things (read time, formatting, ordering, feed parsing): no React, no database, no network, no `Date.now()` (time is a parameter). Every pure module has a test file next to it.
+- **Server authority.** Every admin write goes through a server action or route that checks the session and the admin allowlist. The browser never holds a database URL or any secret. Only `NEXT_PUBLIC_*` public values reach the client.
+- **Row-level security on every table.** The site never queries as the database owner. Public pages run as `site_reader`, which sees published content only; admin actions run as `site_admin`, and only after the server has checked the session. Both are enforced in the database by RLS and checked by `db/tests/rls.sql`.
 - **Untrusted input stays untrusted.** Substack feed HTML and editor content are sanitized before rendering. No `dangerouslySetInnerHTML` on unsanitized strings.
-- **Migrations:** a new timestamped file in `supabase/migrations/` every time, never edit an applied one, RLS on every new table, count rows before anything destructive and say the number.
-- **Pages read content only through `features/content/queries.ts`**, so swapping sample data for Supabase is one file.
+- **Migrations:** a new timestamped file in `db/migrations/` every time, never edit an applied one, RLS and `site_reader`/`site_admin` grants on every new table, a check for them in `db/tests/rls.sql`, count rows before anything destructive and say the number.
+- **Pages read content only through `features/content/queries.ts`**, so swapping sample data for the database is one file.
 - **One module builds outbound links:** `lib/links.ts` (GitHub, LinkedIn, email, Substack). A link set to `null` stays hidden until it is filled in.
 
 ## Design
@@ -54,4 +54,5 @@ UI follows the `app-ui-design-audit` skill: the one home for Ty's design rules. 
 2. `npm run lint`
 3. `npm test`
 4. `npm run build`
-5. Read your own diff against this file, then fill in the PR template, including Risk and Rollback.
+5. `npm run db:test` when `db/` changed (needs `DATABASE_URL` to an empty Postgres; CI runs it on every PR)
+6. Read your own diff against this file, then fill in the PR template, including Risk and Rollback.

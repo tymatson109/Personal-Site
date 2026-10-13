@@ -1,6 +1,6 @@
 import type { Entry } from "@/types/entry";
 
-/** Stand-in content from the approved prototype until pages read Supabase (PR 6). Text says it is sample. */
+/** Stand-in content from the approved prototype until pages read the database (PR 6). Text says it is sample. */
 export const SAMPLE_ENTRIES: Entry[] = [
   {
     id: "roomwise",
@@ -52,7 +52,7 @@ export const SAMPLE_ENTRIES: Entry[] = [
     section: "projects",
     slug: "this-website",
     title: "This website",
-    summary: "Next.js and Supabase, with a block editor behind it.",
+    summary: "Next.js and Neon, with a block editor behind it.",
     date: "2026-10-01",
     tags: ["Web", "Next.js"],
     featured: true,
@@ -61,7 +61,7 @@ export const SAMPLE_ENTRIES: Entry[] = [
     quote: "",
     facts: [
       ["Platform", "Web"],
-      ["Stack", "Next.js · Supabase"],
+      ["Stack", "Next.js · Neon"],
     ],
     blocks: [{ type: "p", text: "Sample write-up. The site you are looking at, with an admin behind it for adding and removing work." }],
   },

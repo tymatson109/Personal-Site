@@ -1,0 +1,72 @@
+-- Row-level security and constraint checks, run by scripts/db-test.sh after the migrations.
+-- Visitors (site_reader) see only published content and write nothing; site_admin manages everything.
+-- Any failed check raises and stops the run.
+
+insert into public.entries (section, slug, title, status) values
+  ('projects', 'live-one', 'Live', 'live'),
+  ('projects', 'draft-one', 'Draft', 'draft');
+insert into public.entries (section, slug, title, status, deleted_at) values
+  ('writing', 'deleted-one', 'Deleted', 'live', now());
+
+create function pg_temp.check(ok boolean, what text) returns void language plpgsql as $$
+begin
+  if not ok then raise exception 'Database check failed: %', what; end if;
+  raise notice 'ok: %', what;
+end;
+$$;
+
+-- True when the statement is refused for lack of privilege
+create function pg_temp.blocked(statement text) returns boolean language plpgsql as $$
+begin
+  execute statement;
+  return false;
+exception when insufficient_privilege then
+  return true;
+end;
+$$;
+
+-- True when a constraint rejects the statement
+create function pg_temp.rejected(statement text) returns boolean language plpgsql as $$
+begin
+  execute statement;
+  return false;
+exception when check_violation or not_null_violation or foreign_key_violation or unique_violation then
+  return true;
+end;
+$$;
+
+-- A visitor, through the reader role
+set role site_reader;
+select pg_temp.check((select count(*) from public.sections) = 2, 'a visitor sees both starting sections');
+select pg_temp.check((select array_agg(slug) from public.entries) = array['live-one'], 'a visitor sees only live, undeleted entries');
+select pg_temp.check((select count(*) from public.pages where slug = 'about') = 1, 'a visitor sees the About page');
+select pg_temp.check(pg_temp.blocked($$insert into public.sections (slug, name, layout) values ('talks', 'Talks', 'grid')$$), 'a visitor cannot add a section');
+select pg_temp.check(pg_temp.blocked($$update public.entries set title = 'x'$$), 'a visitor cannot edit entries');
+select pg_temp.check(pg_temp.blocked($$delete from public.entries$$), 'a visitor cannot delete entries');
+select pg_temp.check(pg_temp.blocked($$insert into public.media (url) values ('https://x.test/a.png')$$), 'a visitor cannot add media');
+reset role;
+
+-- The admin, through the admin role
+set role site_admin;
+select pg_temp.check((select count(*) from public.entries) = 3, 'the admin sees drafts and deleted entries too');
+insert into public.sections (slug, name, layout, position) values ('talks', 'Talks', 'grid', 3);
+select pg_temp.check((select count(*) from public.sections) = 3, 'the admin can add a section');
+update public.entries set title = 'Edited' where slug = 'draft-one';
+select pg_temp.check((select title from public.entries where slug = 'draft-one') = 'Edited', 'the admin can edit a draft');
+insert into public.media (url, alt) values ('https://x.test/cover.png', 'Cover');
+select pg_temp.check((select count(*) from public.media) = 1, 'the admin can record an uploaded image');
+reset role;
+
+-- Constraints the content contract relies on
+select pg_temp.check(pg_temp.rejected($$insert into public.sections (slug, name, layout) values ('Bad Slug', 'Bad', 'grid')$$), 'a slug must be lowercase words joined by hyphens');
+select pg_temp.check(pg_temp.rejected($$insert into public.sections (slug, name, layout) values ('gallery', 'Gallery', 'masonry')$$), 'a section layout must be grid or list');
+select pg_temp.check(pg_temp.rejected($$insert into public.entries (section, slug, status) values ('projects', 'x', 'published')$$), 'an entry status must be draft or live');
+select pg_temp.check(pg_temp.rejected($$insert into public.entries (section, slug) values ('projects', 'live-one')$$), 'two entries in one section cannot share a slug');
+select pg_temp.check(pg_temp.rejected($$insert into public.entries (section, slug) values ('nowhere', 'x')$$), 'an entry must belong to a real section');
+select pg_temp.check(pg_temp.rejected($$insert into public.entries (section, slug, source) values ('writing', 'x', 'substack')$$), 'a Substack entry must carry its original link');
+select pg_temp.check(pg_temp.rejected($$insert into public.entries (section, slug, blocks) values ('projects', 'x', '{}')$$), 'blocks must be a list');
+select pg_temp.check(pg_temp.rejected($$insert into public.media (url) values ('http://x.test/a.png')$$), 'media URLs must be https');
+select pg_temp.check(pg_temp.rejected($$delete from public.sections where slug = 'projects'$$), 'a section with entries cannot be dropped out from under them');
+
+update public.entries set updated_at = '2000-01-01', title = 'Touched' where slug = 'live-one';
+select pg_temp.check((select updated_at > '2001-01-01' from public.entries where slug = 'live-one'), 'editing an entry stamps updated_at');

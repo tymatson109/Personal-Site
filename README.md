@@ -1,6 +1,6 @@
 # Ty Matson
 
-Personal site for Ty Matson's projects and writing: Next.js on Vercel, Supabase for content and the admin login.
+Personal site for Ty Matson's projects and writing: Next.js on Vercel, Neon Postgres for content, Vercel Blob for images, GitHub sign-in for the admin.
 
 ## Run it
 
@@ -18,6 +18,7 @@ npm run dev
 | `npm run typecheck` | TypeScript with no emit |
 | `npm run lint` | ESLint |
 | `npm test` | Vitest unit tests |
+| `npm run db:test` | Migrations and row-level security checks against an empty Postgres at `DATABASE_URL` |
 
 ## Layout
 
@@ -28,6 +29,7 @@ npm run dev
 | `components/ui/` | Design tokens and shared UI |
 | `lib/` | Pure logic with tests next to it, plus clients |
 | `types/` | The shared content contract (`Entry`, `Block`, `Section`) |
-| `supabase/migrations/` | Database schema, one timestamped file per change |
+| `db/migrations/` | Database schema, one timestamped file per change |
+| `db/tests/` | Row-level security and constraint checks |
 
 Rules for working in this repo are in [AGENTS.md](AGENTS.md).
