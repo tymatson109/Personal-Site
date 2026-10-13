@@ -1,0 +1,97 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+  padding-bottom: var(--s8);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.title {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s3);
+}
+
+.toggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s4) var(--s6);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  border: 0;
+  padding: 0;
+}
+
+.status legend {
+  float: left;
+}
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: var(--btn-h);
+}
+
+.choice input {
+  accent-color: var(--accent);
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+/* Save stays in reach under the thumb however long the story gets */
+.bar {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-raised);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2) var(--s4);
+  padding: var(--s3) 0 calc(var(--s3) + var(--safe-bottom));
+  background: var(--bg);
+  border-top: var(--hairline) solid var(--line);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.note,
+.error {
+  font-size: var(--t-sm);
+  color: var(--muted);
+}
+
+.error {
+  color: var(--danger);
+}
+
+.leave {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  width: 100%;
+}

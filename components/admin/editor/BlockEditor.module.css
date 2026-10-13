@@ -1,0 +1,120 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s1);
+  padding-block: var(--s1);
+}
+
+.gutter {
+  display: flex;
+}
+
+.kind {
+  padding: var(--s1) 0;
+}
+
+.kind:hover,
+.kind[aria-expanded="true"] {
+  color: var(--accent);
+}
+
+/* 16px text keeps iPhone Safari from zooming in on focus */
+.text {
+  width: 100%;
+  font: inherit;
+  font-size: var(--t-md);
+  line-height: var(--leading-body);
+  color: var(--fg);
+  background: transparent;
+  border: 0;
+  border-left: var(--hairline) solid var(--line);
+  padding: var(--s1) var(--s3);
+  resize: none;
+  overflow: hidden;
+}
+
+.text:focus-visible {
+  outline: none;
+  border-left-color: var(--accent);
+}
+
+.block[data-type="h"] .text {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+  line-height: var(--leading-tight);
+}
+
+.block[data-type="quote"] .text {
+  font-style: italic;
+  border-left-width: var(--ring);
+}
+
+.block[data-type="code"] .text {
+  font-family: var(--mono);
+  font-size: var(--t-sm);
+  background: var(--surface);
+  border-radius: var(--r1);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.media {
+  color: var(--muted);
+  font-size: var(--t-sm);
+  padding: var(--s3);
+  border: var(--hairline) dashed var(--line);
+  border-radius: var(--r1);
+}
+
+.menu,
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s2);
+  list-style: none;
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r2);
+  background: var(--bg);
+}
+
+.menu {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.menu button,
+.options button {
+  font-size: var(--t-sm);
+  min-height: var(--btn-h-sm);
+  padding-inline: var(--s3);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r-pill);
+}
+
+.menu button[aria-selected="true"],
+.options button[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.options button:disabled {
+  opacity: var(--busy);
+}
+
+.options .danger {
+  color: var(--danger);
+}

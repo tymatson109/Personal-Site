@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { AdminFrame } from "@/components/admin/AdminFrame";
 import { EntryRows } from "@/components/admin/EntryRows";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { Button } from "@/components/ui/Button";
 import { Chip, ChipRow } from "@/components/ui/Chip";
 import { signOutAdmin } from "@/features/admin/actions";
+import { createEntry } from "@/features/admin/entry-actions";
 import { listAdminEntries } from "@/features/admin/content";
 import { requireAdmin } from "@/features/admin/session";
 import { getSections } from "@/features/content/queries";
@@ -31,6 +33,13 @@ export default async function AdminContent(props: PageProps<"/admin">) {
       note={section ? `${count} in ${names.get(section)}.` : `${count}.`}
       actions={
         <>
+          {sortedSections(sections)
+            .filter((s) => !section || s.slug === section)
+            .map((s) => (
+              <form key={s.slug} action={createEntry.bind(null, s.slug)}>
+                <SubmitButton variant="primary">{`New in ${s.name}`}</SubmitButton>
+              </form>
+            ))}
           <Button href="/" size="sm">
             View the site
           </Button>
@@ -57,7 +66,7 @@ export default async function AdminContent(props: PageProps<"/admin">) {
       {current.length > 0 ? (
         <EntryRows entries={current} sectionNames={names} />
       ) : (
-        <p className={styles.empty}>No entries yet. The editor for writing them comes next.</p>
+        <p className={styles.empty}>No entries yet. Start one with a New button above.</p>
       )}
       {deleted.length > 0 && (
         <section className={styles.deleted}>

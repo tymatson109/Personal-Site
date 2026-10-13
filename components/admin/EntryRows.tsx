@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Entry } from "@/types/entry";
+import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { deleteEntry, restoreEntry, setEntryFeatured, setEntryStatus } from "@/features/admin/entry-actions";
 import { adminMeta } from "@/lib/admin-entries";
@@ -14,6 +15,11 @@ function CurrentActions({ entry }: { entry: Entry }) {
   const live = entry.status === "live";
   return (
     <>
+      {live && (
+        <Button href={entryHref(entry)} size="sm">
+          View
+        </Button>
+      )}
       <form action={setEntryStatus.bind(null, entry.id, live ? "draft" : "live")}>
         <SubmitButton variant={live ? "outline" : "primary"}>{live ? "Unpublish" : "Publish"}</SubmitButton>
       </form>
@@ -36,12 +42,12 @@ export function EntryRows({ entries, sectionNames, deleted = false }: Props) {
         return (
           <li key={entry.id} className={styles.row}>
             <div className={styles.main}>
-              {entry.status === "live" && !deleted ? (
-                <Link className={styles.title} href={entryHref(entry)}>
+              {deleted ? (
+                <span className={styles.title}>{title}</span>
+              ) : (
+                <Link className={styles.title} href={`/admin/entries/${entry.id}`}>
                   {title}
                 </Link>
-              ) : (
-                <span className={styles.title}>{title}</span>
               )}
               <p className={styles.meta}>
                 {adminMeta(entry, sectionNames.get(entry.section) ?? entry.section).map((part) => (
