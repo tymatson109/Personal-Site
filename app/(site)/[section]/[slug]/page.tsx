@@ -5,8 +5,6 @@ import { ProjectPage } from "@/components/entry/ProjectPage";
 import { getEntries, getSections } from "@/features/content/queries";
 import { findEntry, liveEntries } from "@/lib/content";
 
-export const dynamicParams = false;
-
 export async function generateStaticParams() {
   return liveEntries(await getEntries()).map((e) => ({ section: e.section, slug: e.slug }));
 }

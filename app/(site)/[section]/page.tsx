@@ -7,8 +7,6 @@ import { getEntries, getSections } from "@/features/content/queries";
 import { liveEntries } from "@/lib/content";
 import styles from "./page.module.css";
 
-export const dynamicParams = false;
-
 export async function generateStaticParams() {
   return (await getSections()).map((s) => ({ section: s.slug }));
 }

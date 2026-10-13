@@ -5,6 +5,9 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { getSections } from "@/features/content/queries";
 import { navLinks } from "@/lib/nav";
 
+// Pages are static; publishing refreshes them, and this hourly pass catches anything changed outside the admin
+export const revalidate = 3600;
+
 /** Public pages share the header, footer and motion; the admin gets its own layout later. */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   return (

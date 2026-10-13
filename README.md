@@ -6,8 +6,11 @@ Personal site for Ty Matson's projects and writing: Next.js on Vercel, Neon Post
 
 ```sh
 npm install
+vercel env pull .env.local   # DATABASE_URL for the Neon database; never commit it
 npm run dev
 ```
+
+Pages read the database while building and running, so `npm run dev` and `npm run build` need `DATABASE_URL`. Any Postgres with `npm run db:migrate` applied works too.
 
 ## Scripts
 
@@ -18,6 +21,7 @@ npm run dev
 | `npm run typecheck` | TypeScript with no emit |
 | `npm run lint` | ESLint |
 | `npm test` | Vitest unit tests |
+| `npm run db:migrate` | Applies every migration to the empty Postgres at `DATABASE_URL` |
 | `npm run db:test` | Migrations and row-level security checks against an empty Postgres at `DATABASE_URL` |
 
 ## Layout
