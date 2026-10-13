@@ -14,6 +14,15 @@ export function mailto(address: string): string {
   return `mailto:${address}`;
 }
 
+function substackPage(base: string, page: string): string {
+  return `${base.replace(/\/$/, "")}/${page}`;
+}
+
 export function substackSubscribe(base: string): string {
-  return `${base.replace(/\/$/, "")}/subscribe`;
+  return substackPage(base, "subscribe");
+}
+
+/** The RSS feed the sync reads posts from. */
+export function substackFeed(base: string): string {
+  return substackPage(base, "feed");
 }

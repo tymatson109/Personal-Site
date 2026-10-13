@@ -1,6 +1,7 @@
 import "server-only";
 import { Pool, type PoolClient } from "pg";
 import type { Admin } from "@/features/admin/session";
+import type { ScheduledRun } from "@/features/cron/session";
 
 let pool: Pool | undefined;
 
@@ -15,7 +16,7 @@ function getPool(): Pool {
   return pool;
 }
 
-type Role = "site_reader" | "site_admin";
+type Role = "site_reader" | "site_admin" | "site_sync";
 
 async function inTransaction<T>(role: Role, readOnly: boolean, work: (client: PoolClient) => Promise<T>): Promise<T> {
   const client = await getPool().connect();
@@ -41,4 +42,9 @@ export function asReader<T>(work: (client: PoolClient) => Promise<T>): Promise<T
 /** Runs work as site_admin; taking the Admin from requireAdmin() means no write runs before the session check. */
 export function asAdmin<T>(_admin: Admin, work: (client: PoolClient) => Promise<T>): Promise<T> {
   return inTransaction("site_admin", false, work);
+}
+
+/** Runs work as site_sync, which can only add and refresh Substack posts; the ScheduledRun proves the cron secret was checked. */
+export function asSync<T>(_run: ScheduledRun, work: (client: PoolClient) => Promise<T>): Promise<T> {
+  return inTransaction("site_sync", false, work);
 }
