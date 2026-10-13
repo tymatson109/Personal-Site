@@ -1,12 +1,11 @@
 "use server";
 
-import { randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { ENTRY_STATUSES } from "@/types/entry";
+import { ENTRY_STATUSES, type EntryStatus } from "@/types/entry";
 import { isEntryId, RESTORE_DAYS } from "@/lib/admin-entries";
 import { asAdmin } from "@/lib/db";
 import { parseEntryInput } from "@/lib/entry-input";
+import { freeSlug, newEntryInput, toNewEntryDraft } from "@/lib/new-entry";
 import { isSlug } from "@/lib/slug";
 import { requireAdmin } from "./session";
 
@@ -57,20 +56,36 @@ export async function restoreEntry(id: string) {
   );
 }
 
-/** Starts an untitled draft in a section and opens it in the editor. */
-export async function createEntry(section: string) {
+export type CreateResult = { ok: true; id: string } | { ok: false; error: string };
+
+/** Creates an entry from the new-entry flow's answers, giving it a free address in its section and today's date. */
+export async function createEntry(section: string, value: unknown, status: EntryStatus): Promise<CreateResult> {
   const admin = await requireAdmin();
-  if (!isSlug(section)) throw new Error("Unknown section");
-  const slug = `untitled-${randomBytes(3).toString("hex")}`;
-  const { rows } = await asAdmin(admin, (db) =>
-    db.query(
-      `insert into public.entries (section, slug)
-       select slug, $2 from public.sections where slug = $1 and deleted_at is null returning id`,
-      [section, slug],
-    ),
-  );
-  if (!rows.length) throw new Error("Unknown section");
-  redirect(`/admin/entries/${rows[0].id}`);
+  if (!isSlug(section)) return { ok: false, error: "That section no longer exists." };
+  try {
+    return await asAdmin(admin, async (db) => {
+      const sections = await db.query(`select slug from public.sections where deleted_at is null`);
+      // Removed entries keep their address, so they count as taken too
+      const taken = await db.query(`select slug from public.entries where section = $1`, [section]);
+      const draft = toNewEntryDraft(value);
+      if (!draft) return { ok: false, error: "Nothing to save." } as const;
+      const place = { section, slug: freeSlug(draft.title, taken.rows.map((r) => String(r.slug))), date: new Date().toISOString().slice(0, 10) };
+      const parsed = parseEntryInput(newEntryInput(draft, place, status), sections.rows.map((r) => String(r.slug)));
+      if (!parsed.ok) return parsed;
+      const e = parsed.input;
+      const { rows } = await db.query(
+        `insert into public.entries (section, slug, title, summary, date, tags, featured, status, quote, facts, blocks)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning id`,
+        [e.section, e.slug, e.title, e.summary, e.date, e.tags, e.featured, e.status, e.quote, JSON.stringify(e.facts), JSON.stringify(e.blocks)],
+      );
+      refreshSite();
+      return { ok: true, id: String(rows[0].id) } as const;
+    });
+  } catch (error) {
+    if (pgCode(error) === UNIQUE_VIOLATION) return { ok: false, error: "Another entry took that address just now. Try again." };
+    if (pgCode(error) === FOREIGN_KEY_VIOLATION) return { ok: false, error: "That section no longer exists." };
+    throw error;
+  }
 }
 
 /** Saves everything the editor holds; problems come back as a message instead of an error page. */

@@ -130,6 +130,7 @@
   --stop-media-h-narrow: 44svh;
   --tour-seg-w: 28px;
   --tour-seg-h: 3px;
+  --progress-h: 4px;
   --cue-h: 40px;
   /* Breakpoints can't be variables in media queries; these are the only two, checked by tokens.test.ts:
      narrow 760px stacks two-column layouts; 860px or no hover swaps hover previews for tap-to-expand */
