@@ -1,0 +1,33 @@
+.nav {
+  display: flex;
+  gap: var(--s4);
+}
+
+.link {
+  position: relative;
+  padding-block: var(--s2);
+  font-size: var(--t-sm);
+  color: var(--muted);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.link:hover,
+.link[aria-current="page"] {
+  color: var(--fg);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--ring);
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+
+.link[aria-current="page"]::after {
+  transform: scaleX(1);
+}

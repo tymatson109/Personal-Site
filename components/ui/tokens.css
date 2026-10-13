@@ -1,0 +1,114 @@
+/* The only place design values live; components read these variables and never hardcode a value */
+:root {
+  /* Color */
+  --bg: #fbfbfd;
+  --surface: #f1f2f6;
+  --fg: #0d0e12;
+  --muted: #5d6170;
+  --line: #e2e4ea;
+  --accent: #1f4bff;
+  --accent-soft: rgba(31, 75, 255, 0.1);
+  --danger: #c4322b;
+  --on-accent: #ffffff;
+  --head-glass: color-mix(in srgb, var(--bg) 86%, transparent);
+
+  /* Phone mockups show the app itself, which is light, so they keep fixed colors in both themes */
+  --phone-body: #111318;
+  --phone-rim: #2a2d36;
+  --app-bg: #f6f7fa;
+  --app-fg: #0d0e12;
+  --app-muted: #6b6f7c;
+  --app-card: #ffffff;
+  --app-line: #dfe2e8;
+  --accent-fixed: #1f4bff;
+
+  /* The hero backdrop is dark in both themes, so text on it stays light */
+  --image-bg: #0b0d14;
+  --on-image: #ffffff;
+  --on-image-muted: rgba(255, 255, 255, 0.72);
+  --on-image-line: rgba(255, 255, 255, 0.38);
+  --on-image-soft: rgba(255, 255, 255, 0.12);
+  --scrim: rgba(5, 7, 12, 0.72);
+
+  /* Type */
+  --sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --t-xs: 12px;
+  --t-sm: 14px;
+  --t-md: 16px;
+  --t-lg: 20px;
+  --t-xl: 32px;
+  --t-2xl: clamp(40px, 7vw, 76px);
+  --t-hero: clamp(48px, 10vw, 120px);
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-bold: 600;
+  --leading-body: 1.6;
+  --leading-tight: 1.05;
+  --track-label: 0.04em;
+  --track-tight: -0.01em;
+  --track-display: -0.035em;
+
+  /* Space */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 72px;
+  --s9: 112px;
+
+  /* Shape */
+  --r1: 6px;
+  --r2: 12px;
+  --r-pill: 999px;
+  --hairline: 1px;
+  --ring: 2px;
+  --ring-offset: 3px;
+  --dot: 9px;
+  --blur-glass: 10px;
+
+  /* Layout */
+  --col: 1040px;
+  --gutter: var(--s4);
+  --head-h: 60px;
+  --screen-h: 100svh;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Motion */
+  --dur: 420ms;
+  --dur-fast: 200ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --rise: 8px;
+
+  /* Layers */
+  --z-head: 20;
+  --z-overlay: 40;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0c10;
+    --surface: #15171d;
+    --fg: #eef0f5;
+    --muted: #9195a3;
+    --line: #242731;
+    --accent: #6b8bff;
+    --accent-soft: rgba(107, 139, 255, 0.14);
+    --danger: #ff6b62;
+    --on-accent: #0b0c10;
+    color-scheme: dark;
+  }
+}
+
+/* Reduced motion zeroes every duration, so components never need their own check for CSS motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+    --dur-fast: 0ms;
+    --rise: 0px;
+  }
+}

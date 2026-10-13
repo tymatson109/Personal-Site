@@ -1,0 +1,34 @@
+.head {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-head);
+  padding-top: var(--safe-top);
+  background: var(--head-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border-bottom: var(--hairline) solid var(--line);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  height: var(--head-h);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--track-tight);
+  white-space: nowrap;
+}
+
+.logo i {
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: var(--r-pill);
+  background: var(--accent);
+}
