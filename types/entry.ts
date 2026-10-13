@@ -39,3 +39,10 @@ export type Entry = {
   facts: [label: string, value: string][];
   blocks: Block[];
 };
+
+/** A one-off page such as About: a title and the same blocks an entry uses. */
+export type Page = {
+  slug: string;
+  title: string;
+  blocks: Block[];
+};

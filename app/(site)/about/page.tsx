@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { EntryBody } from "@/components/entry/EntryBody";
 import { Container } from "@/components/ui/Container";
 import { Label } from "@/components/ui/Label";
 import motion from "@/components/ui/motion.module.css";
 import { RiseWords } from "@/components/ui/RiseWords";
+import { getPage } from "@/features/content/queries";
 import { mailto, SITE_LINKS } from "@/lib/links";
 import styles from "./page.module.css";
 
@@ -16,8 +18,9 @@ const CONTACTS: Contact[] = [
   ...(SITE_LINKS.linkedin ? [{ kind: "Work", name: "LinkedIn", href: SITE_LINKS.linkedin, shown: "LinkedIn" }] : []),
 ];
 
-// Sample text until About becomes an editable page in the admin
-export default function AboutPage() {
+// The story under the greeting is the About page's blocks, edited in the admin
+export default async function AboutPage() {
+  const page = await getPage("about");
   return (
     <Container>
       <article className={styles.article}>
@@ -28,7 +31,7 @@ export default function AboutPage() {
           </h1>
           <p className={styles.lede}>I build iPhone apps and the web tools around them. This site holds everything I make and write.</p>
         </header>
-        <p>Sample about text. It becomes editable from the admin like any other page.</p>
+        {page && page.blocks.length > 0 && <EntryBody blocks={page.blocks} />}
         <section id="contact" className={styles.contact} data-reveal>
           <h2 className={styles.subtitle}>Get in touch</h2>
           <ul className={styles.rows}>

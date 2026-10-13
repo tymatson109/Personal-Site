@@ -25,8 +25,8 @@ Next.js (App Router) on Vercel. Content lives in Neon Postgres, images in Vercel
 - **Server authority.** Every admin write goes through a server action or route that checks the session and the admin allowlist. The browser never holds a database URL or any secret. Only `NEXT_PUBLIC_*` public values reach the client.
 - **Row-level security on every table.** The site never queries as the database owner. Public pages run as `site_reader`, which sees published content only; admin actions run as `site_admin`, and only after the server has checked the session. Both are enforced in the database by RLS and checked by `db/tests/rls.sql`.
 - **Untrusted input stays untrusted.** Substack feed HTML and editor content are sanitized before rendering. No `dangerouslySetInnerHTML` on unsanitized strings.
-- **Migrations:** a new timestamped file in `db/migrations/` every time, never edit an applied one, RLS and `site_reader`/`site_admin` grants on every new table, a check for them in `db/tests/rls.sql`, count rows before anything destructive and say the number.
-- **Pages read content only through `features/content/queries.ts`**, so swapping sample data for the database is one file.
+- **Migrations:** a new timestamped file in `db/migrations/` every time, never edit an applied one, RLS and `site_reader`/`site_admin` grants on every new table, a check for them in `db/tests/rls.sql`, count rows before anything destructive and say the number. Production has no migration runner yet: Ty pastes each new migration into Neon's SQL Editor, so a PR with a migration says so at the top.
+- **Pages read content only through `features/content/queries.ts`**, which runs every query as `site_reader` through `asReader` in `lib/db.ts`. Rows become the contract in `lib/rows.ts`, which drops anything malformed.
 - **One module builds outbound links:** `lib/links.ts` (GitHub, LinkedIn, email, Substack). A link set to `null` stays hidden until it is filled in.
 
 ## Design
@@ -53,6 +53,6 @@ UI follows the `app-ui-design-audit` skill: the one home for Ty's design rules. 
 1. `npm run typecheck`
 2. `npm run lint`
 3. `npm test`
-4. `npm run build`
+4. `npm run build` (needs `DATABASE_URL`; CI builds against a freshly migrated Postgres)
 5. `npm run db:test` when `db/` changed (needs `DATABASE_URL` to an empty Postgres; CI runs it on every PR)
 6. Read your own diff against this file, then fill in the PR template, including Risk and Rollback.

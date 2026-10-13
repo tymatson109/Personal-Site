@@ -10,20 +10,6 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build
-
-  database:
-    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:16
@@ -39,13 +25,31 @@ jobs:
           --health-retries 10
     steps:
       - uses: actions/checkout@v4
-      # A non-superuser owner, like Neon's neondb_owner, so row-level security applies as it does in production
-      - name: Create the database owner
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # A non-superuser owner, like Neon's neondb_owner, so row-level security applies as it does in production.
+      # site_test is for the database checks; site holds the migrated, empty schema the build reads.
+      - name: Create the databases
         run: |
           psql -h localhost -U postgres -v ON_ERROR_STOP=1 \
             -c "create role site_owner login createrole" \
-            -c "create database site owner site_owner"
-          psql -h localhost -U postgres -d site -v ON_ERROR_STOP=1 -c "alter schema public owner to site_owner"
-      - run: scripts/db-test.sh
+            -c "create database site owner site_owner" \
+            -c "create database site_test owner site_owner"
+          for db in site site_test; do
+            psql -h localhost -U postgres -d "$db" -v ON_ERROR_STOP=1 -c "alter schema public owner to site_owner"
+          done
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run db:test
+        env:
+          DATABASE_URL: postgresql://site_owner@localhost:5432/site_test
+      - run: npm run db:migrate
+        env:
+          DATABASE_URL: postgresql://site_owner@localhost:5432/site
+      - run: npm run build
         env:
           DATABASE_URL: postgresql://site_owner@localhost:5432/site
