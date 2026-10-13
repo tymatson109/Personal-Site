@@ -57,6 +57,22 @@ insert into public.media (url, alt) values ('https://x.test/cover.png', 'Cover')
 select pg_temp.check((select count(*) from public.media) = 1, 'the admin can record an uploaded image');
 reset role;
 
+-- The Substack sync, through the sync role: it adds and refreshes Substack posts and touches nothing else
+set role site_sync;
+select pg_temp.check((select count(*) from public.entries) = 3, 'the sync sees every address, drafts and removed entries included');
+insert into public.entries (section, slug, title, status, source, source_url) values ('writing', 'synced', 'Synced', 'live', 'substack', 'https://x.substack.com/p/synced');
+update public.entries set title = 'Refreshed' where source_url = 'https://x.substack.com/p/synced';
+select pg_temp.check((select title from public.entries where slug = 'synced') = 'Refreshed', 'the sync can add a Substack post and refresh its words');
+select pg_temp.check(pg_temp.blocked($$insert into public.entries (section, slug, title) values ('writing', 'own', 'Own')$$), 'the sync cannot add an entry of the site''s own');
+update public.entries set title = 'Hijacked' where slug = 'live-one';
+select pg_temp.check((select count(*) from public.entries where title = 'Hijacked') = 0, 'the sync cannot change an entry of the site''s own');
+select pg_temp.check(pg_temp.blocked($$update public.entries set status = 'draft' where slug = 'synced'$$), 'the sync cannot unpublish a post');
+select pg_temp.check(pg_temp.blocked($$update public.entries set quote = 'x' where slug = 'synced'$$), 'the sync cannot overwrite the highlight Ty picked');
+select pg_temp.check(pg_temp.blocked($$delete from public.entries where slug = 'synced'$$), 'the sync cannot delete posts');
+select pg_temp.check(pg_temp.blocked($$insert into public.sections (slug, name, layout) values ('feed', 'Feed', 'list')$$), 'the sync cannot add a section');
+reset role;
+delete from public.entries where slug = 'synced';
+
 -- Constraints the content contract relies on
 select pg_temp.check(pg_temp.rejected($$insert into public.sections (slug, name, layout) values ('Bad Slug', 'Bad', 'grid')$$), 'a slug must be lowercase words joined by hyphens');
 select pg_temp.check(pg_temp.rejected($$insert into public.sections (slug, name, layout) values ('gallery', 'Gallery', 'masonry')$$), 'a section layout must be grid or list');

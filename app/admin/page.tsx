@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { AdminFrame } from "@/components/admin/AdminFrame";
 import { EntryRows } from "@/components/admin/EntryRows";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { Button } from "@/components/ui/Button";
 import { Chip, ChipRow } from "@/components/ui/Chip";
 import { signOutAdmin } from "@/features/admin/actions";
 import { listAdminEntries } from "@/features/admin/content";
 import { requireAdmin } from "@/features/admin/session";
 import { getSections } from "@/features/content/queries";
+import { syncSubstackNow } from "@/features/substack/actions";
 import { adminView, RESTORE_DAYS, sectionFilter } from "@/lib/admin-entries";
 import { sortedSections } from "@/lib/content";
+import { SUBSTACK_SECTION } from "@/lib/links";
 import { entryCount } from "@/lib/sections";
 import styles from "./page.module.css";
 
@@ -39,6 +42,11 @@ export default async function AdminContent(props: PageProps<"/admin">) {
                 {`New in ${s.name}`}
               </Button>
             ))}
+          {(!section || section === SUBSTACK_SECTION) && (
+            <form action={syncSubstackNow}>
+              <SubmitButton>Sync Substack</SubmitButton>
+            </form>
+          )}
           <Button href="/admin/sections" size="sm">
             Sections
           </Button>
