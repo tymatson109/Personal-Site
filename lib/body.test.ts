@@ -5,7 +5,11 @@ import { bodyPieces } from "./body";
 const p1: Block = { type: "p", text: "One" };
 const p2: Block = { type: "p", text: "Two" };
 const demo: Block = { type: "demo", text: "app" };
-const video: Block = { type: "video", text: "" };
+const video: Block = {
+  type: "video",
+  text: "",
+  media: [{ url: "https://a.public.blob.vercel-storage.com/media/r.mp4", alt: "", width: 9, height: 19 }],
+};
 
 describe("bodyPieces", () => {
   it("keeps text blocks in order", () => {
@@ -24,6 +28,10 @@ describe("bodyPieces", () => {
 
   it("skips the block already shown at the top of the page", () => {
     expect(bodyPieces([p1, demo, p2], { skip: demo }).map((x) => x.kind)).toEqual(["block", "block"]);
+  });
+
+  it("leaves out an image that has no file yet", () => {
+    expect(bodyPieces([p1, { type: "image", text: "Caption" }, p2]).map((x) => x.kind)).toEqual(["block", "block"]);
   });
 
   it("gives every piece a distinct key", () => {

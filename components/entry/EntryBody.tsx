@@ -1,6 +1,6 @@
 import type { Block } from "@/types/entry";
 import { HighlightQuote } from "@/components/entries/HighlightQuote";
-import { MediaSlot } from "@/components/media/MediaSlot";
+import { MediaFigure } from "@/components/media/MediaFigure";
 import { PhoneFrame } from "@/components/media/PhoneFrame";
 import { bodyPieces } from "@/lib/body";
 import styles from "./EntryBody.module.css";
@@ -22,11 +22,7 @@ function BlockView({ block }: { block: Block }) {
       return <blockquote className={styles.quote}>{block.text}</blockquote>;
     case "image":
     case "gallery":
-      return (
-        <div data-reveal>
-          <MediaSlot label={block.type === "image" ? "Image" : "Gallery"} />
-        </div>
-      );
+      return <MediaFigure block={block} />;
     default:
       return <p>{block.text}</p>;
   }

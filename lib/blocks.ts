@@ -1,4 +1,5 @@
 import type { Block, BlockType } from "@/types/entry";
+import { isUploadBlockType } from "./media";
 
 export const MEDIA_BLOCKS: readonly BlockType[] = ["image", "gallery", "demo", "video"];
 
@@ -9,6 +10,11 @@ export function isPhoneBlock(block: Block): boolean {
 
 export function isMediaBlock(block: Block): boolean {
   return MEDIA_BLOCKS.includes(block.type);
+}
+
+/** An image, gallery or recording appears on the page only once it has a file; until then it lives only in the editor. */
+export function isShown(block: Block): boolean {
+  return !isUploadBlockType(block.type) || Boolean(block.media?.length);
 }
 
 /** Blocks the editor writes as text; media blocks get their own controls. */
@@ -30,10 +36,14 @@ export function isTextBlock(block: Block): block is Block & { type: TextBlockTyp
   return TEXT_BLOCKS.some((t) => t === block.type);
 }
 
+/** What a "/" command can turn a block into: the text kinds, then the kinds that hold uploaded files. */
+export const MENU_BLOCKS = [...TEXT_BLOCKS, "image", "gallery", "video"] as const satisfies readonly BlockType[];
+export type MenuBlockType = (typeof MENU_BLOCKS)[number];
+
 /** The block types a "/" command offers, narrowed by what follows the slash. */
-export function blockMenu(command: string): TextBlockType[] {
+export function blockMenu(command: string): MenuBlockType[] {
   const query = command.replace(/^\//, "").trim().toLowerCase();
-  return TEXT_BLOCKS.filter((t) => BLOCK_LABELS[t].toLowerCase().startsWith(query));
+  return MENU_BLOCKS.filter((t) => BLOCK_LABELS[t].toLowerCase().startsWith(query));
 }
 
 /** Text that is a "/" command in progress: a slash and at most one word, nothing else. */

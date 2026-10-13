@@ -12,7 +12,7 @@ export type EntryInput = Pick<
 
 export type InputResult = { ok: true; input: EntryInput } | { ok: false; error: string };
 
-const LIMITS = { title: 200, summary: 500, quote: 500, tag: 40, tags: 12, facts: 12, blocks: 500, text: 20000 };
+const LIMITS = { title: 200, summary: 500, quote: 500, tag: 40, tags: 12, facts: 12, blocks: 500, text: 20000, alt: 500 };
 
 function text(value: unknown, max: number): string | null {
   return typeof value === "string" && value.length <= max ? value.trim() : null;
@@ -63,6 +63,9 @@ export function parseEntryInput(value: unknown, sections: readonly string[]): In
   const blocks = keptBlocks(toBlocks(v.blocks));
   if (blocks.length > LIMITS.blocks || blocks.some((b) => b.text.length > LIMITS.text)) {
     return { ok: false, error: "The story is too long to save in one entry." };
+  }
+  if (blocks.some((b) => b.media?.some((m) => m.alt.length > LIMITS.alt))) {
+    return { ok: false, error: `Each image description can be at most ${LIMITS.alt} characters.` };
   }
 
   return {

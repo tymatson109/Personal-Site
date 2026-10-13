@@ -27,6 +27,7 @@ Next.js (App Router) on Vercel. Content lives in Neon Postgres, images in Vercel
 - **Untrusted input stays untrusted.** Substack feed HTML and editor content are sanitized before rendering. No `dangerouslySetInnerHTML` on unsanitized strings.
 - **Migrations:** a new timestamped file in `db/migrations/` every time, never edit an applied one, RLS and `site_reader`/`site_admin` grants on every new table, a check for them in `db/tests/rls.sql`, count rows before anything destructive and say the number. Production has no migration runner yet: Ty pastes each new migration into Neon's SQL Editor, so a PR with a migration says so at the top.
 - **Pages read content only through `features/content/queries.ts`**, which runs every query as `site_reader` through `asReader` in `lib/db.ts`. Rows become the contract in `lib/rows.ts`, which drops anything malformed.
+- **Uploads:** photos and recordings go from the browser straight to Vercel Blob through `app/api/admin/upload`, which hands out a token only after `requireAdmin()`. Blocks keep files in `media`, and `lib/media.ts` decides which URLs count as ours; anything else is dropped when read.
 - **One module builds outbound links:** `lib/links.ts` (GitHub, LinkedIn, email, Substack). A link set to `null` stays hidden until it is filled in.
 
 ## Design

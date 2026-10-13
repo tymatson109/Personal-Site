@@ -1,8 +1,8 @@
 import type { Entry, Section } from "@/types/entry";
 import { Container } from "@/components/ui/Container";
 import { Label } from "@/components/ui/Label";
-import { MediaSlot } from "@/components/media/MediaSlot";
 import { PhoneFrame } from "@/components/media/PhoneFrame";
+import { Photo } from "@/components/media/Photo";
 import { entryMedia } from "@/lib/content";
 import { formatDate } from "@/lib/format-date";
 import { BackLink } from "./BackLink";
@@ -45,7 +45,7 @@ export function ProjectPage({ entry, section }: { entry: Entry; section: Section
         </header>
         {media.kind === "image" && (
           <div className={styles.cover}>
-            <MediaSlot label={`Cover image of ${entry.title}`} />
+            <Photo media={media.image} sizes="(max-width: 1040px) 100vw, 1040px" eager />
           </div>
         )}
         <div className={styles.story}>

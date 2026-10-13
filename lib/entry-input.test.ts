@@ -83,6 +83,18 @@ describe("parseEntryInput", () => {
     expect(errorFor({ blocks: [{ type: "p", text: "x".repeat(20001) }] })).toMatch(/too long/);
   });
 
+  it("keeps an image block's file and caption, and an empty upload block so it can be filled later", () => {
+    const photo = { url: "https://a.public.blob.vercel-storage.com/media/x.jpg", alt: "A desk", width: 4, height: 3 };
+    const blocks = [{ type: "image", text: "Caption", media: [photo] }, { type: "gallery", text: "" }];
+    const result = parseEntryInput({ ...VALID, blocks }, SECTIONS);
+    expect(result.ok && result.input.blocks).toEqual(blocks);
+  });
+
+  it("rejects an image description that is too long", () => {
+    const photo = { url: "https://a.public.blob.vercel-storage.com/media/x.jpg", alt: "x".repeat(501), width: 4, height: 3 };
+    expect(errorFor({ blocks: [{ type: "image", text: "", media: [photo] }] })).toMatch(/description/);
+  });
+
   it("rejects something that isn't an entry at all", () => {
     expect(parseEntryInput(null, SECTIONS)).toEqual({ ok: false, error: "Nothing to save." });
   });

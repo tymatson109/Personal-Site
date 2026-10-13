@@ -1,0 +1,98 @@
+.media {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: var(--s3);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r2);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: var(--thumb) minmax(0, 1fr);
+  gap: var(--s3);
+  align-items: start;
+}
+
+.thumb {
+  width: var(--thumb);
+  aspect-ratio: 1;
+  border-radius: var(--r1);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.file {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+
+.hint {
+  font-size: var(--t-xs);
+  color: var(--muted);
+}
+
+.row {
+  display: flex;
+  gap: var(--s4);
+}
+
+.remove:hover {
+  color: var(--danger);
+}
+
+/* The picker looks like a button; the real file input covers it invisibly, so a tap opens the phone's own picker */
+.pick {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  align-self: flex-start;
+  min-height: var(--btn-h);
+  padding-inline: var(--s4);
+  font-size: var(--t-sm);
+  border: var(--hairline) dashed var(--line);
+  border-radius: var(--r-pill);
+}
+
+.pick:hover,
+.pick:focus-within {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.progress {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: var(--track-label);
+  color: var(--accent);
+}
+
+.error {
+  font-size: var(--t-sm);
+  color: var(--danger);
+}

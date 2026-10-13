@@ -11,11 +11,11 @@ const KIND: Record<"demo" | "video", { title: string; sub: string }> = {
 
 /**
  * A phone frame for an app's live demo or screen recording.
- * A recording plays when its block holds a video URL; demos are wired to the app's web build in PR 11, so until then the screen is a labeled slot.
+ * A recording plays its uploaded file; demos are wired to the app's web build in PR 11, so until then the screen is a labeled slot.
  */
 export function PhoneFrame({ block, caption = true, fitHeight }: Props) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
-  const src = block.type === "video" && /^(https:\/\/|\/)/.test(block.text) ? block.text : null;
+  const src = block.type === "video" ? block.media?.[0]?.url : undefined;
   const frame = (
     <div className={fitHeight ? `${styles.phone} ${styles.fitHeight}` : styles.phone}>
       <div className={styles.screen}>

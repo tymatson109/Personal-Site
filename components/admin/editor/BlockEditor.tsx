@@ -3,29 +3,38 @@
 import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent } from "react";
 import type { Block } from "@/types/entry";
 import { Label } from "@/components/ui/Label";
-import { BLOCK_LABELS, blockMenu, isSlashCommand, isTextBlock, TEXT_BLOCKS, type TextBlockType } from "@/lib/blocks";
+import { BLOCK_LABELS, blockMenu, isSlashCommand, isTextBlock, TEXT_BLOCKS, type MenuBlockType, type TextBlockType } from "@/lib/blocks";
+import { isUploadBlockType } from "@/lib/media";
 import { insertAt, moveItem, removeAt, replaceAt } from "@/lib/list-ops";
 import { looksLikeMarkdown, markdownToBlocks } from "@/lib/markdown";
 import { AutoTextarea } from "./AutoTextarea";
+import { MediaEditor, type BlockUpdate } from "./MediaEditor";
 import styles from "./BlockEditor.module.css";
 import controls from "./controls.module.css";
 
 /** A block with a key that survives reordering, so React keeps each textarea's focus and caret. */
 export type KeyedBlock = { key: string; block: Block };
 
-type Props = { blocks: KeyedBlock[]; onChange: (blocks: KeyedBlock[]) => void; newKey: () => string };
+type Props = {
+  blocks: KeyedBlock[];
+  onChange: (blocks: KeyedBlock[]) => void;
+  /** Changes one block by key against the latest state, for uploads that finish after other edits */
+  update: (key: string) => BlockUpdate;
+  newKey: () => string;
+  onUploading: (busy: boolean) => void;
+};
 
 type Focus = { key: string; caret: number };
 
 const PLACEHOLDER: Record<TextBlockType, string> = {
-  p: "Write, or type / for a heading, quote or code",
+  p: "Write, or type / for a heading, quote, code or photo",
   h: "Heading",
   quote: "Quote",
   code: "Code",
 };
 
 /** The story as a list of blocks: Enter starts a new block, / changes its type, pasted Markdown becomes blocks. */
-export function BlockEditor({ blocks, onChange, newKey }: Props) {
+export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: Props) {
   const inputs = useRef(new Map<string, HTMLTextAreaElement>());
   const pendingFocus = useRef<Focus | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -46,7 +55,7 @@ export function BlockEditor({ blocks, onChange, newKey }: Props) {
 
   const keyed = (block: Block): KeyedBlock => ({ key: newKey(), block });
   const setText = (i: number, text: string) => onChange(replaceAt(blocks, i, { ...blocks[i], block: { ...blocks[i].block, text } }));
-  const setType = (i: number, type: TextBlockType, clear: boolean) => {
+  const setType = (i: number, type: MenuBlockType, clear: boolean) => {
     onChange(replaceAt(blocks, i, { ...blocks[i], block: { type, text: clear ? "" : blocks[i].block.text } }));
     setOpenMenu(null);
     setFocus({ key: blocks[i].key, caret: clear ? 0 : blocks[i].block.text.length });
@@ -145,9 +154,11 @@ export function BlockEditor({ blocks, onChange, newKey }: Props) {
                 onKeyDown={(e) => onKeyDown(i, e)}
                 onPaste={(e) => onPaste(i, e)}
               />
+            ) : isUploadBlockType(block.type) ? (
+              <MediaEditor block={{ ...block, type: block.type }} update={update(key)} onUploading={onUploading} />
             ) : (
               <p className={styles.media}>
-                <Label>{BLOCK_LABELS[block.type]}</Label> Shown on the page as it is. Editing media arrives with image uploads.
+                <Label>{BLOCK_LABELS[block.type]}</Label> Shown on the page as it is. Live demos are set up with the app demos.
               </p>
             )}
             {slash.length > 0 && (

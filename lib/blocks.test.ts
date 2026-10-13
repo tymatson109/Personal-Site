@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { blockMenu, isMediaBlock, isPhoneBlock, isSlashCommand, isTextBlock } from "./blocks";
+import { blockMenu, isMediaBlock, isPhoneBlock, isShown, isSlashCommand, isTextBlock } from "./blocks";
 
 describe("block kinds", () => {
   it("puts demos and recordings in a phone", () => {
@@ -14,9 +14,29 @@ describe("block kinds", () => {
   });
 });
 
+describe("isShown", () => {
+  const photo = { url: "https://a.public.blob.vercel-storage.com/media/x.jpg", alt: "", width: 4, height: 3 };
+
+  it("shows text blocks and demos as they are", () => {
+    expect(isShown({ type: "p", text: "" })).toBe(true);
+    expect(isShown({ type: "demo", text: "app" })).toBe(true);
+  });
+
+  it("shows an image, gallery or recording only once it has a file", () => {
+    expect(isShown({ type: "gallery", text: "Trip" })).toBe(false);
+    expect(isShown({ type: "gallery", text: "Trip", media: [photo] })).toBe(true);
+    expect(isShown({ type: "video", text: "", media: [] })).toBe(false);
+  });
+});
+
 describe("blockMenu", () => {
-  it("offers every text block for a bare slash", () => {
-    expect(blockMenu("/")).toEqual(["p", "h", "quote", "code"]);
+  it("offers every text block and then every upload block for a bare slash", () => {
+    expect(blockMenu("/")).toEqual(["p", "h", "quote", "code", "image", "gallery", "video"]);
+  });
+
+  it("finds the upload blocks by name", () => {
+    expect(blockMenu("/im")).toEqual(["image"]);
+    expect(blockMenu("/phone")).toEqual(["video"]);
   });
 
   it("narrows by the start of the block's name, ignoring case", () => {

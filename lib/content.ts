@@ -1,5 +1,5 @@
-import type { Block, Entry, Section } from "@/types/entry";
-import { isPhoneBlock } from "./blocks";
+import type { Block, Entry, Media, Section } from "@/types/entry";
+import { isPhoneBlock, isShown } from "./blocks";
 
 /** Newest first; ISO dates sort as strings. */
 function byDateDesc(a: Entry, b: Entry) {
@@ -28,15 +28,17 @@ export function findEntry(entries: readonly Entry[], section: string, slug: stri
 
 export type EntryMedia =
   | { kind: "phone"; block: Block }
-  | { kind: "image"; block: Block }
+  | { kind: "image"; block: Block; image: Media }
   | { kind: "type" };
 
 /** What shows an entry: its app in a phone, its image, or its name set in type. */
 export function entryMedia(entry: Entry): EntryMedia {
-  const phone = entry.blocks.find((b) => b.type === "demo") ?? entry.blocks.find(isPhoneBlock);
+  const shown = entry.blocks.filter(isShown);
+  const phone = shown.find((b) => b.type === "demo") ?? shown.find(isPhoneBlock);
   if (phone) return { kind: "phone", block: phone };
-  const image = entry.blocks.find((b) => b.type === "image" || b.type === "gallery");
-  return image ? { kind: "image", block: image } : { kind: "type" };
+  const block = shown.find((b) => b.type === "image" || b.type === "gallery");
+  const image = block?.media?.[0];
+  return block && image ? { kind: "image", block, image } : { kind: "type" };
 }
 
 /** The line a preview highlights: the chosen quote, else the first quote block, else the summary. */
