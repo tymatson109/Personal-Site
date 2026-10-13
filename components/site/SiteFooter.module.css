@@ -1,0 +1,13 @@
+.foot {
+  margin-top: auto;
+  padding-top: var(--s6);
+  padding-bottom: calc(var(--s6) + var(--safe-bottom));
+  border-top: var(--hairline) solid var(--line);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s4);
+}

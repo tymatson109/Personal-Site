@@ -1,0 +1,22 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding-block: var(--s8) var(--s6);
+  animation: rise var(--dur) var(--ease) both;
+}
+
+.title {
+  font-size: var(--t-2xl);
+  font-weight: var(--w-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-display);
+  text-wrap: balance;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+}

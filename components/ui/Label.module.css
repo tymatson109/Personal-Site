@@ -1,0 +1,7 @@
+.label {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}

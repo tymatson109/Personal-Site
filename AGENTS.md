@@ -33,7 +33,9 @@ Next.js (App Router) on Vercel with Supabase for content, media and the admin lo
 UI follows the `app-ui-design-audit` skill: the one home for Ty's design rules. Site-specific additions and exceptions:
 
 - Pages scroll (it is a website). Everything else in the skill applies, including "show the real thing, never filler art".
-- Every color, size, spacing, radius, font and duration comes from the design tokens in `components/ui/` (PR 2). No hardcoded values in components.
+- Every color, size, spacing, radius, font and duration comes from `components/ui/tokens.css`. A value with no token gets a new token. `components/ui/tokens.test.ts` fails on any hardcoded color or size in other stylesheets, or on a token that doesn't exist.
+- Components style with CSS Modules next to the component. `app/globals.css` holds base element styles only.
+- Reduced motion zeroes `--dur`, `--dur-fast` and `--rise` in the tokens, so CSS motion built on them needs no extra check. JavaScript motion still checks `prefers-reduced-motion` itself.
 - Look: minimal editorial, monochrome with one electric-blue accent, Geist for text and Geist Mono for labels, light and dark following the system.
 - Motion is expressive but always honors `prefers-reduced-motion`.
 
