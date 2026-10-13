@@ -27,8 +27,9 @@ jobs:
     services:
       postgres:
         image: postgres:16
+        # A throwaway container that only this job can reach, so it needs no password at all
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
@@ -40,13 +41,11 @@ jobs:
       - uses: actions/checkout@v4
       # A non-superuser owner, like Neon's neondb_owner, so row-level security applies as it does in production
       - name: Create the database owner
-        env:
-          PGPASSWORD: postgres
         run: |
           psql -h localhost -U postgres -v ON_ERROR_STOP=1 \
-            -c "create role site_owner login password 'site_owner' createrole" \
+            -c "create role site_owner login createrole" \
             -c "create database site owner site_owner"
           psql -h localhost -U postgres -d site -v ON_ERROR_STOP=1 -c "alter schema public owner to site_owner"
       - run: scripts/db-test.sh
         env:
-          DATABASE_URL: postgresql://site_owner:site_owner@localhost:5432/site
+          DATABASE_URL: postgresql://site_owner@localhost:5432/site
