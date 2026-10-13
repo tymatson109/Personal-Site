@@ -1,14 +1,19 @@
 // The one shape for site content: every page reads it, the admin editor and the Substack sync write it.
+// The value lists are shared with the database's check constraints; db/schema.test.ts keeps them in step.
 
-export type BlockType = "p" | "h" | "code" | "quote" | "image" | "gallery" | "demo" | "video";
+export const BLOCK_TYPES = ["p", "h", "code", "quote", "image", "gallery", "demo", "video"] as const;
+export type BlockType = (typeof BLOCK_TYPES)[number];
 
 export type Block = { type: BlockType; text: string };
 
-export type EntryStatus = "draft" | "live";
+export const ENTRY_STATUSES = ["draft", "live"] as const;
+export type EntryStatus = (typeof ENTRY_STATUSES)[number];
 
-export type EntrySource = "site" | "substack";
+export const ENTRY_SOURCES = ["site", "substack"] as const;
+export type EntrySource = (typeof ENTRY_SOURCES)[number];
 
-export type SectionLayout = "grid" | "list";
+export const SECTION_LAYOUTS = ["grid", "list"] as const;
+export type SectionLayout = (typeof SECTION_LAYOUTS)[number];
 
 export type Section = {
   slug: string;
