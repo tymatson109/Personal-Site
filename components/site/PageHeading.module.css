@@ -5,6 +5,10 @@
   padding-block: var(--s8) var(--s6);
 }
 
+.action {
+  margin-top: var(--s2);
+}
+
 .title {
   font-size: var(--t-2xl);
   font-weight: var(--w-bold);

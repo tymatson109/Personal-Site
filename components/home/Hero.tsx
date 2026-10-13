@@ -25,6 +25,9 @@ export function Hero({ hasTour }: Props) {
               Take the tour ↓
             </Button>
           )}
+          <Button href={SITE_LINKS.substack} variant="onImage" size="lg">
+            Read on Substack ↗
+          </Button>
           <Button href="/about#contact" variant="onImage" size="lg">
             Get in touch
           </Button>

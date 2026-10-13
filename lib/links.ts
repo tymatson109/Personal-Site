@@ -7,6 +7,9 @@ export const SITE_LINKS = {
   substack: "https://tymatson.substack.com",
 } as const;
 
+/** The section Substack posts belong to, where its subscribe button sits. */
+export const SUBSTACK_SECTION = "writing";
+
 export function mailto(address: string): string {
   return `mailto:${address}`;
 }
