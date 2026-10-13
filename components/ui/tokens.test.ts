@@ -19,8 +19,16 @@ const FILES = [...stylesheets(join(ROOT, "app")), ...stylesheets(join(ROOT, "com
 // A color literal, or a non-zero number with a unit; zero and unitless numbers (opacity, z-order) are fine
 const HARDCODED = /#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|(?<![\w-])(?:\d*\.)?[1-9]\d*(?:\.\d+)?(?:px|rem|em|ms|s|vh|vw|svh)\b/gi;
 
+const BREAKPOINTS = ["760px", "860px"];
+const MEDIA_PRELUDE = /@media[^{]*/g;
+
 function withoutComments(css: string) {
   return css.replace(/\/\*[\s\S]*?\*\//g, "");
+}
+
+// Media queries can't read variables, so their sizes are checked against the breakpoint list instead
+function withoutMediaPreludes(css: string) {
+  return css.replace(MEDIA_PRELUDE, "@media");
 }
 
 describe("design tokens", () => {
@@ -29,7 +37,13 @@ describe("design tokens", () => {
   });
 
   it.each(FILES.map((f) => [f.slice(ROOT.length + 1), f]))("%s uses no hardcoded colors or sizes", (_, file) => {
-    expect(withoutComments(readFileSync(file, "utf8")).match(HARDCODED) ?? []).toEqual([]);
+    expect(withoutMediaPreludes(withoutComments(readFileSync(file, "utf8"))).match(HARDCODED) ?? []).toEqual([]);
+  });
+
+  it.each(FILES.map((f) => [f.slice(ROOT.length + 1), f]))("%s only uses the shared breakpoints", (_, file) => {
+    const preludes = withoutComments(readFileSync(file, "utf8")).match(MEDIA_PRELUDE) ?? [];
+    const sizes = preludes.flatMap((p) => p.match(/\d+px/g) ?? []);
+    expect(sizes.filter((s) => !BREAKPOINTS.includes(s))).toEqual([]);
   });
 
   it.each(FILES.map((f) => [f.slice(ROOT.length + 1), f]))("%s only reads tokens that exist", (_, file) => {

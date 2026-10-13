@@ -1,27 +1,38 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { SectionEntries } from "@/components/entries/SectionEntries";
 import { PageHeading } from "@/components/site/PageHeading";
-import { SAMPLE_SECTIONS } from "@/lib/sample/sections";
+import { Container } from "@/components/ui/Container";
+import { getEntries, getSections } from "@/features/content/queries";
+import { liveEntries } from "@/lib/content";
+import styles from "./page.module.css";
 
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return SAMPLE_SECTIONS.map((s) => ({ section: s.slug }));
+export async function generateStaticParams() {
+  return (await getSections()).map((s) => ({ section: s.slug }));
 }
 
-function findSection(slug: string) {
-  return SAMPLE_SECTIONS.find((s) => s.slug === slug);
+async function findSection(slug: string) {
+  return (await getSections()).find((s) => s.slug === slug);
 }
 
 export async function generateMetadata(props: PageProps<"/[section]">): Promise<Metadata> {
   const { section } = await props.params;
-  return { title: findSection(section)?.name };
+  return { title: (await findSection(section))?.name };
 }
 
-// Entries for each section arrive in PR 3
 export default async function SectionPage(props: PageProps<"/[section]">) {
-  const { section } = await props.params;
-  const found = findSection(section);
-  if (!found) notFound();
-  return <PageHeading title={found.name} />;
+  const { section: slug } = await props.params;
+  const section = await findSection(slug);
+  if (!section) notFound();
+  const entries = liveEntries(await getEntries(), section.slug);
+  return (
+    <>
+      <PageHeading title={section.name} label={`${entries.length} ${entries.length === 1 ? "entry" : "entries"}`} />
+      <Container className={styles.list}>
+        <SectionEntries entries={entries} layout={section.layout} name={section.name} />
+      </Container>
+    </>
+  );
 }

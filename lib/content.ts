@@ -1,0 +1,58 @@
+import type { Block, Entry, Section } from "@/types/entry";
+import { isPhoneBlock } from "./blocks";
+
+/** Newest first; ISO dates sort as strings. */
+function byDateDesc(a: Entry, b: Entry) {
+  return b.date.localeCompare(a.date);
+}
+
+/** Published entries, newest first, optionally from one section. */
+export function liveEntries(entries: readonly Entry[], section?: string): Entry[] {
+  return entries.filter((e) => e.status === "live" && (!section || e.section === section)).sort(byDateDesc);
+}
+
+export function sortedSections(sections: readonly Section[]): Section[] {
+  return [...sections].sort((a, b) => a.order - b.order);
+}
+
+/** The tour walks featured work from grid sections, in nav order, newest first within each. */
+export function tourEntries(sections: readonly Section[], entries: readonly Entry[]): Entry[] {
+  return sortedSections(sections)
+    .filter((s) => s.layout === "grid")
+    .flatMap((s) => liveEntries(entries, s.slug).filter((e) => e.featured));
+}
+
+export function findEntry(entries: readonly Entry[], section: string, slug: string): Entry | undefined {
+  return entries.find((e) => e.status === "live" && e.section === section && e.slug === slug);
+}
+
+export type EntryMedia =
+  | { kind: "phone"; block: Block }
+  | { kind: "image"; block: Block }
+  | { kind: "type" };
+
+/** What shows an entry: its app in a phone, its image, or its name set in type. */
+export function entryMedia(entry: Entry): EntryMedia {
+  const phone = entry.blocks.find((b) => b.type === "demo") ?? entry.blocks.find(isPhoneBlock);
+  if (phone) return { kind: "phone", block: phone };
+  const image = entry.blocks.find((b) => b.type === "image" || b.type === "gallery");
+  return image ? { kind: "image", block: image } : { kind: "type" };
+}
+
+/** The line a preview highlights: the chosen quote, else the first quote block, else the summary. */
+export function highlightQuote(entry: Entry): string {
+  return entry.quote || entry.blocks.find((b) => b.type === "quote")?.text || entry.summary;
+}
+
+export function excerpt(entry: Entry): string {
+  return entry.blocks.find((b) => b.type === "p")?.text ?? "";
+}
+
+/** Every tag used across the entries, in first-seen order. */
+export function tagsOf(entries: readonly Entry[]): string[] {
+  return [...new Set(entries.flatMap((e) => e.tags))];
+}
+
+export function entryHref(entry: Entry): string {
+  return `/${entry.section}/${entry.slug}`;
+}

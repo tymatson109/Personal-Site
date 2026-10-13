@@ -29,6 +29,13 @@
   --on-image-line: rgba(255, 255, 255, 0.38);
   --on-image-soft: rgba(255, 255, 255, 0.12);
   --scrim: rgba(5, 7, 12, 0.72);
+  /* Dot field colors as RGB triplets, so the canvas can vary each dot's alpha */
+  --hero-dot-rgb: 255 255 255;
+  --hero-dot-hot-rgb: 31 75 255;
+
+  /* Shadows */
+  --shadow-phone: 0 30px 60px -20px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 10px 30px rgba(0, 0, 0, 0.12);
 
   /* Type */
   --sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -40,14 +47,27 @@
   --t-xl: 32px;
   --t-2xl: clamp(40px, 7vw, 76px);
   --t-hero: clamp(48px, 10vw, 120px);
+  --t-project: clamp(40px, 7vw, 72px);
+  --t-article: clamp(32px, 5vw, 48px);
+  --t-cover: clamp(32px, 5vw, 56px);
+  --t-stop: clamp(24px, 4vw, 40px);
+  --t-quote: clamp(22px, 2.4vw, 30px);
+  --t-pull: clamp(24px, 3vw, 34px);
+  --t-quote-mark: 56px;
   --w-regular: 400;
   --w-medium: 500;
   --w-bold: 600;
   --leading-body: 1.6;
   --leading-tight: 1.05;
+  --leading-display: 0.95;
+  --leading-quote: 1.25;
+  --leading-mark: 0.6;
   --track-label: 0.04em;
   --track-tight: -0.01em;
   --track-display: -0.035em;
+  --track-heading: -0.025em;
+  --track-quote: -0.02em;
+  --track-hero: -0.045em;
 
   /* Space */
   --s1: 4px;
@@ -69,12 +89,44 @@
   --ring-offset: 3px;
   --dot: 9px;
   --blur-glass: 10px;
+  --stripe: 10px;
+  --icon: 18px;
+  --btn-h: 36px;
+  --btn-h-sm: 30px;
+  --btn-h-lg: 48px;
+  --chip-pad-y: 2px;
+  --lift: 4px;
+  --nudge: 6px;
+
+  /* Phone frame */
+  --phone-w: 280px;
+  --phone-r: 46px;
+  --phone-bezel: 9px;
+  --phone-screen-r: 38px;
+  --phone-rim-w: 1.5px;
+  --notch-w: 84px;
+  --notch-h: 24px;
+  --notch-top: 18px;
 
   /* Layout */
   --col: 1040px;
   --gutter: var(--s4);
   --head-h: 60px;
   --screen-h: 100svh;
+  --hero-min-h: 520px;
+  --measure: 680px;
+  --measure-lede: 40ch;
+  --measure-body: 52ch;
+  --rail: 120px;
+  --preview-min-h: 360px;
+  --stop-h: 240svh;
+  --stop-media-h: min(64svh, 600px);
+  --stop-media-h-narrow: 44svh;
+  --tour-seg-w: 28px;
+  --tour-seg-h: 3px;
+  --cue-h: 40px;
+  /* Breakpoints can't be variables in media queries; these are the only two, checked by tokens.test.ts:
+     narrow 760px stacks two-column layouts; 860px or no hover swaps hover previews for tap-to-expand */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
@@ -82,10 +134,13 @@
   --dur: 420ms;
   --dur-fast: 200ms;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --dur-slow: 900ms;
   --rise: 8px;
+  --rise-far: 24px;
 
   /* Layers */
   --z-head: 20;
+  --z-raised: 1;
   --z-overlay: 40;
 }
 
@@ -109,6 +164,8 @@
   :root {
     --dur: 0ms;
     --dur-fast: 0ms;
+    --dur-slow: 0ms;
     --rise: 0px;
+    --rise-far: 0px;
   }
 }

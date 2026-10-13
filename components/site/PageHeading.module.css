@@ -3,7 +3,6 @@
   flex-direction: column;
   gap: var(--s3);
   padding-block: var(--s8) var(--s6);
-  animation: rise var(--dur) var(--ease) both;
 }
 
 .title {
@@ -14,9 +13,3 @@
   text-wrap: balance;
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(var(--rise));
-  }
-}

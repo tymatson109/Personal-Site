@@ -1,0 +1,13 @@
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding-block: var(--s2);
+  color: var(--muted);
+  font-size: var(--t-sm);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.back:hover {
+  color: var(--accent);
+}

@@ -1,0 +1,56 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  border-radius: var(--r-pill);
+  border: var(--hairline) solid var(--line);
+  font-weight: var(--w-medium);
+  white-space: nowrap;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease),
+    filter var(--dur-fast) var(--ease);
+}
+
+.sm {
+  height: var(--btn-h-sm);
+  padding-inline: var(--s3);
+  font-size: var(--t-xs);
+}
+
+.md {
+  height: var(--btn-h);
+  padding-inline: var(--s4);
+  font-size: var(--t-sm);
+}
+
+.lg {
+  height: var(--btn-h-lg);
+  padding-inline: var(--s5);
+  font-size: var(--t-md);
+}
+
+.outline:hover {
+  border-color: var(--fg);
+}
+
+.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.primary:hover {
+  filter: brightness(1.1);
+}
+
+.onImage {
+  border-color: var(--on-image-line);
+  color: var(--on-image);
+}
+
+.onImage:hover {
+  border-color: var(--on-image);
+  background: var(--on-image-soft);
+}

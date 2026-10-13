@@ -1,0 +1,41 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  max-width: var(--measure);
+}
+
+.body h2 {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--track-tight);
+  margin-top: var(--s6);
+}
+
+.body pre {
+  background: var(--surface);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r1);
+  padding: var(--s4);
+  overflow-x: auto;
+  font: var(--w-regular) var(--t-sm) / var(--leading-body) var(--mono);
+}
+
+.quote {
+  padding-left: var(--s4);
+  border-left: var(--ring) solid var(--accent);
+  font-size: var(--t-lg);
+}
+
+.pull {
+  margin-block: var(--s5);
+  padding-block: var(--s5);
+  border-block: var(--hairline) solid var(--line);
+}
+
+.phones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s6);
+  margin-block: var(--s5);
+}

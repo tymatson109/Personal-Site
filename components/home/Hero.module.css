@@ -1,0 +1,99 @@
+.hero {
+  position: relative;
+  height: calc(var(--screen-h) - var(--head-h) - var(--safe-top));
+  min-height: var(--hero-min-h);
+  overflow: hidden;
+  background: var(--image-bg);
+  color: var(--on-image);
+}
+
+.inner {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--s9) max(var(--gutter), calc((100% - var(--col)) / 2)) var(--s7);
+  background: linear-gradient(to top, var(--scrim), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.name {
+  font-size: var(--t-hero);
+  line-height: var(--leading-display);
+  letter-spacing: var(--track-hero);
+  font-weight: var(--w-bold);
+}
+
+.word {
+  display: inline-block;
+  animation: word var(--dur-slow) var(--ease) both;
+}
+
+.word + .word {
+  animation-delay: var(--dur-fast);
+}
+
+@keyframes word {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-far));
+  }
+}
+
+.role > * {
+  color: var(--on-image-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  align-items: center;
+  margin-top: var(--s3);
+}
+
+.cue {
+  position: absolute;
+  right: max(var(--gutter), calc((100% - var(--col)) / 2));
+  bottom: var(--s7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.cue > span {
+  color: var(--on-image-muted);
+}
+
+.cue i {
+  width: var(--hairline);
+  height: var(--cue-h);
+  background: var(--on-image-muted);
+  transform-origin: top;
+  animation: cue calc(var(--dur-slow) * 2) var(--ease) infinite;
+}
+
+@keyframes cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@media (max-width: 760px) {
+  .cue {
+    display: none;
+  }
+}

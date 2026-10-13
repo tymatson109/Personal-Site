@@ -11,6 +11,12 @@ body {
   overflow-x: clip;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   min-height: var(--screen-h);
   display: flex;
