@@ -4,7 +4,14 @@
 export const BLOCK_TYPES = ["p", "h", "code", "quote", "image", "gallery", "demo", "video"] as const;
 export type BlockType = (typeof BLOCK_TYPES)[number];
 
-export type Block = { type: BlockType; text: string };
+/** An uploaded file: images and recordings live in Vercel Blob and keep their size so pages reserve the space. */
+export type Media = { url: string; alt: string; width: number; height: number };
+
+/**
+ * One piece of a story. Text blocks hold their words in `text`.
+ * Image, gallery and phone recording blocks hold their files in `media` and their caption in `text`; a demo's `text` names the app.
+ */
+export type Block = { type: BlockType; text: string; media?: Media[] };
 
 export const ENTRY_STATUSES = ["draft", "live"] as const;
 export type EntryStatus = (typeof ENTRY_STATUSES)[number];

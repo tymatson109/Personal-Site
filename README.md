@@ -12,6 +12,8 @@ npm run dev
 
 The admin at `/admin` signs in with GitHub and needs `AUTH_SECRET`, `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` (a GitHub OAuth app whose callback is `<site>/api/auth/callback/github`). Only the GitHub ids in `lib/admin.ts` get in.
 
+Photos and phone recordings upload from the editor straight to Vercel Blob, which needs `BLOB_READ_WRITE_TOKEN` (set by connecting a Blob store to the project). Only files in that store's `media/` folder are shown; `lib/media.ts` holds the rule and `next.config.ts` reuses it.
+
 Pages read the database while building and running, so `npm run dev` and `npm run build` need `DATABASE_URL`. Any Postgres with `npm run db:migrate` applied works too.
 
 ## Scripts

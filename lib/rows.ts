@@ -1,4 +1,5 @@
 import type { AdminEntry } from "./admin-entries";
+import { isMediaUrl, isUploadBlockType, UPLOAD_RULES } from "./media";
 import {
   BLOCK_TYPES,
   ENTRY_SOURCES,
@@ -6,6 +7,7 @@ import {
   SECTION_LAYOUTS,
   type Block,
   type Entry,
+  type Media,
   type Page,
   type Section,
 } from "@/types/entry";
@@ -30,13 +32,30 @@ function isRecord(value: unknown): value is Row {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-/** Keeps blocks with a known type; a block without text gets an empty string. */
+function size(value: unknown): number | null {
+  return typeof value === "number" && Number.isInteger(value) && value > 0 ? value : null;
+}
+
+/** Keeps files from this site's store that know their size; anything else is dropped. */
+export function toMedia(value: unknown): Media[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((m) => {
+    if (!isRecord(m) || !isMediaUrl(m.url)) return [];
+    const width = size(m.width);
+    const height = size(m.height);
+    return width && height ? [{ url: m.url, alt: text(m.alt), width, height }] : [];
+  });
+}
+
+/** Keeps blocks with a known type; a block without text gets an empty string, and only image, gallery and recording blocks carry `media`, up to what each holds. */
 export function toBlocks(value: unknown): Block[] {
   if (!Array.isArray(value)) return [];
-  return value.flatMap((b) => {
+  return value.flatMap((b): Block[] => {
     if (!isRecord(b)) return [];
     const type = BLOCK_TYPES.find((t) => t === b.type);
-    return type ? [{ type, text: text(b.text) }] : [];
+    if (!type) return [];
+    const media = isUploadBlockType(type) ? toMedia(b.media).slice(0, UPLOAD_RULES[type].max) : [];
+    return [media.length ? { type, text: text(b.text), media } : { type, text: text(b.text) }];
   });
 }
 

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import type { Entry, Section } from "@/types/entry";
+import type { Block, Entry, Section } from "@/types/entry";
 import { Button } from "@/components/ui/Button";
 import { saveEntry } from "@/features/admin/entry-actions";
 import { tagsFromText, type EntryInput } from "@/lib/entry-input";
@@ -47,6 +47,7 @@ export function EntryEditor({ entry, sections }: Props) {
   const [message, setMessage] = useState<{ kind: "error" | "saved"; text: string } | null>(null);
   const [leaving, setLeaving] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [uploads, setUploads] = useState(0);
 
   const dirty = JSON.stringify(toInput(draft)) !== saved;
   const layout = sections.find((s) => s.slug === draft.section)?.layout;
@@ -61,6 +62,10 @@ export function EntryEditor({ entry, sections }: Props) {
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => {
     setDraft((d) => ({ ...d, [key]: value }));
+    setMessage(null);
+  };
+  const updateBlock = (key: string) => (change: (block: Block) => Block) => {
+    setDraft((d) => ({ ...d, blocks: d.blocks.map((b) => (b.key === key ? { ...b, block: change(b.block) } : b)) }));
     setMessage(null);
   };
   const setTitle = (title: string) => {
@@ -150,7 +155,13 @@ export function EntryEditor({ entry, sections }: Props) {
 
       <section className={styles.story} aria-label="Story">
         <p className={controls.legend}>Story</p>
-        <BlockEditor blocks={draft.blocks} onChange={(blocks) => set("blocks", blocks)} newKey={newKey} />
+        <BlockEditor
+          blocks={draft.blocks}
+          onChange={(blocks) => set("blocks", blocks)}
+          update={updateBlock}
+          newKey={newKey}
+          onUploading={(busy) => setUploads((n) => n + (busy ? 1 : -1))}
+        />
       </section>
 
       <div className={styles.bar}>
@@ -158,7 +169,7 @@ export function EntryEditor({ entry, sections }: Props) {
           <div className={styles.leave} role="alertdialog" aria-label="Unsaved changes">
             <p>You have unsaved changes.</p>
             <div className={styles.buttons}>
-              <Button size="sm" variant="primary" busy={pending} onClick={() => save(backToList)}>
+              <Button size="sm" variant="primary" busy={pending} disabled={uploads > 0} onClick={() => save(backToList)}>
                 Save
               </Button>
               <Button size="sm" onClick={backToList}>
@@ -172,13 +183,13 @@ export function EntryEditor({ entry, sections }: Props) {
         ) : (
           <>
             <p className={message?.kind === "error" ? styles.error : styles.note} role="status">
-              {message?.text ?? (dirty ? "Unsaved changes" : "All changes saved")}
+              {uploads > 0 ? "Uploading…" : (message?.text ?? (dirty ? "Unsaved changes" : "All changes saved"))}
             </p>
             <div className={styles.buttons}>
               <Button size="sm" onClick={() => (dirty ? setLeaving(true) : backToList())}>
                 Back
               </Button>
-              <Button size="sm" variant="primary" busy={pending} disabled={!dirty} onClick={() => save()}>
+              <Button size="sm" variant="primary" busy={pending} disabled={!dirty || uploads > 0} onClick={() => save()}>
                 Save
               </Button>
             </div>

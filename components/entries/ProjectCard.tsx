@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Entry } from "@/types/entry";
 import { Label } from "@/components/ui/Label";
-import { MediaSlot } from "@/components/media/MediaSlot";
 import { PhoneFrame } from "@/components/media/PhoneFrame";
+import { Photo } from "@/components/media/Photo";
 import { TypeCover } from "@/components/media/TypeCover";
 import { entryHref, entryMedia } from "@/lib/content";
 import { formatDate } from "@/lib/format-date";
@@ -18,7 +18,7 @@ export function ProjectCard({ entry }: { entry: Entry }) {
             <PhoneFrame block={media.block} caption={false} />
           </div>
         ) : media.kind === "image" ? (
-          <MediaSlot label={`Image of ${entry.title}`} shape="fill" />
+          <Photo media={media.image} shape="fill" sizes="(max-width: 760px) 100vw, 50vw" />
         ) : (
           <TypeCover title={entry.title} fill />
         )}

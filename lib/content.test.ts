@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Section } from "@/types/entry";
+import type { Block, Media, Section } from "@/types/entry";
 import { entryHref, entryMedia, excerpt, findEntry, highlightQuote, liveEntries, tagsOf, tourEntries } from "./content";
 import { testEntry } from "./test-entry";
 
@@ -54,18 +54,26 @@ describe("findEntry", () => {
   });
 });
 
+const PHOTO: Media = { url: "https://a.public.blob.vercel-storage.com/media/x.jpg", alt: "", width: 4, height: 3 };
+
 describe("entryMedia", () => {
   it("prefers a live demo over a recording", () => {
-    const e = testEntry({ blocks: [{ type: "video", text: "" }, { type: "demo", text: "app" }] });
+    const e = testEntry({ blocks: [{ type: "video", text: "", media: [PHOTO] }, { type: "demo", text: "app" }] });
     expect(entryMedia(e)).toEqual({ kind: "phone", block: { type: "demo", text: "app" } });
   });
 
   it("uses a recording when there is no demo", () => {
-    expect(entryMedia(testEntry({ blocks: [{ type: "video", text: "" }] })).kind).toBe("phone");
+    expect(entryMedia(testEntry({ blocks: [{ type: "video", text: "", media: [PHOTO] }] })).kind).toBe("phone");
   });
 
-  it("uses an image when there is no app to show", () => {
-    expect(entryMedia(testEntry({ blocks: [{ type: "p", text: "hi" }, { type: "image", text: "" }] })).kind).toBe("image");
+  it("uses the first file of an image when there is no app to show", () => {
+    const image: Block = { type: "image", text: "", media: [PHOTO] };
+    expect(entryMedia(testEntry({ blocks: [{ type: "p", text: "hi" }, image] }))).toEqual({ kind: "image", block: image, image: PHOTO });
+  });
+
+  it("ignores an image or recording that has no file yet", () => {
+    const blocks: Block[] = [{ type: "video", text: "" }, { type: "image", text: "" }];
+    expect(entryMedia(testEntry({ blocks }))).toEqual({ kind: "type" });
   });
 
   it("falls back to the name in type when there is no media", () => {

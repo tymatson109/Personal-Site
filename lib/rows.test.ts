@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toAdminEntry, toBlocks, toEntry, toFacts, toPage, toSection } from "./rows";
+import { toAdminEntry, toBlocks, toEntry, toFacts, toMedia, toPage, toSection } from "./rows";
 
 const ENTRY_ROW = {
   id: "0b6c5c1e-3c1a-4d55-9d4e-1f7f8c2f3a10",
@@ -97,5 +97,45 @@ describe("toAdminEntry", () => {
 
   it("reads a missing deletion time as not deleted", () => {
     expect(toAdminEntry(ENTRY_ROW).deletedAt).toBeNull();
+  });
+});
+
+const PHOTO = { url: "https://abc.public.blob.vercel-storage.com/media/desk-x1.jpg", alt: "A desk", width: 1200, height: 800 };
+
+describe("toMedia", () => {
+  it("keeps a file from the site's store with its size and alt text", () => {
+    expect(toMedia([PHOTO])).toEqual([PHOTO]);
+  });
+
+  it("drops files from other hosts, plain http, and files without a size", () => {
+    expect(
+      toMedia([
+        { ...PHOTO, url: "https://evil.example.com/x.jpg" },
+        { ...PHOTO, url: "http://abc.public.blob.vercel-storage.com/x.jpg" },
+        { ...PHOTO, width: 0 },
+        { ...PHOTO, height: "800" },
+        "x",
+      ]),
+    ).toEqual([]);
+  });
+
+  it("gives a file without alt text an empty one", () => {
+    expect(toMedia([{ ...PHOTO, alt: undefined }])[0].alt).toBe("");
+  });
+});
+
+describe("toBlocks with media", () => {
+  it("keeps the files of an image block alongside its caption", () => {
+    expect(toBlocks([{ type: "image", text: "Caption", media: [PHOTO] }])).toEqual([
+      { type: "image", text: "Caption", media: [PHOTO] },
+    ]);
+  });
+
+  it("keeps only as many files as the block holds", () => {
+    expect(toBlocks([{ type: "image", text: "", media: [PHOTO, PHOTO] }])[0].media).toHaveLength(1);
+  });
+
+  it("drops files attached to a text block", () => {
+    expect(toBlocks([{ type: "p", text: "Hi", media: [PHOTO] }])).toEqual([{ type: "p", text: "Hi" }]);
   });
 });
