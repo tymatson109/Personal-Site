@@ -8,6 +8,8 @@ import { saveEntry } from "@/features/admin/entry-actions";
 import { tagsFromText, type EntryInput } from "@/lib/entry-input";
 import { slugify } from "@/lib/slug";
 import { AutoTextarea } from "./AutoTextarea";
+import { Choices } from "./Choices";
+import choices from "./Choices.module.css";
 import { BlockEditor, type KeyedBlock } from "./BlockEditor";
 import { FactsEditor } from "./FactsEditor";
 import { Field } from "./Field";
@@ -15,6 +17,11 @@ import controls from "./controls.module.css";
 import styles from "./EntryEditor.module.css";
 
 type Props = { entry: Entry; sections: Section[] };
+
+const STATUS_OPTIONS = [
+  { value: "draft", label: "Draft" },
+  { value: "live", label: "Live" },
+] as const;
 
 type Draft = Omit<EntryInput, "tags" | "blocks"> & { tagsText: string; blocks: KeyedBlock[] };
 
@@ -137,16 +144,8 @@ export function EntryEditor({ entry, sections }: Props) {
         )}
         {layout === "grid" && <FactsEditor facts={draft.facts} onChange={(facts) => set("facts", facts)} />}
         <div className={styles.toggles}>
-          <fieldset className={styles.status}>
-            <legend className={controls.legend}>Status</legend>
-            {(["draft", "live"] as const).map((status) => (
-              <label key={status} className={styles.choice}>
-                <input type="radio" name="status" checked={draft.status === status} onChange={() => set("status", status)} />
-                {status === "draft" ? "Draft" : "Live"}
-              </label>
-            ))}
-          </fieldset>
-          <label className={styles.choice}>
+          <Choices legend="Status" name="status" options={STATUS_OPTIONS} value={draft.status} onChange={(status) => set("status", status)} />
+          <label className={choices.choice}>
             <input type="checkbox" checked={draft.featured} onChange={(e) => set("featured", e.target.checked)} />
             Featured on the homepage
           </label>

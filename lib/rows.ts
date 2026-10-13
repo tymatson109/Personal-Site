@@ -1,4 +1,5 @@
 import type { AdminEntry } from "./admin-entries";
+import type { AdminSection } from "./sections";
 import { isMediaUrl, isUploadBlockType, UPLOAD_RULES } from "./media";
 import {
   BLOCK_TYPES,
@@ -97,6 +98,14 @@ export function toEntry(row: Row): Entry {
 
 export function toPage(row: Row): Page {
   return { slug: text(row.slug), title: text(row.title), blocks: toBlocks(row.blocks) };
+}
+
+export function toAdminSection(row: Row): AdminSection {
+  return {
+    ...toSection(row),
+    entries: typeof row.entries === "number" ? row.entries : 0,
+    deletedAt: typeof row.deletedAt === "string" ? row.deletedAt : null,
+  };
 }
 
 export function toAdminEntry(row: Row): AdminEntry {

@@ -1,3 +1,4 @@
+/* The admin's shared list look: entries and sections are rows of a title, a mono line and actions */
 .rows {
   list-style: none;
   padding: 0;

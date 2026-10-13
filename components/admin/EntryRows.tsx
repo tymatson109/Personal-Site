@@ -6,7 +6,7 @@ import { deleteEntry, restoreEntry, setEntryFeatured, setEntryStatus } from "@/f
 import { adminMeta } from "@/lib/admin-entries";
 import { entryHref } from "@/lib/content";
 import { SubmitButton } from "./SubmitButton";
-import styles from "./EntryRows.module.css";
+import styles from "./Rows.module.css";
 
 type Props = { entries: Entry[]; sectionNames: ReadonlyMap<string, string>; deleted?: boolean };
 

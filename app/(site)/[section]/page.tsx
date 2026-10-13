@@ -5,6 +5,7 @@ import { PageHeading } from "@/components/site/PageHeading";
 import { Container } from "@/components/ui/Container";
 import { getEntries, getSections } from "@/features/content/queries";
 import { liveEntries } from "@/lib/content";
+import { entryCount } from "@/lib/sections";
 import styles from "./page.module.css";
 
 export async function generateStaticParams() {
@@ -27,7 +28,7 @@ export default async function SectionPage(props: PageProps<"/[section]">) {
   const entries = liveEntries(await getEntries(), section.slug);
   return (
     <>
-      <PageHeading title={section.name} label={`${entries.length} ${entries.length === 1 ? "entry" : "entries"}`} />
+      <PageHeading title={section.name} label={entryCount(entries.length)} />
       <Container className={styles.list}>
         <SectionEntries entries={entries} layout={section.layout} name={section.name} />
       </Container>

@@ -11,6 +11,7 @@ import { requireAdmin } from "@/features/admin/session";
 import { getSections } from "@/features/content/queries";
 import { adminView, RESTORE_DAYS, sectionFilter } from "@/lib/admin-entries";
 import { sortedSections } from "@/lib/content";
+import { entryCount } from "@/lib/sections";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Content" };
@@ -23,9 +24,9 @@ export default async function AdminContent(props: PageProps<"/admin">) {
     props.searchParams,
   ]);
   const section = sectionFilter(sections, param);
-  const { current, deleted } = adminView(items, section, new Date());
+  const { current, deleted } = adminView(items, section, new Date(), sections);
   const names = new Map(sections.map((s) => [s.slug, s.name]));
-  const count = `${current.length} ${current.length === 1 ? "entry" : "entries"}`;
+  const count = entryCount(current.length);
 
   return (
     <AdminFrame
@@ -40,6 +41,9 @@ export default async function AdminContent(props: PageProps<"/admin">) {
                 <SubmitButton variant="primary">{`New in ${s.name}`}</SubmitButton>
               </form>
             ))}
+          <Button href="/admin/sections" size="sm">
+            Sections
+          </Button>
           <Button href="/" size="sm">
             View the site
           </Button>

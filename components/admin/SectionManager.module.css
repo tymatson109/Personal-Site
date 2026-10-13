@@ -1,0 +1,42 @@
+.manager {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  width: 100%;
+  max-width: var(--measure);
+}
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  font-size: var(--t-sm);
+}
+
+.error {
+  color: var(--danger);
+  font-size: var(--t-sm);
+}
+
+.add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  margin-top: var(--s6);
+}
+
+.subtitle {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+}
+
+.note {
+  color: var(--muted);
+  font-size: var(--t-sm);
+}

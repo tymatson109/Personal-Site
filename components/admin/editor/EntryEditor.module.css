@@ -29,29 +29,6 @@
   gap: var(--s4) var(--s6);
 }
 
-.status {
-  display: flex;
-  align-items: center;
-  gap: var(--s4);
-  border: 0;
-  padding: 0;
-}
-
-.status legend {
-  float: left;
-}
-
-.choice {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s2);
-  min-height: var(--btn-h);
-}
-
-.choice input {
-  accent-color: var(--accent);
-}
-
 .story {
   display: flex;
   flex-direction: column;
