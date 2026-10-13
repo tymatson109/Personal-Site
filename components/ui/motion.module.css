@@ -1,0 +1,11 @@
+/* Shared entrance motion; durations come from tokens, which reduced motion zeroes */
+.rise {
+  animation: rise var(--dur) var(--ease) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+}

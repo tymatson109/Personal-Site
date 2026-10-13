@@ -26,7 +26,8 @@ Next.js (App Router) on Vercel with Supabase for content, media and the admin lo
 - **Row-level security on every table.** Visitors can read published content only. Writes are admin-only, enforced in the database, not just the UI.
 - **Untrusted input stays untrusted.** Substack feed HTML and editor content are sanitized before rendering. No `dangerouslySetInnerHTML` on unsanitized strings.
 - **Migrations:** a new timestamped file in `supabase/migrations/` every time, never edit an applied one, RLS on every new table, count rows before anything destructive and say the number.
-- **One module builds outbound links** (Substack, App Store, GitHub) once it exists.
+- **Pages read content only through `features/content/queries.ts`**, so swapping sample data for Supabase is one file.
+- **One module builds outbound links:** `lib/links.ts` (GitHub, LinkedIn, email, Substack). A link set to `null` stays hidden until it is filled in.
 
 ## Design
 

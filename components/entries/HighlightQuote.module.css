@@ -1,0 +1,35 @@
+.quote {
+  font-weight: var(--w-medium);
+  line-height: var(--leading-quote);
+  letter-spacing: var(--track-quote);
+  text-wrap: balance;
+}
+
+.quote::before {
+  content: "“";
+  display: block;
+  color: var(--accent);
+  font-size: var(--t-quote-mark);
+  line-height: var(--leading-mark);
+  margin-bottom: var(--s2);
+}
+
+.card {
+  font-size: var(--t-quote);
+}
+
+.pull {
+  font-size: var(--t-pull);
+}
+
+.mark {
+  color: inherit;
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)) no-repeat 0 85% / 100% 45%;
+  animation: draw var(--dur-slow) var(--ease) var(--dur-fast) both;
+}
+
+@keyframes draw {
+  from {
+    background-size: 0% 45%;
+  }
+}

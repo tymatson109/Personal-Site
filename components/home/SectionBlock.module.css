@@ -1,0 +1,28 @@
+.block {
+  padding-block: var(--s7);
+  border-top: var(--hairline) solid var(--line);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s4);
+  margin-bottom: var(--s5);
+}
+
+.title {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+  letter-spacing: var(--track-tight);
+}
+
+.more {
+  color: var(--accent);
+  font-size: var(--t-sm);
+}
+
+.more:hover {
+  text-decoration: underline;
+  text-underline-offset: var(--ring-offset);
+}
