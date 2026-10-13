@@ -72,10 +72,14 @@
   font-weight: var(--w-bold);
 }
 
-/* The demo's tap target fills the screen and wears the accent, so it reads as the one thing to press */
+/* The demo's tap target covers the loading app and wears the accent, so it reads as the one thing to press */
 .start {
-  width: 100%;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   border: 0;
+  background: none;
   cursor: pointer;
 }
 
