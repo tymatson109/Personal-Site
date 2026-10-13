@@ -64,6 +64,13 @@
   overflow-x: auto;
 }
 
+.add {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s2);
+}
+
 .menu,
 .options {
   display: flex;
