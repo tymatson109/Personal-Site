@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { AdminFrame } from "@/components/admin/AdminFrame";
 import { EntryRows } from "@/components/admin/EntryRows";
-import { SubmitButton } from "@/components/admin/SubmitButton";
 import { Button } from "@/components/ui/Button";
 import { Chip, ChipRow } from "@/components/ui/Chip";
 import { signOutAdmin } from "@/features/admin/actions";
-import { createEntry } from "@/features/admin/entry-actions";
 import { listAdminEntries } from "@/features/admin/content";
 import { requireAdmin } from "@/features/admin/session";
 import { getSections } from "@/features/content/queries";
@@ -37,9 +35,9 @@ export default async function AdminContent(props: PageProps<"/admin">) {
           {sortedSections(sections)
             .filter((s) => !section || s.slug === section)
             .map((s) => (
-              <form key={s.slug} action={createEntry.bind(null, s.slug)}>
-                <SubmitButton variant="primary">{`New in ${s.name}`}</SubmitButton>
-              </form>
+              <Button key={s.slug} href={`/admin/new/${s.slug}`} variant="primary" size="sm">
+                {`New in ${s.name}`}
+              </Button>
             ))}
           <Button href="/admin/sections" size="sm">
             Sections

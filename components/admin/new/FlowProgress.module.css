@@ -1,0 +1,17 @@
+.progress {
+  display: flex;
+  gap: var(--s1);
+  flex: 1;
+}
+
+.segment {
+  flex: 1;
+  height: var(--progress-h);
+  border-radius: var(--r-pill);
+  background: var(--line);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.segment[data-done] {
+  background: var(--accent);
+}

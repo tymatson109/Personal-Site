@@ -1,0 +1,97 @@
+/* One screen per question: the header and the bar stay put, and the question fills the space between */
+.flow {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--screen-h);
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: var(--safe-top) var(--gutter) var(--safe-bottom);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding-block: var(--s3);
+  border-bottom: var(--hairline) solid var(--line);
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  padding-block: var(--s6);
+}
+
+.question {
+  font-size: var(--t-2xl);
+  font-weight: var(--w-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--track-display);
+}
+
+.big {
+  font-size: var(--t-lg);
+  font-weight: var(--w-bold);
+}
+
+/* The demo plays in a phone that takes whatever height is left, so the step never scrolls */
+.phone {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.answers {
+  list-style: none;
+  padding: 0;
+  border-top: var(--hairline) solid var(--line);
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s1);
+  width: 100%;
+  padding-block: var(--s3);
+  text-align: start;
+  border-bottom: var(--hairline) solid var(--line);
+}
+
+.value {
+  overflow-wrap: anywhere;
+}
+
+.answer:hover .value {
+  color: var(--accent);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  min-height: calc(var(--btn-h-sm) + var(--s3) * 2);
+  padding-block: var(--s3);
+  border-top: var(--hairline) solid var(--line);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--s2);
+  margin-inline-start: auto;
+}
+
+.note,
+.error {
+  font-size: var(--t-sm);
+  color: var(--muted);
+}
+
+.error {
+  color: var(--danger);
+}
