@@ -13,7 +13,8 @@
     border-color var(--dur-fast) var(--ease);
 }
 
-.chip[aria-pressed="true"] {
+.chip[aria-pressed="true"],
+.chip[aria-current="page"] {
   border-color: var(--accent);
   color: var(--accent);
   background: var(--accent-soft);

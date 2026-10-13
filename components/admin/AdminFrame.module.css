@@ -28,3 +28,8 @@
   gap: var(--s3);
   margin-top: var(--s3);
 }
+
+.body {
+  align-self: stretch;
+  margin-top: var(--s5);
+}

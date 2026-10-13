@@ -97,6 +97,8 @@
   --chip-pad-y: 2px;
   --lift: 4px;
   --nudge: 6px;
+  /* A control waiting on the server */
+  --busy: 0.5;
 
   /* Phone frame */
   --phone-w: 280px;

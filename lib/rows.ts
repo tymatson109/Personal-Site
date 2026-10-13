@@ -1,3 +1,4 @@
+import type { AdminEntry } from "./admin-entries";
 import {
   BLOCK_TYPES,
   ENTRY_SOURCES,
@@ -77,4 +78,8 @@ export function toEntry(row: Row): Entry {
 
 export function toPage(row: Row): Page {
   return { slug: text(row.slug), title: text(row.title), blocks: toBlocks(row.blocks) };
+}
+
+export function toAdminEntry(row: Row): AdminEntry {
+  return { entry: toEntry(row), deletedAt: typeof row.deletedAt === "string" ? row.deletedAt : null };
 }

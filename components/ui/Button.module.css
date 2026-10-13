@@ -54,3 +54,8 @@
   border-color: var(--on-image);
   background: var(--on-image-soft);
 }
+
+.btn:disabled {
+  opacity: var(--busy);
+  cursor: progress;
+}

@@ -12,12 +12,17 @@ export default async function SignInPage(props: PageProps<"/admin/sign-in">) {
   if (await getAdmin()) redirect("/admin");
   const { error } = await props.searchParams;
   return (
-    <AdminFrame title="Sign in" note="Only Ty's GitHub account can sign in here." error={signInError(error)}>
-      <form action={signInWithGitHub}>
-        <Button submit variant="primary">
-          Sign in with GitHub
-        </Button>
-      </form>
-    </AdminFrame>
+    <AdminFrame
+      title="Sign in"
+      note="Only Ty's GitHub account can sign in here."
+      error={signInError(error)}
+      actions={
+        <form action={signInWithGitHub}>
+          <Button submit variant="primary">
+            Sign in with GitHub
+          </Button>
+        </form>
+      }
+    />
   );
 }

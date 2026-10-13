@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toBlocks, toEntry, toFacts, toPage, toSection } from "./rows";
+import { toAdminEntry, toBlocks, toEntry, toFacts, toPage, toSection } from "./rows";
 
 const ENTRY_ROW = {
   id: "0b6c5c1e-3c1a-4d55-9d4e-1f7f8c2f3a10",
@@ -84,5 +84,18 @@ describe("toPage", () => {
       title: "About",
       blocks: [{ type: "p", text: "Hi" }],
     });
+  });
+});
+
+describe("toAdminEntry", () => {
+  it("keeps the deletion time alongside the entry", () => {
+    expect(toAdminEntry({ ...ENTRY_ROW, deletedAt: "2026-10-12T09:00:00Z" })).toEqual({
+      entry: ENTRY_ROW,
+      deletedAt: "2026-10-12T09:00:00Z",
+    });
+  });
+
+  it("reads a missing deletion time as not deleted", () => {
+    expect(toAdminEntry(ENTRY_ROW).deletedAt).toBeNull();
   });
 });

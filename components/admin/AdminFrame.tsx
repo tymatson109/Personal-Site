@@ -3,10 +3,10 @@ import { Container } from "@/components/ui/Container";
 import { Label } from "@/components/ui/Label";
 import styles from "./AdminFrame.module.css";
 
-type Props = { title: string; note: string; error?: string; children: ReactNode };
+type Props = { title: string; note: string; error?: string; actions: ReactNode; children?: ReactNode };
 
-/** The admin's plain page: a title, a line about where you are, any error, then the actions. */
-export function AdminFrame({ title, note, error, children }: Props) {
+/** The admin's plain page: a title, a line about where you are, any error, the actions, then the page's body. */
+export function AdminFrame({ title, note, error, actions, children }: Props) {
   return (
     <Container className={styles.frame}>
       <Label as="p">Admin</Label>
@@ -17,7 +17,8 @@ export function AdminFrame({ title, note, error, children }: Props) {
           {error}
         </p>
       )}
-      <div className={styles.actions}>{children}</div>
+      <div className={styles.actions}>{actions}</div>
+      {children && <div className={styles.body}>{children}</div>}
     </Container>
   );
 }

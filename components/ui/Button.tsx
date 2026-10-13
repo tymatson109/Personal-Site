@@ -5,7 +5,7 @@ import styles from "./Button.module.css";
 export type ButtonVariant = "primary" | "outline" | "onImage";
 export type ButtonSize = "sm" | "md" | "lg";
 
-type Common = { children: ReactNode; variant?: ButtonVariant; size?: ButtonSize; label?: string };
+type Common = { children: ReactNode; variant?: ButtonVariant; size?: ButtonSize; label?: string; busy?: boolean };
 type Props = Common &
   (
     | { href: string; onClick?: never; submit?: never }
@@ -14,11 +14,18 @@ type Props = Common &
   );
 
 /** The one pill button: a link when it has an href, a button when it has an action, a submit inside a form. */
-export function Button({ children, variant = "outline", size = "md", label, href, onClick, submit }: Props) {
+export function Button({ children, variant = "outline", size = "md", label, href, onClick, submit, busy }: Props) {
   const className = `${styles.btn} ${styles[variant]} ${styles[size]}`;
   if (href === undefined) {
     return (
-      <button type={submit ? "submit" : "button"} className={className} onClick={onClick} aria-label={label}>
+      <button
+        type={submit ? "submit" : "button"}
+        className={className}
+        onClick={onClick}
+        aria-label={label}
+        disabled={busy}
+        aria-busy={busy}
+      >
         {children}
       </button>
     );
