@@ -129,7 +129,7 @@ export function Tour({ stops }: Props) {
               </Button>
             </div>
             <div className={styles.media} data-media>
-              <EntryVisual entry={entry} fitHeight />
+              <EntryVisual entry={entry} fitHeight live />
             </div>
           </div>
         </section>

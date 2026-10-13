@@ -13,7 +13,7 @@ const KIND: Record<"demo" | "video", { title: string; sub: string }> = {
 
 /**
  * A phone frame for an app's live demo or screen recording.
- * A recording plays its uploaded file; a demo starts on tap where it is `live`, and elsewhere (cards, the tour, which are links) shows its label.
+ * A recording plays its uploaded file; a demo starts on tap where it is `live`, and inside a link (cards) shows its label.
  */
 export function PhoneFrame({ block, caption = true, fitHeight, live }: Props) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
