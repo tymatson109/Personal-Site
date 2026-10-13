@@ -57,5 +57,8 @@
 
 .btn:disabled {
   opacity: var(--busy);
+}
+
+.btn[aria-busy="true"] {
   cursor: progress;
 }

@@ -1,0 +1,11 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  min-width: 0;
+}
+
+.hint {
+  font-size: var(--t-xs);
+  color: var(--muted);
+}
