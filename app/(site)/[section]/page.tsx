@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SectionEntries } from "@/components/entries/SectionEntries";
+import { Button } from "@/components/ui/Button";
 import { PageHeading } from "@/components/site/PageHeading";
 import { Container } from "@/components/ui/Container";
 import { getEntries, getSections } from "@/features/content/queries";
 import { liveEntries } from "@/lib/content";
+import { SITE_LINKS, SUBSTACK_SECTION, substackSubscribe } from "@/lib/links";
 import { entryCount } from "@/lib/sections";
 import styles from "./page.module.css";
 
@@ -28,7 +30,17 @@ export default async function SectionPage(props: PageProps<"/[section]">) {
   const entries = liveEntries(await getEntries(), section.slug);
   return (
     <>
-      <PageHeading title={section.name} label={entryCount(entries.length)} />
+      <PageHeading
+        title={section.name}
+        label={entryCount(entries.length)}
+        action={
+          section.slug === SUBSTACK_SECTION && (
+            <Button href={substackSubscribe(SITE_LINKS.substack)} variant="primary">
+              Subscribe on Substack ↗
+            </Button>
+          )
+        }
+      />
       <Container className={styles.list}>
         <SectionEntries entries={entries} layout={section.layout} name={section.name} />
       </Container>
