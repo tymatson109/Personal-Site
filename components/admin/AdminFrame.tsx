@@ -1,0 +1,23 @@
+import type { ReactNode } from "react";
+import { Container } from "@/components/ui/Container";
+import { Label } from "@/components/ui/Label";
+import styles from "./AdminFrame.module.css";
+
+type Props = { title: string; note: string; error?: string; children: ReactNode };
+
+/** The admin's plain page: a title, a line about where you are, any error, then the actions. */
+export function AdminFrame({ title, note, error, children }: Props) {
+  return (
+    <Container className={styles.frame}>
+      <Label as="p">Admin</Label>
+      <h1 className={styles.title}>{title}</h1>
+      <p className={styles.note}>{note}</p>
+      {error && (
+        <p className={styles.error} role="alert">
+          {error}
+        </p>
+      )}
+      <div className={styles.actions}>{children}</div>
+    </Container>
+  );
+}

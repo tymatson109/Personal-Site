@@ -6,14 +6,19 @@ export type ButtonVariant = "primary" | "outline" | "onImage";
 export type ButtonSize = "sm" | "md" | "lg";
 
 type Common = { children: ReactNode; variant?: ButtonVariant; size?: ButtonSize; label?: string };
-type Props = Common & ({ href: string; onClick?: never } | { href?: never; onClick: () => void });
+type Props = Common &
+  (
+    | { href: string; onClick?: never; submit?: never }
+    | { href?: never; onClick: () => void; submit?: never }
+    | { href?: never; onClick?: never; submit: true }
+  );
 
-/** The one pill button: a link when it has an href, a button when it has an action. */
-export function Button({ children, variant = "outline", size = "md", label, href, onClick }: Props) {
+/** The one pill button: a link when it has an href, a button when it has an action, a submit inside a form. */
+export function Button({ children, variant = "outline", size = "md", label, href, onClick, submit }: Props) {
   const className = `${styles.btn} ${styles[variant]} ${styles[size]}`;
   if (href === undefined) {
     return (
-      <button type="button" className={className} onClick={onClick} aria-label={label}>
+      <button type={submit ? "submit" : "button"} className={className} onClick={onClick} aria-label={label}>
         {children}
       </button>
     );
