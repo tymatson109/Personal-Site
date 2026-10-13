@@ -21,9 +21,12 @@ function BlockView({ block }: { block: Block }) {
     case "quote":
       return <blockquote className={styles.quote}>{block.text}</blockquote>;
     case "image":
-      return <MediaSlot label="Image" />;
     case "gallery":
-      return <MediaSlot label="Gallery" />;
+      return (
+        <div data-reveal>
+          <MediaSlot label={block.type === "image" ? "Image" : "Gallery"} />
+        </div>
+      );
     default:
       return <p>{block.text}</p>;
   }
@@ -36,14 +39,14 @@ export function EntryBody({ blocks, skip, pull }: Props) {
       {bodyPieces(blocks, { skip, pull }).map((piece) => {
         if (piece.kind === "pull") {
           return (
-            <div key={piece.key} className={styles.pull}>
+            <div key={piece.key} className={styles.pull} data-reveal>
               <HighlightQuote text={piece.text} size="pull" />
             </div>
           );
         }
         if (piece.kind === "phones") {
           return (
-            <div key={piece.key} className={styles.phones}>
+            <div key={piece.key} className={styles.phones} data-reveal>
               {piece.blocks.map((b, i) => (
                 <PhoneFrame key={i} block={b} />
               ))}

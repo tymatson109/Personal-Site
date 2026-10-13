@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { IconLink } from "@/components/ui/IconLink";
 import { Label } from "@/components/ui/Label";
+import { RiseWords } from "@/components/ui/RiseWords";
 import { mailto, SITE_LINKS } from "@/lib/links";
 import { DotField } from "./DotField";
 import styles from "./Hero.module.css";
@@ -13,7 +14,7 @@ export function Hero({ hasTour }: Props) {
       <DotField />
       <div className={styles.inner}>
         <h1 className={styles.name}>
-          <span className={styles.word}>Ty</span> <span className={styles.word}>Matson</span>
+          <RiseWords text="Ty Matson" />
         </h1>
         <span className={styles.role}>
           <Label>Developer and writer</Label>

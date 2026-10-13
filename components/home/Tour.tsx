@@ -91,7 +91,7 @@ export function Tour({ stops }: Props) {
 
   return (
     <>
-      <div ref={introRef} className={styles.intro}>
+      <div ref={introRef} className={styles.intro} data-reveal>
         <div className={styles.introTitle}>
           <Label>The tour · {stops.length} projects</Label>
           <h2>Selected work</h2>

@@ -26,7 +26,7 @@ export function WritingList({ entries }: { entries: Entry[] }) {
         {entries.map((entry) => {
           const open = openId === entry.id;
           return (
-            <div key={entry.id} className={styles.item}>
+            <div key={entry.id} className={styles.item} data-reveal>
               <Link
                 href={entryHref(entry)}
                 className={styles.row}

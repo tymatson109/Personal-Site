@@ -9,3 +9,18 @@
     transform: translateY(var(--rise));
   }
 }
+
+/* Headline words, each delayed by its index in --i */
+.word {
+  display: inline-block;
+  animation: word var(--dur-slow) var(--ease) both;
+  animation-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+@keyframes word {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-far));
+    filter: blur(var(--blur-word));
+  }
+}

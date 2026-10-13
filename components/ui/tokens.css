@@ -135,6 +135,11 @@
   --dur-fast: 200ms;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
   --dur-slow: 900ms;
+  --dur-reveal: 800ms;
+  --stagger: 90ms;
+  --blur-word: 6px;
+  --cursor: 28px;
+  --cursor-big: 56px;
   --rise: 8px;
   --rise-far: 24px;
 
@@ -142,6 +147,7 @@
   --z-head: 20;
   --z-raised: 1;
   --z-overlay: 40;
+  --z-cursor: 100;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -165,6 +171,8 @@
     --dur: 0ms;
     --dur-fast: 0ms;
     --dur-slow: 0ms;
+    --dur-reveal: 0ms;
+    --stagger: 0ms;
     --rise: 0px;
     --rise-far: 0px;
   }

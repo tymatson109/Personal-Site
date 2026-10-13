@@ -47,7 +47,8 @@ describe("design tokens", () => {
   });
 
   it.each(FILES.map((f) => [f.slice(ROOT.length + 1), f]))("%s only reads tokens that exist", (_, file) => {
-    const used = [...readFileSync(file, "utf8").matchAll(/var\((--[\w-]+)/g)].map((m) => m[1]);
+    // A var with a fallback, like var(--i, 0), is a per-element input set inline, not a token
+    const used = [...readFileSync(file, "utf8").matchAll(/var\((--[\w-]+)\s*\)/g)].map((m) => m[1]);
     expect(used.filter((name) => !DEFINED.has(name))).toEqual([]);
   });
 });

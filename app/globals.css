@@ -46,6 +46,18 @@ button {
   border-radius: var(--r1);
 }
 
+/* Scroll reveal: content is visible by default; ScrollReveal holds only what starts below the first screen */
+[data-reveal] {
+  transition:
+    transform var(--dur-reveal) var(--ease),
+    opacity var(--dur-reveal) var(--ease);
+}
+
+[data-reveal][data-held] {
+  transform: translateY(var(--rise-far));
+  opacity: 0.25;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
