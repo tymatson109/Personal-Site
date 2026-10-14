@@ -1,18 +1,6 @@
 .tour {
+  position: relative;
   scroll-margin-top: calc(var(--head-h) + var(--safe-top));
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s2);
-  padding-block: var(--s8) var(--s5);
-}
-
-.intro h2 {
-  font-size: var(--t-xl);
-  font-weight: var(--w-bold);
-  letter-spacing: var(--track-heading);
 }
 
 /* One screen per project; --amount (0 to 1) is set from scroll by Tour.tsx */
@@ -25,12 +13,15 @@
   padding: var(--s8) var(--gutter);
 }
 
-/* The app's color, uncovered by a circle that grows from the logo's center */
-.flood {
-  position: absolute;
-  inset: 0;
+/* One screen of color, mixed from the projects in view by Tour.tsx and uncovered by a circle from the leading logo; it sticks while the tour scrolls under it and stays inside the tour */
+.backdrop {
+  position: sticky;
+  top: 0;
+  height: var(--screen-h);
+  margin-bottom: calc(var(--screen-h) * -1);
   background: var(--flood, transparent);
-  clip-path: circle(calc(var(--amount, 1) * var(--flood-reach)) at var(--cx, 50%) var(--cy, 50%));
+  clip-path: circle(calc(var(--coverage, 0) * var(--flood-reach)) at var(--cx, 50%) var(--cy, 50%));
+  pointer-events: none;
 }
 
 /* Once flooded, the stop's text takes the ink that reads on the app's color */

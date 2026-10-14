@@ -24,3 +24,23 @@ export function floodAmount(top: number, height: number, viewportHeight: number)
 export function floodStep(amount: number): number {
   return amount >= INK_SWITCH ? 1 : 0;
 }
+
+export type Rgb = [number, number, number];
+
+/** What the shared backdrop shows: the stops' colors mixed by how much each has flooded, how far the color has spread, and which stop leads it. */
+export type Blend = { rgb: Rgb | null; coverage: number; lead: number };
+
+/** Mixes the colors of every stop with some flood, weighted by its amount, so one app's color glides into the next with no gap between them. */
+export function blendFlood(stops: readonly { rgb: Rgb | null; amount: number }[]): Blend {
+  let total = 0;
+  let lead = -1;
+  const sum: Rgb = [0, 0, 0];
+  stops.forEach(({ rgb, amount }, i) => {
+    if (!rgb || amount <= 0) return;
+    total += amount;
+    rgb.forEach((c, k) => (sum[k] += c * amount));
+    if (lead === -1 || amount > stops[lead].amount) lead = i;
+  });
+  if (lead === -1) return { rgb: null, coverage: 0, lead };
+  return { rgb: sum.map((c) => Math.round(c / total)) as Rgb, coverage: stops[lead].amount, lead };
+}
