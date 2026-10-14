@@ -31,9 +31,9 @@ export type EntryMedia =
   | { kind: "image"; block: Block; image: Media }
   | { kind: "type" };
 
-/** What shows an entry: its app in a phone, its image, or its name set in type; `demo: false` skips live demos for a recording. */
-export function entryMedia(entry: Entry, { demo = true }: { demo?: boolean } = {}): EntryMedia {
-  const shown = entry.blocks.filter((b) => isShown(b) && (demo || b.type !== "demo"));
+/** What shows an entry: its app in a phone, its image, or its name set in type. */
+export function entryMedia(entry: Entry): EntryMedia {
+  const shown = entry.blocks.filter(isShown);
   const phone = shown.find((b) => b.type === "demo") ?? shown.find(isPhoneBlock);
   if (phone) return { kind: "phone", block: phone };
   const block = shown.find((b) => b.type === "image" || b.type === "gallery");

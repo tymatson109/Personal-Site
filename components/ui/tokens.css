@@ -127,10 +127,10 @@
   --rail: 120px;
   --preview-min-h: 360px;
   --index-media-h: min(48svh, 420px);
-  --index-media-h-narrow: 200px;
+  --index-media-h-narrow: 64svh;
   --index-media-max-w: 40vw;
   --index-rise: 60px;
-  --index-tilt: 4deg;
+  --index-tilt: 0deg;
   --index-swing: 14deg;
   --index-dim: 0.2;
   --progress-h: 4px;

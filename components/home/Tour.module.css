@@ -87,12 +87,16 @@
   will-change: transform, opacity;
 }
 
+/* On a phone the app sits under the story, big enough to tap into */
 @media (max-width: 760px) {
   .body {
-    gap: var(--s4);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s5);
   }
 
   .media {
+    justify-items: center;
+    max-width: none;
     height: var(--index-media-h-narrow);
   }
 }

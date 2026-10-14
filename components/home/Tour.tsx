@@ -15,7 +15,7 @@ import styles from "./Tour.module.css";
 type Stop = { entry: Entry; sectionName: string };
 type Props = { stops: Stop[] };
 
-/** The featured index: each project's name, set huge, drifts and fills with the accent as it crosses the screen. */
+/** The featured index: each project's name, set huge, drifts and fills with the accent as it crosses the screen, beside its live app. */
 export function Tour({ stops }: Props) {
   const rowRefs = useRef<(HTMLElement | null)[]>([]);
 
@@ -93,9 +93,9 @@ export function Tour({ stops }: Props) {
                   {entry.blocks.some((b) => demoSrc(b)) ? "Try the live app →" : "See the project →"}
                 </Button>
               </div>
-              {entryMedia(entry, { demo: false }).kind !== "type" && (
+              {entryMedia(entry).kind !== "type" && (
                 <div className={styles.media}>
-                  <EntryVisual entry={entry} fitHeight demo={false} />
+                  <EntryVisual entry={entry} fitHeight live />
                 </div>
               )}
             </div>

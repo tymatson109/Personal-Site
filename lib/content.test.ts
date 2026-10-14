@@ -62,16 +62,6 @@ describe("entryMedia", () => {
     expect(entryMedia(e)).toEqual({ kind: "phone", block: { type: "demo", text: "https://app.example.com" } });
   });
 
-  it("skips a live demo for the recording when demos are turned off", () => {
-    const video: Block = { type: "video", text: "", media: [PHOTO] };
-    const e = testEntry({ blocks: [{ type: "demo", text: "https://app.example.com" }, video] });
-    expect(entryMedia(e, { demo: false })).toEqual({ kind: "phone", block: video });
-  });
-
-  it("falls back to the name in type when demos are off and the demo is the only media", () => {
-    expect(entryMedia(testEntry({ blocks: [{ type: "demo", text: "https://app.example.com" }] }), { demo: false })).toEqual({ kind: "type" });
-  });
-
   it("uses a recording when there is no demo", () => {
     expect(entryMedia(testEntry({ blocks: [{ type: "video", text: "", media: [PHOTO] }] })).kind).toBe("phone");
   });
