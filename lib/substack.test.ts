@@ -39,6 +39,23 @@ describe("parseSubstackFeed", () => {
     ]);
   });
 
+  it("decodes the HTML entities Substack leaves inside a title and summary", () => {
+    const encoded = item(
+      `<title><![CDATA[Ty&#8217;s notes &amp; more]]></title>
+       <description><![CDATA[Key evidence is individuals&#8217; cooperation &#8212; mostly.]]></description>
+       <link>https://tymatson.substack.com/p/notes</link>
+       <pubDate>Mon, 06 Oct 2026 23:30:00 GMT</pubDate>`,
+    );
+    const [parsed] = parseSubstackFeed(feed(encoded));
+    expect(parsed.title).toBe("Ty’s notes & more");
+    expect(parsed.summary).toBe("Key evidence is individuals’ cooperation — mostly.");
+  });
+
+  it("decodes a plain title's entities only once", () => {
+    const plain = item(`<title>A &amp;amp; B</title><link>https://x.substack.com/p/a</link><pubDate>Mon, 06 Oct 2026 10:00:00 GMT</pubDate>`);
+    expect(parseSubstackFeed(feed(plain))[0].title).toBe("A &amp; B");
+  });
+
   it("leaves out an item with no link, a link that isn't https, no title or no date", () => {
     const missing = [
       item(`<title>No link</title><pubDate>Mon, 06 Oct 2026 10:00:00 GMT</pubDate>`),
