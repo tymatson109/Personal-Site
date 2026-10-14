@@ -1,3 +1,7 @@
+.tour {
+  scroll-margin-top: calc(var(--head-h) + var(--safe-top));
+}
+
 .intro {
   display: flex;
   flex-direction: column;
@@ -11,88 +15,73 @@
   letter-spacing: var(--track-heading);
 }
 
-.list {
-  scroll-margin-top: calc(var(--head-h) + var(--safe-top));
-}
-
-/* Rows clip the drifting names so the page itself never scrolls sideways */
-.row {
+/* One screen per project; --amount (0 to 1) is set from scroll by Tour.tsx */
+.stop {
   position: relative;
-  overflow-x: clip;
-  padding-block: var(--s5) var(--s8);
-  border-top: var(--hairline) solid var(--line);
+  overflow: clip;
+  min-height: var(--screen-h);
+  display: grid;
+  place-items: center;
+  padding: var(--s8) var(--gutter);
 }
 
-.num {
-  display: block;
-  margin-bottom: var(--s3);
+/* The app's color, uncovered by a circle that grows from the logo's center */
+.flood {
+  position: absolute;
+  inset: 0;
+  background: var(--flood, transparent);
+  clip-path: circle(calc(var(--amount, 1) * var(--flood-reach)) at var(--cx, 50%) var(--cy, 50%));
 }
 
-.name {
+/* Once flooded, the stop's text takes the ink that reads on the app's color */
+.stop[data-flooded] {
+  --fg: var(--ink, var(--app-fg));
+  --muted: var(--ink, var(--app-fg));
+}
+
+.inner {
   position: relative;
-  white-space: nowrap;
-  font-size: var(--t-index);
-  font-weight: var(--w-black);
-  line-height: var(--leading-display);
-  letter-spacing: var(--track-hero);
-  transform: translateX(var(--drift, 0px));
+  z-index: var(--z-raised);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s4);
+  text-align: center;
+  color: var(--fg);
+  transition: color var(--dur) var(--ease);
+}
+
+.logo {
+  width: var(--flood-logo);
+  aspect-ratio: 1;
+  max-width: 100%;
+  border-radius: var(--flood-logo-r);
+  overflow: hidden;
+  box-shadow: var(--shadow-phone);
+  transform: scale(calc(0.6 + var(--amount, 1) * 0.6)) rotate(calc((1 - var(--amount, 1)) * var(--flood-turn)));
   will-change: transform;
 }
 
-.ghost {
-  color: transparent;
-  -webkit-text-stroke: var(--hairline) var(--muted);
+.splash {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--flood-logo-zoom));
 }
 
-/* The accent copy sits on the outline and is uncovered left to right as the name fills */
-.fill {
-  position: absolute;
-  inset: 0;
-  color: var(--accent);
-  clip-path: inset(0 calc((1 - var(--fill, 1)) * 100%) 0 0);
-}
-
-.body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: var(--s6);
-  margin-top: var(--s5);
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--s3);
-  min-width: 0;
-  opacity: calc(var(--index-dim) + (1 - var(--index-dim)) * var(--show, 1));
-  transform: translateY(calc((1 - var(--show, 1)) * var(--s4)));
-}
-
-.summary {
-  color: var(--muted);
-  max-width: var(--measure-body);
-}
-
-.media {
-  display: grid;
-  justify-items: end;
-  height: var(--index-media-h);
-  max-width: var(--index-media-max-w);
-  transform-origin: 50% 100%;
-  opacity: calc(var(--index-dim) + (1 - var(--index-dim)) * var(--show, 1));
-  transform: translateY(calc((1 - var(--show, 1)) * var(--index-rise)))
-    rotate(calc(var(--index-tilt) + (1 - var(--show, 1)) * var(--index-swing)));
+.name {
+  font-size: var(--t-flood);
+  font-weight: var(--w-black);
+  line-height: var(--leading-display);
+  letter-spacing: var(--track-hero);
+  transform: scale(calc(1.35 - var(--amount, 1) * 0.35));
+  opacity: min(1, calc(var(--amount, 1) * 1.6));
   will-change: transform, opacity;
 }
 
-@media (max-width: 760px) {
-  .body {
-    gap: var(--s4);
-  }
-
-  .media {
-    height: var(--index-media-h-narrow);
-  }
+.summary {
+  max-width: var(--measure-lede);
+  font-size: var(--t-md);
+  line-height: var(--leading-body);
 }

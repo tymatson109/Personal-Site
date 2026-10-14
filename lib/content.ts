@@ -1,5 +1,6 @@
 import type { Block, Entry, Media, Section } from "@/types/entry";
 import { isPhoneBlock, isShown } from "./blocks";
+import { splashSrc } from "./demos";
 
 /** Newest first; ISO dates sort as strings. */
 function byDateDesc(a: Entry, b: Entry) {
@@ -39,6 +40,12 @@ export function entryMedia(entry: Entry): EntryMedia {
   const block = shown.find((b) => b.type === "image" || b.type === "gallery");
   const image = block?.media?.[0];
   return block && image ? { kind: "image", block, image } : { kind: "type" };
+}
+
+/** The splash screen the entry's app publishes beside its live demo, or null with no demo. */
+export function entrySplash(entry: Entry): string | null {
+  const demo = entry.blocks.filter(isShown).find((b) => b.type === "demo");
+  return demo ? splashSrc(demo) : null;
 }
 
 /** The line a preview highlights: the chosen quote, else the first quote block, else the summary. */

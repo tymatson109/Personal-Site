@@ -1,11 +1,10 @@
-// Scroll-index math: each project's name drifts sideways and fills with the accent as it crosses the screen
+// Flood math: each project's color pours over the screen from its logo as the project nears the middle of the screen
 
-/** Where a name starts and finishes filling, as shares of the viewport's height from the top. */
-export const FILL_START = 0.85;
-export const FILL_END = 0.4;
+/** How far from the middle, in viewport heights, a project can sit and still carry some of its color. */
+export const FLOOD_RANGE = 0.78;
 
-/** How far a name drifts sideways per pixel it sits away from the middle of the screen. */
-export const DRIFT = 0.25;
+/** How much color makes the text switch to the ink that reads on the app's color. */
+export const INK_SWITCH = 0.45;
 
 export function clamp01(v: number): number {
   return Math.max(0, Math.min(1, v));
@@ -15,19 +14,13 @@ export function easeOut(v: number): number {
   return 1 - Math.pow(1 - v, 3);
 }
 
-/** How much of a name is filled, 0 below the start line and 1 once its top passes the end line. */
-export function nameFill(top: number, viewportHeight: number): number {
-  const start = viewportHeight * FILL_START;
-  const end = viewportHeight * FILL_END;
-  return clamp01((start - top) / (start - end));
+/** How much a project has flooded the screen: 1 with its middle on the screen's middle, falling to 0 a range away either side. */
+export function floodAmount(top: number, height: number, viewportHeight: number): number {
+  const offset = Math.abs(top + height / 2 - viewportHeight / 2) / viewportHeight;
+  return easeOut(clamp01(1 - offset / FLOOD_RANGE));
 }
 
-/** A name's sideways offset in pixels; alternate rows drift opposite ways so the list shears as it scrolls. */
-export function nameDrift(top: number, viewportHeight: number, index: number): number {
-  return (top - viewportHeight / 2) * DRIFT * (index % 2 === 0 ? -1 : 1);
-}
-
-/** How far a project's story and recording have come in, starting once its name is a third filled. */
-export function storyReveal(fill: number): number {
-  return easeOut(clamp01((fill - 0.35) / 0.5));
+/** Reduced motion swaps colors outright instead of pouring them. */
+export function floodStep(amount: number): number {
+  return amount >= INK_SWITCH ? 1 : 0;
 }
