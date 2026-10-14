@@ -1,4 +1,5 @@
-import { isTag, isText, type ChildNode as DomNode, type Element as DomElement } from "domhandler";
+import { isCDATA, isTag, isText, type ChildNode as DomNode, type Element as DomElement } from "domhandler";
+import { decodeHTML } from "entities";
 import { DomUtils, parseDocument } from "htmlparser2";
 import type { Block } from "@/types/entry";
 import type { EntryInput } from "./entry-input";
@@ -70,9 +71,11 @@ export function postBlocks(html: string): Block[] {
     .map((b) => ({ ...b, text: clip(b.text, LIMITS.text) }));
 }
 
+// CDATA keeps Substack's HTML entities (&#8217;) as written, so only that text is decoded; plain XML text already is
 function childText(item: DomElement, name: string): string {
   const el = DomUtils.findOne((e) => e.name === name, item.children, false);
-  return el ? DomUtils.textContent(el).trim() : "";
+  if (!el) return "";
+  return el.children.map((c) => (isCDATA(c) ? decodeHTML(DomUtils.textContent(c)) : DomUtils.textContent(c))).join("").trim();
 }
 
 /** The YYYY-MM-DD a feed's pubDate falls on in UTC, or null when it isn't a date. */

@@ -12,6 +12,7 @@ import choices from "./Choices.module.css";
 import type { KeyedBlock } from "./BlockEditor";
 import { EditorBar } from "./EditorBar";
 import { FactsEditor } from "./FactsEditor";
+import { QuotePicker } from "./QuotePicker";
 import { StoryEditor } from "./StoryEditor";
 import { Field } from "./Field";
 import controls from "./controls.module.css";
@@ -101,9 +102,7 @@ export function EntryEditor({ entry, sections }: Props) {
           <input className={controls.input} value={draft.tagsText} placeholder="iOS, Expo" onChange={(e) => set("tagsText", e.target.value)} />
         </Field>
         {layout === "list" && (
-          <Field label="Highlight quote" hint="Shown in the preview and as a pull quote. Leave empty to use the first quote block.">
-            <AutoTextarea className={controls.input} value={draft.quote} onChange={(e) => set("quote", e.target.value)} />
-          </Field>
+          <QuotePicker blocks={draft.blocks.map((b) => b.block)} value={draft.quote} onChange={(quote) => set("quote", quote)} />
         )}
         {layout === "grid" && <FactsEditor facts={draft.facts} onChange={(facts) => set("facts", facts)} />}
         <div className={styles.toggles}>

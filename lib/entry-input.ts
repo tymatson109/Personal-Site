@@ -12,7 +12,10 @@ export type EntryInput = Pick<
 
 export type InputResult = { ok: true; input: EntryInput } | { ok: false; error: string };
 
-const LIMITS = { title: 200, summary: 500, quote: 500, tag: 40, tags: 12, facts: 12, blocks: 500, text: 20000, alt: 500 };
+/** The longest highlight quote a save accepts. */
+export const QUOTE_MAX = 500;
+
+const LIMITS = { title: 200, summary: 500, quote: QUOTE_MAX, tag: 40, tags: 12, facts: 12, blocks: 500, text: 20000, alt: 500 };
 
 function text(value: unknown, max: number): string | null {
   return typeof value === "string" && value.length <= max ? value.trim() : null;

@@ -24,7 +24,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero hasTour={stops.length > 0} />
+      <Hero />
       {stops.length > 0 && <Tour stops={stops} />}
       <Container>
         {lists.map((section) => {
