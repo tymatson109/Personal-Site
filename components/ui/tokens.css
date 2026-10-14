@@ -125,9 +125,11 @@
   --measure-body: 52ch;
   --rail: 120px;
   --preview-min-h: 360px;
-  --stop-h: 240svh;
-  --stop-media-h: min(64svh, 600px);
-  --stop-media-h-narrow: 44svh;
+  --tour-phone-h: min(64svh, 600px);
+  --tour-phone-h-narrow: 40svh;
+  --story-min-h: 80svh;
+  --story-min-h-narrow: 55svh;
+  --story-dim: 0.35;
   --tour-seg-w: 28px;
   --tour-seg-h: 3px;
   --progress-h: 4px;

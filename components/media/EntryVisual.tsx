@@ -1,6 +1,6 @@
 import type { Entry } from "@/types/entry";
 import { entryMedia } from "@/lib/content";
-import { PhoneFrame } from "./PhoneFrame";
+import { PhoneFrame, PhoneScreen } from "./PhoneFrame";
 import { Photo } from "./Photo";
 import { TypeCover } from "./TypeCover";
 
@@ -12,4 +12,12 @@ export function EntryVisual({ entry, fill, fitHeight, live }: Props) {
   if (media.kind === "phone") return <PhoneFrame block={media.block} caption={false} fitHeight={fitHeight} live={live} />;
   if (media.kind === "image") return <Photo media={media.image} shape={fill ? "fill" : fitHeight ? "contain" : "natural"} sizes="(max-width: 760px) 100vw, 50vw" />;
   return <TypeCover title={entry.title} fill={fill} />;
+}
+
+/** The same media filling a phone's screen, for the one phone the tour slides between projects. */
+export function EntryScreen({ entry }: { entry: Entry }) {
+  const media = entryMedia(entry);
+  if (media.kind === "phone") return <PhoneScreen block={media.block} live />;
+  if (media.kind === "image") return <Photo media={media.image} shape="fill" sizes="(max-width: 760px) 50vw, 25vw" />;
+  return <TypeCover title={entry.title} fill />;
 }
