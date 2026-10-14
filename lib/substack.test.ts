@@ -51,9 +51,16 @@ describe("parseSubstackFeed", () => {
     expect(parsed.summary).toBe("Key evidence is individuals’ cooperation — mostly.");
   });
 
-  it("decodes a plain title's entities only once", () => {
-    const plain = item(`<title>A &amp;amp; B</title><link>https://x.substack.com/p/a</link><pubDate>Mon, 06 Oct 2026 10:00:00 GMT</pubDate>`);
-    expect(parseSubstackFeed(feed(plain))[0].title).toBe("A &amp; B");
+  it("decodes entity-encoded text in a title and summary written without CDATA", () => {
+    const plain = item(
+      `<title>Henrich&amp;#8217;s mechanism</title>
+       <description>Following Henrich&amp;#8217;s mechanism &amp;amp; more.</description>
+       <link>https://x.substack.com/p/a</link>
+       <pubDate>Mon, 06 Oct 2026 10:00:00 GMT</pubDate>`,
+    );
+    const [parsed] = parseSubstackFeed(feed(plain));
+    expect(parsed.title).toBe("Henrich\u2019s mechanism");
+    expect(parsed.summary).toBe("Following Henrich\u2019s mechanism & more.");
   });
 
   it("leaves out an item with no link, a link that isn't https, no title or no date", () => {
