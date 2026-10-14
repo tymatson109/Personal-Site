@@ -23,6 +23,9 @@ export const getEntries = cache(async (): Promise<Entry[]> => {
 });
 
 export const getPage = cache(async (slug: string): Promise<Page | undefined> => {
-  const { rows } = await asReader((db) => db.query(`select slug, title, intro, blocks from public.pages where slug = $1`, [slug]));
+  // intro is read through the row's JSON so a database that hasn't had the page_intro migration still builds, with no opening line
+  const { rows } = await asReader((db) =>
+    db.query(`select slug, title, to_jsonb(p) ->> 'intro' as intro, blocks from public.pages p where slug = $1`, [slug]),
+  );
   return rows.length ? toPage(rows[0]) : undefined;
 });
