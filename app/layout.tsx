@@ -26,7 +26,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    // Tells Next to pause the smooth scroll while it jumps a new page to the top, so pages open at the very top
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} data-scroll-behavior="smooth">
       <body>{children}</body>
     </html>
   );
