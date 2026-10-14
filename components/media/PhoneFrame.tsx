@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import type { Block } from "@/types/entry";
 import { Label } from "@/components/ui/Label";
 import { demoSrc, splashSrc } from "@/lib/demos";
-import { DemoScreen } from "./DemoScreen";
 import { SplashScreen } from "./SplashScreen";
 import styles from "./PhoneFrame.module.css";
 
@@ -36,14 +35,14 @@ function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
     </div>
   );
   if (video) return <video className={styles.video} src={video} autoPlay muted loop playsInline aria-label={kind.title} />;
-  if (demo) return <DemoScreen src={demo} title={kind.title} />;
+  if (demo) return <iframe className={styles.video} src={demo} title={kind.title} loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms" />;
   if (splash) return <SplashScreen src={splash} fallback={slot} />;
   return slot;
 }
 
 /**
  * A phone frame for an app's live demo or screen recording.
- * A recording plays its uploaded file; a demo starts on tap where it is `live`, and elsewhere (cards, the home index) shows its splash screen.
+ * A recording plays its uploaded file; a demo loads and plays where it is `live`, and elsewhere (cards, the home index) shows its splash screen.
  */
 export function PhoneFrame({ block, caption = true, fitHeight, live }: Props) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
