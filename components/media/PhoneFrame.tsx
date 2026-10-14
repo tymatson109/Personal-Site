@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import type { Block } from "@/types/entry";
 import { Label } from "@/components/ui/Label";
-import { demoSrc } from "@/lib/demos";
+import { demoSrc, splashSrc } from "@/lib/demos";
 import { DemoScreen } from "./DemoScreen";
-import { Photo } from "./Photo";
+import { SplashScreen } from "./SplashScreen";
 import styles from "./PhoneFrame.module.css";
 
 type Props = { block: Block; caption?: boolean; fitHeight?: boolean; live?: boolean };
@@ -24,20 +24,21 @@ function PhoneShell({ fitHeight, children }: ShellProps) {
   );
 }
 
-/** What an app block puts on a phone's screen: its recording, its live demo where `live`, its splash screen in previews, or its label. */
+/** What an app block puts on a phone's screen: its recording, its live demo where `live`, the splash screen its app publishes in previews, or its label. */
 function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
   const video = block.type === "video" ? block.media?.[0]?.url : undefined;
   const demo = live ? demoSrc(block) : null;
-  const splash = block.type === "demo" ? block.media?.[0] : undefined;
-  if (video) return <video className={styles.video} src={video} autoPlay muted loop playsInline aria-label={kind.title} />;
-  if (demo) return <DemoScreen src={demo} title={kind.title} />;
-  if (splash) return <Photo media={splash} shape="fill" sizes="(max-width: 760px) 50vw, 320px" />;
-  return (
+  const splash = live ? null : splashSrc(block);
+  const slot = (
     <div className={styles.slot}>
       <Label>{kind.title}</Label>
     </div>
   );
+  if (video) return <video className={styles.video} src={video} autoPlay muted loop playsInline aria-label={kind.title} />;
+  if (demo) return <DemoScreen src={demo} title={kind.title} />;
+  if (splash) return <SplashScreen src={splash} fallback={slot} />;
+  return slot;
 }
 
 /**
