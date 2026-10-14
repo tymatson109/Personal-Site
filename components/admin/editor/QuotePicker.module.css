@@ -1,0 +1,77 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+.post summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.post summary::-webkit-details-marker {
+  display: none;
+}
+
+.post summary::before {
+  content: "+ ";
+}
+
+.post[open] summary::before {
+  content: "− ";
+}
+
+.passages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r1);
+  padding: var(--s3) var(--s4);
+  background: var(--surface);
+}
+
+.hint {
+  float: left;
+  width: 100%;
+  font-size: var(--t-xs);
+  color: var(--muted);
+  margin-bottom: var(--s2);
+}
+
+.passage {
+  line-height: var(--leading-body);
+}
+
+/* Inline so a sentence wraps with the paragraph, like text you could run a highlighter over */
+.sentence {
+  cursor: pointer;
+  border-radius: var(--r1);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.sentence + .sentence {
+  margin-left: var(--s1);
+}
+
+.sentence input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sentence:hover {
+  background-color: var(--line);
+}
+
+.sentence:has(input:checked) {
+  background-color: var(--accent-soft);
+  box-shadow: inset 0 calc(var(--ring) * -1) 0 var(--accent);
+}
+
+.sentence:has(input:focus-visible) {
+  outline: var(--ring) solid var(--accent);
+  outline-offset: var(--hairline);
+}
