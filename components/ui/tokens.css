@@ -51,13 +51,14 @@
   --t-project: clamp(40px, 7vw, 72px);
   --t-article: clamp(32px, 5vw, 48px);
   --t-cover: clamp(32px, 5vw, 56px);
-  --t-stop: clamp(24px, 4vw, 40px);
+  --t-index: clamp(72px, 16vw, 220px);
   --t-quote: clamp(22px, 2.4vw, 30px);
   --t-pull: clamp(24px, 3vw, 34px);
   --t-quote-mark: 56px;
   --w-regular: 400;
   --w-medium: 500;
   --w-bold: 600;
+  --w-black: 800;
   --leading-body: 1.6;
   --leading-tight: 1.05;
   --leading-display: 0.95;
@@ -125,13 +126,13 @@
   --measure-body: 52ch;
   --rail: 120px;
   --preview-min-h: 360px;
-  --tour-phone-h: min(64svh, 600px);
-  --tour-phone-h-narrow: 40svh;
-  --story-min-h: 80svh;
-  --story-min-h-narrow: 55svh;
-  --story-dim: 0.35;
-  --tour-seg-w: 28px;
-  --tour-seg-h: 3px;
+  --index-media-h: min(48svh, 420px);
+  --index-media-h-narrow: 200px;
+  --index-media-max-w: 40vw;
+  --index-rise: 60px;
+  --index-tilt: 4deg;
+  --index-swing: 14deg;
+  --index-dim: 0.2;
   --progress-h: 4px;
   --cue-h: 40px;
   /* Breakpoints can't be variables in media queries; these are the only two, checked by tokens.test.ts:
