@@ -1,23 +1,25 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import type { Entry } from "@/types/entry";
 import { Button } from "@/components/ui/Button";
-import { Chip, ChipRow } from "@/components/ui/Chip";
+import { Container } from "@/components/ui/Container";
 import { Label } from "@/components/ui/Label";
-import { EntryVisual } from "@/components/media/EntryVisual";
-import { entryHref, entryMedia } from "@/lib/content";
-import { demoSrc } from "@/lib/demos";
+import { SplashScreen } from "@/components/media/SplashScreen";
+import { entryHref } from "@/lib/content";
 import { pad2 } from "@/lib/format-date";
-import { nameDrift, nameFill, storyReveal } from "@/lib/tour";
+import type { Ink } from "@/lib/splash";
+import { floodAmount, floodStep, INK_SWITCH } from "@/lib/tour";
 import styles from "./Tour.module.css";
 
-type Stop = { entry: Entry; sectionName: string };
+type Stop = { entry: Entry; sectionName: string; splash: string | null; flood: { color: string; ink: Ink } | null };
 type Props = { stops: Stop[] };
 
-/** The featured index: each project's name, set huge, drifts and fills with the accent as it crosses the screen. */
+const INK: Record<Ink, string> = { light: "var(--on-image)", dark: "var(--app-fg)" };
+
+/** The featured tour: as each project nears the middle of the screen, its app's color pours over the page from its logo. */
 export function Tour({ stops }: Props) {
-  const rowRefs = useRef<(HTMLElement | null)[]>([]);
+  const stopRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
@@ -25,14 +27,16 @@ export function Tour({ stops }: Props) {
 
     const update = () => {
       ticking = false;
-      rowRefs.current.forEach((row, i) => {
-        const name = row?.querySelector<HTMLElement>("[data-name]");
-        if (!row || !name) return;
-        const top = name.getBoundingClientRect().top;
-        const fill = reduce.matches ? 1 : nameFill(top, innerHeight);
-        row.style.setProperty("--fill", String(fill));
-        row.style.setProperty("--drift", `${reduce.matches ? 0 : nameDrift(top, innerHeight, i)}px`);
-        row.style.setProperty("--show", String(reduce.matches ? 1 : storyReveal(fill)));
+      stopRefs.current.forEach((stop) => {
+        if (!stop) return;
+        const box = stop.getBoundingClientRect();
+        const pour = floodAmount(box.top, box.height, innerHeight);
+        const amount = reduce.matches ? floodStep(pour) : pour;
+        const logo = stop.querySelector("[data-logo]")?.getBoundingClientRect();
+        stop.style.setProperty("--amount", String(amount));
+        stop.style.setProperty("--cx", `${logo ? logo.left + logo.width / 2 - box.left : box.width / 2}px`);
+        stop.style.setProperty("--cy", `${logo ? logo.top + logo.height / 2 - box.top : box.height / 2}px`);
+        stop.toggleAttribute("data-flooded", stop.dataset.ink !== undefined && amount >= INK_SWITCH);
       });
     };
 
@@ -54,54 +58,44 @@ export function Tour({ stops }: Props) {
   }, []);
 
   return (
-    <>
-      <div className={styles.intro} data-reveal>
-        <Label>The tour · {stops.length} projects</Label>
-        <h2>Selected work</h2>
-      </div>
+    <section id="tour" className={styles.tour}>
+      <Container>
+        <div className={styles.intro} data-reveal>
+          <Label>The tour · {stops.length} projects</Label>
+          <h2>Selected work</h2>
+        </div>
+      </Container>
 
-      <div id="tour" className={styles.list}>
-        {stops.map(({ entry, sectionName }, i) => (
-          <article
-            key={entry.id}
-            ref={(el) => {
-              rowRefs.current[i] = el;
-            }}
-            className={styles.row}
-            aria-label={entry.title}
-          >
-            <span className={styles.num}>
-              <Label>
-                {pad2(i + 1)} · {sectionName}
-              </Label>
-            </span>
-            <h3 className={styles.name} data-name>
-              <span className={styles.ghost}>{entry.title}</span>
-              <span className={styles.fill} aria-hidden="true">
-                {entry.title}
-              </span>
-            </h3>
-            <div className={styles.body}>
-              <div className={styles.info}>
-                <p className={styles.summary}>{entry.summary}</p>
-                <ChipRow>
-                  {entry.tags.map((t) => (
-                    <Chip key={t}>{t}</Chip>
-                  ))}
-                </ChipRow>
-                <Button href={entryHref(entry)} variant="primary">
-                  {entry.blocks.some((b) => demoSrc(b)) ? "Try the live app →" : "See the project →"}
-                </Button>
+      {stops.map(({ entry, sectionName, splash, flood }, i) => (
+        <article
+          key={entry.id}
+          ref={(el) => {
+            stopRefs.current[i] = el;
+          }}
+          className={styles.stop}
+          aria-label={entry.title}
+          data-ink={flood?.ink}
+          data-flooded={flood ? "" : undefined}
+          style={flood ? ({ "--flood": flood.color, "--ink": INK[flood.ink] } as CSSProperties) : undefined}
+        >
+          {flood && <div className={styles.flood} aria-hidden="true" />}
+          <div className={styles.inner}>
+            <Label>
+              {pad2(i + 1)} · {sectionName}
+            </Label>
+            {splash && (
+              <div className={styles.logo} data-logo>
+                <SplashScreen src={splash} fallback={null} className={styles.splash} />
               </div>
-              {entryMedia(entry).kind !== "type" && (
-                <div className={styles.media}>
-                  <EntryVisual entry={entry} fitHeight />
-                </div>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
-    </>
+            )}
+            <h3 className={styles.name}>{entry.title}</h3>
+            <p className={styles.summary}>{entry.summary}</p>
+            <Button href={entryHref(entry)} variant="primary">
+              See the project →
+            </Button>
+          </div>
+        </article>
+      ))}
+    </section>
   );
 }

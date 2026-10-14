@@ -4,21 +4,29 @@ import { SectionBlock } from "@/components/home/SectionBlock";
 import { Tour } from "@/components/home/Tour";
 import { Container } from "@/components/ui/Container";
 import { getEntries, getSections } from "@/features/content/queries";
-import { liveEntries, sortedSections, tourEntries } from "@/lib/content";
+import { getSplashColor } from "@/features/content/splash";
+import { entrySplash, liveEntries, sortedSections, tourEntries } from "@/lib/content";
+import { inkOn } from "@/lib/splash";
 
 const LATEST_COUNT = 4;
 
 export default async function Home() {
   const [sections, entries] = await Promise.all([getSections(), getEntries()]);
   const nameOf = new Map(sections.map((s) => [s.slug, s.name]));
-  const stops = tourEntries(sections, entries).map((entry) => ({ entry, sectionName: nameOf.get(entry.section) ?? "" }));
+  const stops = await Promise.all(
+    tourEntries(sections, entries).map(async (entry) => {
+      const splash = entrySplash(entry);
+      const color = splash && (await getSplashColor(splash));
+      return { entry, sectionName: nameOf.get(entry.section) ?? "", splash, flood: color ? { color, ink: inkOn(color) } : null };
+    }),
+  );
   const lists = sortedSections(sections).filter((s) => s.layout === "list");
 
   return (
     <>
       <Hero hasTour={stops.length > 0} />
+      {stops.length > 0 && <Tour stops={stops} />}
       <Container>
-        {stops.length > 0 && <Tour stops={stops} />}
         {lists.map((section) => {
           const latest = liveEntries(entries, section.slug).slice(0, LATEST_COUNT);
           if (!latest.length) return null;
