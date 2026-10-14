@@ -11,93 +11,63 @@
   letter-spacing: var(--track-heading);
 }
 
-.stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: var(--s7);
+.list {
   scroll-margin-top: calc(var(--head-h) + var(--safe-top));
 }
 
-/* The phone holds still beside the stories, so scrolling only ever moves the stories and the phone's screen */
-.phoneCol {
-  grid-column: 2;
-  grid-row: 1;
-  position: sticky;
-  top: calc(var(--head-h) + var(--safe-top));
-  height: calc(var(--screen-h) - var(--head-h) - var(--safe-top));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--s3);
-}
-
-.phone {
-  height: var(--tour-phone-h);
-  display: grid;
-  place-items: center;
-}
-
-.track {
-  display: flex;
-  height: 100%;
-  transform: translateX(calc(var(--active, 0) * -100%));
-  transition: transform var(--dur-slow) var(--ease);
-}
-
-.slide {
-  flex: 0 0 100%;
-  height: 100%;
-}
-
-.rail {
-  display: flex;
-  gap: var(--s1);
-}
-
-.seg {
+/* Rows clip the drifting names so the page itself never scrolls sideways */
+.row {
   position: relative;
-  width: var(--tour-seg-w);
-  height: var(--tour-seg-h);
-  border-radius: var(--r-pill);
-  background: var(--line);
-  overflow: hidden;
+  overflow-x: clip;
+  padding-block: var(--s5) var(--s8);
+  border-top: var(--hairline) solid var(--line);
 }
 
-.seg i {
+.num {
+  display: block;
+  margin-bottom: var(--s3);
+}
+
+.name {
+  position: relative;
+  white-space: nowrap;
+  font-size: var(--t-index);
+  font-weight: var(--w-black);
+  line-height: var(--leading-display);
+  letter-spacing: var(--track-hero);
+  transform: translateX(var(--drift, 0px));
+  will-change: transform;
+}
+
+.ghost {
+  color: transparent;
+  -webkit-text-stroke: var(--hairline) var(--muted);
+}
+
+/* The accent copy sits on the outline and is uncovered left to right as the name fills */
+.fill {
   position: absolute;
   inset: 0;
-  background: var(--accent);
-  transform-origin: left;
-  transform: scaleX(0);
+  color: var(--accent);
+  clip-path: inset(0 calc((1 - var(--fill, 1)) * 100%) 0 0);
 }
 
-.stories {
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--s6);
+  margin-top: var(--s5);
 }
 
-.story {
-  min-height: var(--story-min-h);
+.info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
   gap: var(--s3);
-  opacity: var(--story-dim);
-  transition: opacity var(--dur) var(--ease);
-}
-
-.story[data-active="true"] {
-  opacity: 1;
-}
-
-.title {
-  font-size: var(--t-stop);
-  font-weight: var(--w-bold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--track-quote);
+  min-width: 0;
+  opacity: calc(var(--index-dim) + (1 - var(--index-dim)) * var(--show, 1));
+  transform: translateY(calc((1 - var(--show, 1)) * var(--s4)));
 }
 
 .summary {
@@ -105,30 +75,24 @@
   max-width: var(--measure-body);
 }
 
+.media {
+  display: grid;
+  justify-items: end;
+  height: var(--index-media-h);
+  max-width: var(--index-media-max-w);
+  transform-origin: 50% 100%;
+  opacity: calc(var(--index-dim) + (1 - var(--index-dim)) * var(--show, 1));
+  transform: translateY(calc((1 - var(--show, 1)) * var(--index-rise)))
+    rotate(calc(var(--index-tilt) + (1 - var(--show, 1)) * var(--index-swing)));
+  will-change: transform, opacity;
+}
+
 @media (max-width: 760px) {
-  .stage {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+  .body {
+    gap: var(--s4);
   }
 
-  /* On a phone the phone sits on top and the stories scroll up beneath it */
-  .phoneCol {
-    grid-column: 1;
-    height: auto;
-    z-index: var(--z-raised);
-    padding-block: var(--s3);
-    background: linear-gradient(var(--bg) 88%, transparent);
-  }
-
-  .phone {
-    height: var(--tour-phone-h-narrow);
-  }
-
-  .stories {
-    grid-row: 2;
-  }
-
-  .story {
-    min-height: var(--story-min-h-narrow);
+  .media {
+    height: var(--index-media-h-narrow);
   }
 }

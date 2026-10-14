@@ -15,7 +15,7 @@ const KIND: Record<"demo" | "video", { title: string; sub: string }> = {
 type ShellProps = { fitHeight?: boolean; children: ReactNode };
 
 /** The phone's body and screen, holding whatever the screen shows. */
-export function PhoneShell({ fitHeight, children }: ShellProps) {
+function PhoneShell({ fitHeight, children }: ShellProps) {
   return (
     <div className={fitHeight ? `${styles.phone} ${styles.fitHeight}` : styles.phone}>
       <div className={styles.screen}>{children}</div>
@@ -24,7 +24,7 @@ export function PhoneShell({ fitHeight, children }: ShellProps) {
 }
 
 /** What an app block puts on a phone's screen: its recording, its live demo where `live`, or its label. */
-export function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
+function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
   const video = block.type === "video" ? block.media?.[0]?.url : undefined;
   const demo = live ? demoSrc(block) : null;
