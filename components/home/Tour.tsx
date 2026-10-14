@@ -93,7 +93,7 @@ export function Tour({ stops }: Props) {
                   {entry.blocks.some((b) => demoSrc(b)) ? "Try the live app →" : "See the project →"}
                 </Button>
               </div>
-              {entryMedia(entry, { live: false }).kind !== "type" && (
+              {entryMedia(entry).kind !== "type" && (
                 <div className={styles.media}>
                   <EntryVisual entry={entry} fitHeight />
                 </div>

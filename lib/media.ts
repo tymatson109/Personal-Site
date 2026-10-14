@@ -4,7 +4,7 @@ import type { BlockType } from "@/types/entry";
 export const MEDIA_HOST_SUFFIX = ".public.blob.vercel-storage.com";
 export const MEDIA_FOLDER = "media";
 
-export type UploadBlockType = Extract<BlockType, "image" | "gallery" | "video" | "demo">;
+export type UploadBlockType = Extract<BlockType, "image" | "gallery" | "video">;
 
 export const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
 export const VIDEO_TYPES = ["video/mp4", "video/quicktime"] as const;
@@ -16,8 +16,6 @@ export const UPLOAD_RULES: Record<UploadBlockType, { types: readonly string[]; m
   image: { types: IMAGE_TYPES, max: 1, bytes: 20 * MB },
   gallery: { types: IMAGE_TYPES, max: 12, bytes: 20 * MB },
   video: { types: VIDEO_TYPES, max: 1, bytes: 200 * MB },
-  // A live demo's one file is a picture of its splash screen, which previews show instead of the running app
-  demo: { types: IMAGE_TYPES, max: 1, bytes: 20 * MB },
 };
 
 /** The longest side a photo keeps after it is shrunk in the browser before upload. */

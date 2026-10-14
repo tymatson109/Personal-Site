@@ -31,9 +31,9 @@ export type EntryMedia =
   | { kind: "image"; block: Block; image: Media }
   | { kind: "type" };
 
-/** What shows an entry: its app in a phone, its image, or its name set in type; previews (`live: false`) count a demo only once it has a splash screen. */
-export function entryMedia(entry: Entry, { live = true }: { live?: boolean } = {}): EntryMedia {
-  const shown = entry.blocks.filter((b) => isShown(b) && (live || b.type !== "demo" || Boolean(b.media?.length)));
+/** What shows an entry: its app in a phone, its image, or its name set in type. */
+export function entryMedia(entry: Entry): EntryMedia {
+  const shown = entry.blocks.filter(isShown);
   const phone = shown.find((b) => b.type === "demo") ?? shown.find(isPhoneBlock);
   if (phone) return { kind: "phone", block: phone };
   const block = shown.find((b) => b.type === "image" || b.type === "gallery");

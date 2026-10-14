@@ -15,3 +15,9 @@ export function isDemoUrl(value: unknown): value is string {
 export function demoSrc(block: Block): string | null {
   return block.type === "demo" && isDemoUrl(block.text) ? block.text.trim() : null;
 }
+
+/** Where a demo's app publishes its splash screen, at the root of the same web build. */
+export function splashSrc(block: Block): string | null {
+  const src = demoSrc(block);
+  return src && new URL("/splash.svg", src).href;
+}

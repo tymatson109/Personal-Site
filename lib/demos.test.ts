@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { demoSrc, isDemoUrl } from "./demos";
+import { demoSrc, isDemoUrl, splashSrc } from "./demos";
 
 describe("isDemoUrl", () => {
   it("accepts an https address, trimming spaces around it", () => {
@@ -24,5 +24,16 @@ describe("demoSrc", () => {
   it("gives nothing for a demo without an address or for another kind of block", () => {
     expect(demoSrc({ type: "demo", text: "Roomwise" })).toBeNull();
     expect(demoSrc({ type: "p", text: "https://example.com" })).toBeNull();
+  });
+});
+
+describe("splashSrc", () => {
+  it("finds the splash screen at the root of the demo's site, whatever page the demo opens on", () => {
+    expect(splashSrc({ type: "demo", text: "https://roomwise-demo.vercel.app" })).toBe("https://roomwise-demo.vercel.app/splash.svg");
+    expect(splashSrc({ type: "demo", text: "https://cambio-demo.vercel.app/play?x=1" })).toBe("https://cambio-demo.vercel.app/splash.svg");
+  });
+
+  it("gives nothing for a demo without an address", () => {
+    expect(splashSrc({ type: "demo", text: "Roomwise" })).toBeNull();
   });
 });

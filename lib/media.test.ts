@@ -58,15 +58,9 @@ describe("fileProblem", () => {
 });
 
 describe("upload limits", () => {
-  it("knows which blocks take uploads, a live demo's splash screen included", () => {
+  it("knows which blocks take uploads", () => {
     expect(isUploadBlockType("gallery")).toBe(true);
-    expect(isUploadBlockType("demo")).toBe(true);
-    expect(isUploadBlockType("p")).toBe(false);
-  });
-
-  it("takes one image as a live demo's splash screen and refuses a video", () => {
-    expect(fileProblem("demo", { type: "image/png", size: 1000 })).toBeNull();
-    expect(fileProblem("demo", { type: "video/mp4", size: 1000 })).toBe("Images can be JPEG, PNG, WebP or GIF.");
+    expect(isUploadBlockType("demo")).toBe(false);
   });
 
   it("lists every accepted type once and caps uploads at the largest block limit", () => {

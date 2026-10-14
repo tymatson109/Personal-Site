@@ -168,14 +168,11 @@ export function BlockEditor({ blocks, onChange, update, newKey, onUploading }: P
                 onKeyDown={(e) => onKeyDown(i, e)}
                 onPaste={(e) => onPaste(i, e)}
               />
-            ) : block.type === "demo" ? (
-              <>
-                <DemoEditor address={block.text} update={update(key)} />
-                <MediaEditor block={{ ...block, type: "demo" }} update={update(key)} onUploading={onUploading} caption={false} />
-              </>
             ) : isUploadBlockType(block.type) ? (
               <MediaEditor block={{ ...block, type: block.type }} update={update(key)} onUploading={onUploading} />
-            ) : null}
+            ) : (
+              <DemoEditor address={block.text} update={update(key)} />
+            )}
             {slash.length > 0 && (
               <ul className={styles.menu} role="listbox" aria-label="Turn into">
                 {slash.map((type, n) => (
