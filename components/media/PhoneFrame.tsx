@@ -3,6 +3,7 @@ import type { Block } from "@/types/entry";
 import { Label } from "@/components/ui/Label";
 import { demoSrc } from "@/lib/demos";
 import { DemoScreen } from "./DemoScreen";
+import { Photo } from "./Photo";
 import styles from "./PhoneFrame.module.css";
 
 type Props = { block: Block; caption?: boolean; fitHeight?: boolean; live?: boolean };
@@ -23,13 +24,15 @@ function PhoneShell({ fitHeight, children }: ShellProps) {
   );
 }
 
-/** What an app block puts on a phone's screen: its recording, its live demo where `live`, or its label. */
+/** What an app block puts on a phone's screen: its recording, its live demo where `live`, its splash screen in previews, or its label. */
 function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
   const video = block.type === "video" ? block.media?.[0]?.url : undefined;
   const demo = live ? demoSrc(block) : null;
+  const splash = block.type === "demo" ? block.media?.[0] : undefined;
   if (video) return <video className={styles.video} src={video} autoPlay muted loop playsInline aria-label={kind.title} />;
   if (demo) return <DemoScreen src={demo} title={kind.title} />;
+  if (splash) return <Photo media={splash} shape="fill" sizes="(max-width: 760px) 50vw, 320px" />;
   return (
     <div className={styles.slot}>
       <Label>{kind.title}</Label>
@@ -39,7 +42,7 @@ function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
 
 /**
  * A phone frame for an app's live demo or screen recording.
- * A recording plays its uploaded file; a demo starts on tap where it is `live`, and inside a link (cards) shows its label.
+ * A recording plays its uploaded file; a demo starts on tap where it is `live`, and elsewhere (cards, the home index) shows its splash screen.
  */
 export function PhoneFrame({ block, caption = true, fitHeight, live }: Props) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];

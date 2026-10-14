@@ -138,6 +138,12 @@ describe("toBlocks with media", () => {
   it("drops files attached to a text block", () => {
     expect(toBlocks([{ type: "p", text: "Hi", media: [PHOTO] }])).toEqual([{ type: "p", text: "Hi" }]);
   });
+
+  it("keeps one splash screen on a live demo", () => {
+    expect(toBlocks([{ type: "demo", text: "https://app.example.com", media: [PHOTO, PHOTO] }])).toEqual([
+      { type: "demo", text: "https://app.example.com", media: [PHOTO] },
+    ]);
+  });
 });
 
 describe("toAdminSection", () => {
