@@ -62,14 +62,19 @@ describe("entryMedia", () => {
     expect(entryMedia(e)).toEqual({ kind: "phone", block: { type: "demo", text: "https://app.example.com" } });
   });
 
-  it("skips a live demo for the recording when demos are turned off", () => {
-    const video: Block = { type: "video", text: "", media: [PHOTO] };
-    const e = testEntry({ blocks: [{ type: "demo", text: "https://app.example.com" }, video] });
-    expect(entryMedia(e, { demo: false })).toEqual({ kind: "phone", block: video });
+  it("shows a demo with a splash screen in previews", () => {
+    const demo: Block = { type: "demo", text: "https://app.example.com", media: [PHOTO] };
+    expect(entryMedia(testEntry({ blocks: [demo] }), { live: false })).toEqual({ kind: "phone", block: demo });
   });
 
-  it("falls back to the name in type when demos are off and the demo is the only media", () => {
-    expect(entryMedia(testEntry({ blocks: [{ type: "demo", text: "https://app.example.com" }] }), { demo: false })).toEqual({ kind: "type" });
+  it("skips a demo with no splash screen in previews and uses the recording instead", () => {
+    const video: Block = { type: "video", text: "", media: [PHOTO] };
+    const e = testEntry({ blocks: [{ type: "demo", text: "https://app.example.com" }, video] });
+    expect(entryMedia(e, { live: false })).toEqual({ kind: "phone", block: video });
+  });
+
+  it("falls back to the name in type in previews when the demo has no splash screen and nothing else shows", () => {
+    expect(entryMedia(testEntry({ blocks: [{ type: "demo", text: "https://app.example.com" }] }), { live: false })).toEqual({ kind: "type" });
   });
 
   it("uses a recording when there is no demo", () => {

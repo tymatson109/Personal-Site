@@ -13,18 +13,19 @@ import styles from "./MediaEditor.module.css";
 /** Applies a change to the block as it is when the change lands, so a finished upload never undoes edits made meanwhile. */
 export type BlockUpdate = (change: (block: Block) => Block) => void;
 
-type Props = { block: Block & { type: UploadBlockType }; update: BlockUpdate; onUploading: (busy: boolean) => void };
+type Props = { block: Block & { type: UploadBlockType }; update: BlockUpdate; onUploading: (busy: boolean) => void; caption?: boolean };
 
 const PICK: Record<UploadBlockType, string> = {
   image: "Choose a photo",
   gallery: "Add photos",
   video: "Choose a recording",
+  demo: "Choose the splash screen",
 };
 
 type Progress = { done: number; total: number; percent: number };
 
-/** An image, gallery or phone recording: pick files from the phone, describe each one, add a caption. */
-export function MediaEditor({ block, update, onUploading }: Props) {
+/** An image, gallery, phone recording or demo's splash screen: pick files from the phone, describe each one, add a caption where the block has one. */
+export function MediaEditor({ block, update, onUploading, caption = true }: Props) {
   const [progress, setProgress] = useState<Progress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const rule = UPLOAD_RULES[block.type];
@@ -110,16 +111,18 @@ export function MediaEditor({ block, update, onUploading }: Props) {
         </p>
       )}
 
-      <AutoTextarea
-        className={controls.input}
-        value={block.text}
-        placeholder="Caption (optional)"
-        aria-label="Caption"
-        onChange={(e) => {
-          const text = e.target.value;
-          update((b) => ({ ...b, text }));
-        }}
-      />
+      {caption && (
+        <AutoTextarea
+          className={controls.input}
+          value={block.text}
+          placeholder="Caption (optional)"
+          aria-label="Caption"
+          onChange={(e) => {
+            const text = e.target.value;
+            update((b) => ({ ...b, text }));
+          }}
+        />
+      )}
     </div>
   );
 }
