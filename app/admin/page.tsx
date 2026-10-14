@@ -50,6 +50,9 @@ export default async function AdminContent(props: PageProps<"/admin">) {
           <Button href="/admin/sections" size="sm">
             Sections
           </Button>
+          <Button href="/admin/about" size="sm">
+            About page
+          </Button>
           <Button href="/" size="sm">
             View the site
           </Button>

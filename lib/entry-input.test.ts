@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseEntryInput, tagsFromText, type EntryInput } from "./entry-input";
+import { parseEntryInput, parsePageInput, tagsFromText, type EntryInput } from "./entry-input";
 
 const SECTIONS = ["projects", "writing"];
 const VALID: EntryInput = {
@@ -103,5 +103,31 @@ describe("parseEntryInput", () => {
 describe("tagsFromText", () => {
   it("splits on commas, trims and drops blanks and repeats", () => {
     expect(tagsFromText(" iOS, Expo ,, iOS,AI ")).toEqual(["iOS", "Expo", "AI"]);
+  });
+});
+
+describe("parsePageInput", () => {
+  const PAGE = { title: "Hi, I’m Ty.", intro: "I build apps.", blocks: [{ type: "p", text: "Story" }] };
+
+  it("accepts a page's headline, opening line and story, trimmed", () => {
+    expect(parsePageInput({ ...PAGE, title: "  Hi, I’m Ty.  " })).toEqual({ ok: true, input: PAGE });
+  });
+
+  it("drops empty text blocks from the story", () => {
+    const result = parsePageInput({ ...PAGE, blocks: [{ type: "p", text: "  " }, ...PAGE.blocks] });
+    expect(result.ok && result.input.blocks).toEqual(PAGE.blocks);
+  });
+
+  it("refuses a page with no headline, since a page is always live", () => {
+    expect(parsePageInput({ ...PAGE, title: "  " })).toMatchObject({ ok: false, error: expect.stringMatching(/headline/) });
+  });
+
+  it("refuses an opening line or story that is too long", () => {
+    expect(parsePageInput({ ...PAGE, intro: "x".repeat(501) })).toMatchObject({ ok: false, error: expect.stringMatching(/opening line/) });
+    expect(parsePageInput({ ...PAGE, blocks: [{ type: "p", text: "x".repeat(20001) }] })).toMatchObject({ ok: false, error: expect.stringMatching(/too long/) });
+  });
+
+  it("refuses something that isn't a page at all", () => {
+    expect(parsePageInput("about")).toEqual({ ok: false, error: "Nothing to save." });
   });
 });

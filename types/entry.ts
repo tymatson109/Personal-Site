@@ -51,5 +51,6 @@ export type Entry = {
 export type Page = {
   slug: string;
   title: string;
+  intro: string;
   blocks: Block[];
 };

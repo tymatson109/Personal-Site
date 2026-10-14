@@ -18,7 +18,7 @@ const CONTACTS: Contact[] = [
   ...(SITE_LINKS.linkedin ? [{ kind: "Work", name: "LinkedIn", href: SITE_LINKS.linkedin, shown: "LinkedIn" }] : []),
 ];
 
-// The story under the greeting is the About page's blocks, edited in the admin
+// The headline, opening line and story are the About page's row, edited in the admin
 export default async function AboutPage() {
   const page = await getPage("about");
   return (
@@ -26,10 +26,12 @@ export default async function AboutPage() {
       <article className={styles.article}>
         <header className={`${styles.head} ${motion.rise}`}>
           <Label as="p">About</Label>
-          <h1 className={styles.title}>
-            <RiseWords text="Hi, I’m Ty." />
-          </h1>
-          <p className={styles.lede}>I build iPhone apps and the web tools around them. This site holds everything I make and write.</p>
+          {page?.title && (
+            <h1 className={styles.title}>
+              <RiseWords text={page.title} />
+            </h1>
+          )}
+          {page?.intro && <p className={styles.lede}>{page.intro}</p>}
         </header>
         {page && page.blocks.length > 0 && <EntryBody blocks={page.blocks} />}
         <section id="contact" className={styles.contact} data-reveal>

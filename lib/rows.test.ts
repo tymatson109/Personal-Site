@@ -79,9 +79,10 @@ describe("toSection", () => {
 
 describe("toPage", () => {
   it("turns a row into a page with checked blocks", () => {
-    expect(toPage({ slug: "about", title: "About", blocks: [{ type: "p", text: "Hi" }, { type: "nope" }] })).toEqual({
+    expect(toPage({ slug: "about", title: "About", intro: "I build apps.", blocks: [{ type: "p", text: "Hi" }, { type: "nope" }] })).toEqual({
       slug: "about",
       title: "About",
+      intro: "I build apps.",
       blocks: [{ type: "p", text: "Hi" }],
     });
   });

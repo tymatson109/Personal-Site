@@ -1,19 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
-import type { Block, Entry, Section } from "@/types/entry";
-import { Button } from "@/components/ui/Button";
+import { useState } from "react";
+import type { Entry, Section } from "@/types/entry";
 import { saveEntry } from "@/features/admin/entry-actions";
 import { tagsFromText, type EntryInput } from "@/lib/entry-input";
 import { slugify } from "@/lib/slug";
 import { AutoTextarea } from "./AutoTextarea";
 import { Choices } from "./Choices";
 import choices from "./Choices.module.css";
-import { BlockEditor, type KeyedBlock } from "./BlockEditor";
+import type { KeyedBlock } from "./BlockEditor";
+import { EditorBar } from "./EditorBar";
 import { FactsEditor } from "./FactsEditor";
+import { StoryEditor } from "./StoryEditor";
 import { Field } from "./Field";
 import controls from "./controls.module.css";
+import { keyedBlocks, useEditorDraft } from "./useEditorDraft";
 import styles from "./EntryEditor.module.css";
 
 type Props = { entry: Entry; sections: Section[] };
@@ -32,69 +34,30 @@ function toInput({ tagsText, blocks, ...rest }: Draft): EntryInput {
 /** Everything about one entry on one page; nothing is stored until Save, and leaving with changes asks first. */
 export function EntryEditor({ entry, sections }: Props) {
   const router = useRouter();
-  const nextKey = useRef(0);
-  // Called only from event handlers, after the first render has used the start-n keys
-  const newKey = () => `b${nextKey.current++}`;
-  const [draft, setDraft] = useState<Draft>(() => ({
-    section: entry.section,
-    slug: entry.slug,
-    title: entry.title,
-    summary: entry.summary,
-    date: entry.date,
-    tagsText: entry.tags.join(", "),
-    featured: entry.featured,
-    status: entry.status,
-    quote: entry.quote,
-    facts: entry.facts,
-    blocks: (entry.blocks.length ? entry.blocks : [{ type: "p" as const, text: "" }]).map((block, i) => ({ key: `start-${i}`, block })),
-  }));
-  const [saved, setSaved] = useState(() => JSON.stringify(toInput(draft)));
-  // A new entry's address follows its title until the address is edited by hand
+  const { draft, change, set, updateBlock, newKey, bar, onUploading } = useEditorDraft<Draft, EntryInput>({
+    start: () => ({
+      section: entry.section,
+      slug: entry.slug,
+      title: entry.title,
+      summary: entry.summary,
+      date: entry.date,
+      tagsText: entry.tags.join(", "),
+      featured: entry.featured,
+      status: entry.status,
+      quote: entry.quote,
+      facts: entry.facts,
+      blocks: keyedBlocks(entry.blocks),
+    }),
+    toInput,
+    save: (input) => saveEntry(entry.id, input),
+    savedText: (input) => (input.status === "live" ? "Saved and live." : "Saved as a draft."),
+  });
+  // A new entry's address follows its title until the address is edited by hand or saved
   const [slugFollows, setSlugFollows] = useState(entry.slug.startsWith("untitled-"));
-  const [message, setMessage] = useState<{ kind: "error" | "saved"; text: string } | null>(null);
-  const [leaving, setLeaving] = useState(false);
-  const [pending, startTransition] = useTransition();
-  const [uploads, setUploads] = useState(0);
-
-  const dirty = JSON.stringify(toInput(draft)) !== saved;
   const layout = sections.find((s) => s.slug === draft.section)?.layout;
 
-  // The browser's own prompt covers closing the tab, reloading and the back gesture
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
-
-  const set = <K extends keyof Draft>(key: K, value: Draft[K]) => {
-    setDraft((d) => ({ ...d, [key]: value }));
-    setMessage(null);
-  };
-  const updateBlock = (key: string) => (change: (block: Block) => Block) => {
-    setDraft((d) => ({ ...d, blocks: d.blocks.map((b) => (b.key === key ? { ...b, block: change(b.block) } : b)) }));
-    setMessage(null);
-  };
-  const setTitle = (title: string) => {
-    setDraft((d) => ({ ...d, title, slug: slugFollows && slugify(title) ? slugify(title) : d.slug }));
-    setMessage(null);
-  };
-
-  function save(then?: () => void) {
-    const input = toInput(draft);
-    startTransition(async () => {
-      const result = await saveEntry(entry.id, input);
-      if (!result.ok) {
-        setMessage({ kind: "error", text: result.error });
-        setLeaving(false);
-        return;
-      }
-      setSaved(JSON.stringify(input));
-      setSlugFollows(false);
-      setMessage({ kind: "saved", text: input.status === "live" ? "Saved and live." : "Saved as a draft." });
-      then?.();
-    });
-  }
+  const setTitle = (title: string) => change((d) => ({ ...d, title, slug: slugFollows && slugify(title) ? slugify(title) : d.slug }));
+  const state = { ...bar, submit: (then?: () => void) => bar.submit(then, () => setSlugFollows(false)) };
 
   const backToList = () => router.push("/admin");
 
@@ -152,49 +115,9 @@ export function EntryEditor({ entry, sections }: Props) {
         </div>
       </div>
 
-      <section className={styles.story} aria-label="Story">
-        <p className={controls.legend}>Story</p>
-        <BlockEditor
-          blocks={draft.blocks}
-          onChange={(blocks) => set("blocks", blocks)}
-          update={updateBlock}
-          newKey={newKey}
-          onUploading={(busy) => setUploads((n) => n + (busy ? 1 : -1))}
-        />
-      </section>
+      <StoryEditor blocks={draft.blocks} onChange={(blocks) => set("blocks", blocks)} update={updateBlock} newKey={newKey} onUploading={onUploading} />
 
-      <div className={styles.bar}>
-        {leaving ? (
-          <div className={styles.leave} role="alertdialog" aria-label="Unsaved changes">
-            <p>You have unsaved changes.</p>
-            <div className={styles.buttons}>
-              <Button size="sm" variant="primary" busy={pending} disabled={uploads > 0} onClick={() => save(backToList)}>
-                Save
-              </Button>
-              <Button size="sm" onClick={backToList}>
-                Discard
-              </Button>
-              <Button size="sm" onClick={() => setLeaving(false)}>
-                Keep editing
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <>
-            <p className={message?.kind === "error" ? styles.error : styles.note} role="status">
-              {uploads > 0 ? "Uploading…" : (message?.text ?? (dirty ? "Unsaved changes" : "All changes saved"))}
-            </p>
-            <div className={styles.buttons}>
-              <Button size="sm" onClick={() => (dirty ? setLeaving(true) : backToList())}>
-                Back
-              </Button>
-              <Button size="sm" variant="primary" busy={pending} disabled={!dirty || uploads > 0} onClick={() => save()}>
-                Save
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
+      <EditorBar state={state} onBack={backToList} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { Block, Entry, EntryStatus } from "@/types/entry";
+import type { Block, Entry, EntryStatus, Page } from "@/types/entry";
 import { ENTRY_STATUSES } from "@/types/entry";
 import { isTextBlock } from "./blocks";
 import { toBlocks, toFacts } from "./rows";
@@ -34,6 +34,20 @@ function keptBlocks(blocks: Block[]): Block[] {
   return blocks.filter((b) => !isTextBlock(b) || b.text.trim() !== "");
 }
 
+export type StoryResult = { ok: true; blocks: Block[] } | { ok: false; error: string };
+
+/** Checks a story's blocks as sent by the browser, for entries and pages alike. */
+export function parseStory(value: unknown): StoryResult {
+  const blocks = keptBlocks(toBlocks(value));
+  if (blocks.length > LIMITS.blocks || blocks.some((b) => b.text.length > LIMITS.text)) {
+    return { ok: false, error: "The story is too long to save in one go." };
+  }
+  if (blocks.some((b) => b.media?.some((m) => m.alt.length > LIMITS.alt))) {
+    return { ok: false, error: `Each image description can be at most ${LIMITS.alt} characters.` };
+  }
+  return { ok: true, blocks };
+}
+
 /** Checks what the browser sent before it is saved; the first problem found is the message shown. */
 export function parseEntryInput(value: unknown, sections: readonly string[]): InputResult {
   if (typeof value !== "object" || value === null) return { ok: false, error: "Nothing to save." };
@@ -60,13 +74,8 @@ export function parseEntryInput(value: unknown, sections: readonly string[]): In
   if (facts.length > LIMITS.facts || facts.some(([label]) => !label)) {
     return { ok: false, error: `Each fact needs a label, and there can be up to ${LIMITS.facts}.` };
   }
-  const blocks = keptBlocks(toBlocks(v.blocks));
-  if (blocks.length > LIMITS.blocks || blocks.some((b) => b.text.length > LIMITS.text)) {
-    return { ok: false, error: "The story is too long to save in one entry." };
-  }
-  if (blocks.some((b) => b.media?.some((m) => m.alt.length > LIMITS.alt))) {
-    return { ok: false, error: `Each image description can be at most ${LIMITS.alt} characters.` };
-  }
+  const story = parseStory(v.blocks);
+  if (!story.ok) return story;
 
   return {
     ok: true,
@@ -81,7 +90,25 @@ export function parseEntryInput(value: unknown, sections: readonly string[]): In
       status,
       quote,
       facts,
-      blocks,
+      blocks: story.blocks,
     },
   };
+}
+
+/** What the page editor saves: a page's headline, opening line and story. */
+export type PageInput = Pick<Page, "title" | "intro" | "blocks">;
+
+export type PageInputResult = { ok: true; input: PageInput } | { ok: false; error: string };
+
+/** Checks a page as the browser sent it; a page always needs a headline, since it has no draft state. */
+export function parsePageInput(value: unknown): PageInputResult {
+  if (typeof value !== "object" || value === null) return { ok: false, error: "Nothing to save." };
+  const v = value as Record<string, unknown>;
+  const title = text(v.title, LIMITS.title);
+  if (!title) return { ok: false, error: `Give the page a headline of at most ${LIMITS.title} characters.` };
+  const intro = text(v.intro, LIMITS.summary);
+  if (intro === null) return { ok: false, error: `The opening line can be at most ${LIMITS.summary} characters.` };
+  const story = parseStory(v.blocks);
+  if (!story.ok) return story;
+  return { ok: true, input: { title, intro, blocks: story.blocks } };
 }
