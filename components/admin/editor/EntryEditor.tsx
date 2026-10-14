@@ -56,6 +56,8 @@ export function EntryEditor({ entry, sections }: Props) {
   // A new entry's address follows its title until the address is edited by hand or saved
   const [slugFollows, setSlugFollows] = useState(entry.slug.startsWith("untitled-"));
   const layout = sections.find((s) => s.slug === draft.section)?.layout;
+  // The sync rewrites a Substack post's words, so its story is shown read-only in the quote picker instead
+  const fromSubstack = entry.source === "substack" && layout === "list";
 
   const setTitle = (title: string) => change((d) => ({ ...d, title, slug: slugFollows && slugify(title) ? slugify(title) : d.slug }));
   const state = { ...bar, submit: (then?: () => void) => bar.submit(then, () => setSlugFollows(false)) };
@@ -102,7 +104,12 @@ export function EntryEditor({ entry, sections }: Props) {
           <input className={controls.input} value={draft.tagsText} placeholder="iOS, Expo" onChange={(e) => set("tagsText", e.target.value)} />
         </Field>
         {layout === "list" && (
-          <QuotePicker blocks={draft.blocks.map((b) => b.block)} value={draft.quote} onChange={(quote) => set("quote", quote)} />
+          <QuotePicker
+            blocks={draft.blocks.map((b) => b.block)}
+            value={draft.quote}
+            onChange={(quote) => set("quote", quote)}
+            fromSubstack={fromSubstack}
+          />
         )}
         {layout === "grid" && <FactsEditor facts={draft.facts} onChange={(facts) => set("facts", facts)} />}
         <div className={styles.toggles}>
@@ -114,7 +121,7 @@ export function EntryEditor({ entry, sections }: Props) {
         </div>
       </div>
 
-      <StoryEditor blocks={draft.blocks} onChange={(blocks) => set("blocks", blocks)} update={updateBlock} newKey={newKey} onUploading={onUploading} />
+      {!fromSubstack && <StoryEditor blocks={draft.blocks} onChange={(blocks) => set("blocks", blocks)} update={updateBlock} newKey={newKey} onUploading={onUploading} />}
 
       <EditorBar state={state} onBack={backToList} />
     </div>

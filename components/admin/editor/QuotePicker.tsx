@@ -9,43 +9,45 @@ import controls from "./controls.module.css";
 import { Field } from "./Field";
 import styles from "./QuotePicker.module.css";
 
-type Props = { blocks: readonly Block[]; value: string; onChange: (quote: string) => void };
+/** `fromSubstack` shows the post's text open as the only copy of it, since the sync owns those words. */
+type Props = { blocks: readonly Block[]; value: string; onChange: (quote: string) => void; fromSubstack?: boolean };
 
 /** The highlight quote: tap a sentence of the post to mark it, tap it again to clear, or type a line by hand. */
-export function QuotePicker({ blocks, value, onChange }: Props) {
+export function QuotePicker({ blocks, value, onChange, fromSubstack = false }: Props) {
   const name = useId();
   const passages = quotablePassages(blocks, QUOTE_MAX);
   const chosen = value.trim();
   // Starts open while no quote is chosen; after that only Ty opens or closes it
   const [startOpen] = useState(!chosen);
 
+  const sentences = (
+    <fieldset className={styles.passages}>
+      <legend className={styles.hint}>
+        {fromSubstack ? "The post as it reads on Substack; it updates on each sync. " : ""}Tap a sentence to make it the quote. Tap it again to clear.
+      </legend>
+      {passages.map((passage) => (
+        <p key={passage.key} className={styles.passage}>
+          {passage.sentences.map((sentence, i) => (
+            <label key={i} className={styles.sentence}>
+              <input type="radio" name={name} checked={sentence === chosen} readOnly onClick={() => onChange(sentence === chosen ? "" : sentence)} />
+              {sentence}
+            </label>
+          ))}
+        </p>
+      ))}
+    </fieldset>
+  );
+
   return (
     <div className={styles.picker}>
       <Field label="Highlight quote" hint="Shown in the preview and as a pull quote. Leave empty to use the first quote block.">
         <AutoTextarea className={controls.input} value={value} onChange={(e) => onChange(e.target.value)} />
       </Field>
-      {passages.length > 0 && (
+      {passages.length > 0 && fromSubstack && sentences}
+      {passages.length > 0 && !fromSubstack && (
         <details className={styles.post} open={startOpen}>
           <summary className={controls.quiet}>Pick a sentence from the post</summary>
-          <fieldset className={styles.passages}>
-            <legend className={styles.hint}>Tap a sentence to make it the quote. Tap it again to clear.</legend>
-            {passages.map((passage) => (
-              <p key={passage.key} className={styles.passage}>
-                {passage.sentences.map((sentence, i) => (
-                  <label key={i} className={styles.sentence}>
-                    <input
-                      type="radio"
-                      name={name}
-                      checked={sentence === chosen}
-                      readOnly
-                      onClick={() => onChange(sentence === chosen ? "" : sentence)}
-                    />
-                    {sentence}
-                  </label>
-                ))}
-              </p>
-            ))}
-          </fieldset>
+          {sentences}
         </details>
       )}
     </div>
