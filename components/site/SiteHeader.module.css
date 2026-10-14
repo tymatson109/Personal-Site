@@ -25,10 +25,3 @@
   letter-spacing: var(--track-tight);
   white-space: nowrap;
 }
-
-.logo i {
-  width: var(--dot);
-  height: var(--dot);
-  border-radius: var(--r-pill);
-  background: var(--accent);
-}

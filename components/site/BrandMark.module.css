@@ -1,0 +1,18 @@
+.mark {
+  width: var(--mark);
+  height: var(--mark);
+  flex: none;
+  fill: currentColor;
+}
+
+.core {
+  fill: var(--accent);
+}
+
+.edge {
+  opacity: 0.85;
+}
+
+.corner {
+  opacity: 0.4;
+}
