@@ -1,12 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { ENTRY_STATUSES, type EntryStatus } from "@/types/entry";
 import { isEntryId, RESTORE_DAYS } from "@/lib/admin-entries";
 import { asAdmin } from "@/lib/db";
 import { parseEntryInput } from "@/lib/entry-input";
 import { freeSlug, newEntryInput, toNewEntryDraft } from "@/lib/new-entry";
 import { isSlug } from "@/lib/slug";
+import { refreshSite } from "./refresh";
 import { requireAdmin } from "./session";
 
 export type SaveResult = { ok: true } | { ok: false; error: string };
@@ -17,11 +17,6 @@ const FOREIGN_KEY_VIOLATION = "23503";
 
 function pgCode(error: unknown): string | undefined {
   return typeof error === "object" && error !== null && "code" in error ? String(error.code) : undefined;
-}
-
-// Static public pages are rebuilt on their next visit, and the admin shows the change at once
-function refreshSite() {
-  revalidatePath("/", "layout");
 }
 
 // Ids and values arrive from the browser, so each is checked here before the one update it allows

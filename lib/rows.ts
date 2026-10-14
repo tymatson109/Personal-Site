@@ -97,7 +97,7 @@ export function toEntry(row: Row): Entry {
 }
 
 export function toPage(row: Row): Page {
-  return { slug: text(row.slug), title: text(row.title), blocks: toBlocks(row.blocks) };
+  return { slug: text(row.slug), title: text(row.title), intro: text(row.intro), blocks: toBlocks(row.blocks) };
 }
 
 export function toAdminSection(row: Row): AdminSection {

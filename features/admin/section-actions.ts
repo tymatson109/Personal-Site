@@ -1,17 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { RESTORE_DAYS } from "@/lib/admin-entries";
 import { asAdmin } from "@/lib/db";
 import { isSameSet, newSectionSlug, parseSectionInput } from "@/lib/sections";
 import { isSlug } from "@/lib/slug";
 import type { SaveResult } from "./entry-actions";
+import { refreshSite } from "./refresh";
 import { requireAdmin } from "./session";
-
-// The nav on every public page lists sections, so any change rebuilds the whole site on its next visit
-function refreshSite() {
-  revalidatePath("/", "layout");
-}
 
 /** Adds a section at the end of the nav; its address comes from its name. */
 export async function createSection(value: unknown): Promise<SaveResult> {

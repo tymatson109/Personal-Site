@@ -40,6 +40,8 @@ set role site_reader;
 select pg_temp.check((select count(*) from public.sections) = 2, 'a visitor sees both starting sections');
 select pg_temp.check((select array_agg(slug) from public.entries) = array['live-one'], 'a visitor sees only live, undeleted entries');
 select pg_temp.check((select count(*) from public.pages where slug = 'about') = 1, 'a visitor sees the About page');
+select pg_temp.check((select intro from public.pages where slug = 'about') <> '', 'a visitor sees the About page''s opening line');
+select pg_temp.check(pg_temp.blocked($$update public.pages set intro = 'x'$$), 'a visitor cannot edit a page');
 select pg_temp.check(pg_temp.blocked($$insert into public.sections (slug, name, layout) values ('talks', 'Talks', 'grid')$$), 'a visitor cannot add a section');
 select pg_temp.check(pg_temp.blocked($$update public.entries set title = 'x'$$), 'a visitor cannot edit entries');
 select pg_temp.check(pg_temp.blocked($$delete from public.entries$$), 'a visitor cannot delete entries');
@@ -55,6 +57,8 @@ update public.entries set title = 'Edited' where slug = 'draft-one';
 select pg_temp.check((select title from public.entries where slug = 'draft-one') = 'Edited', 'the admin can edit a draft');
 insert into public.media (url, alt) values ('https://x.test/cover.png', 'Cover');
 select pg_temp.check((select count(*) from public.media) = 1, 'the admin can record an uploaded image');
+update public.pages set title = 'Hello', intro = 'Edited' where slug = 'about';
+select pg_temp.check((select intro from public.pages where slug = 'about') = 'Edited', 'the admin can edit the About page');
 reset role;
 
 -- The Substack sync, through the sync role: it adds and refreshes Substack posts and touches nothing else
