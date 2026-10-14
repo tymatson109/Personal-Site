@@ -98,6 +98,11 @@
   transform: scale(var(--grow));
 }
 
+/* A card's demo only plays, so every tap on it reaches the card's link */
+.preview {
+  pointer-events: none;
+}
+
 .video:is(iframe) {
   border: 0;
 }

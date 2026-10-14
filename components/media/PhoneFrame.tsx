@@ -23,13 +23,13 @@ function PhoneShell({ fitHeight, children }: ShellProps) {
   );
 }
 
-/** What an app block puts on a phone's screen: its recording, its live demo where `live`, or its label. */
+/** What an app block puts on a phone's screen: its recording, its demo (ready to try where `live`), or its label. */
 function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
   const video = block.type === "video" ? block.media?.[0]?.url : undefined;
-  const demo = live ? demoSrc(block) : null;
+  const demo = demoSrc(block);
   if (video) return <video className={styles.video} src={video} autoPlay muted loop playsInline aria-label={kind.title} />;
-  if (demo) return <DemoScreen src={demo} title={kind.title} />;
+  if (demo) return <DemoScreen src={demo} title={kind.title} startable={Boolean(live)} />;
   return (
     <div className={styles.slot}>
       <Label>{kind.title}</Label>
@@ -39,7 +39,7 @@ function PhoneScreen({ block, live }: Pick<Props, "block" | "live">) {
 
 /**
  * A phone frame for an app's live demo or screen recording.
- * A recording plays its uploaded file; a demo starts on tap where it is `live`, and inside a link (cards) shows its label.
+ * A recording plays its uploaded file; a demo starts on tap where it is `live`, and inside a link (cards) plays as a preview.
  */
 export function PhoneFrame({ block, caption = true, fitHeight, live }: Props) {
   const kind = KIND[block.type === "demo" ? "demo" : "video"];
