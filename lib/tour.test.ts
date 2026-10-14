@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clamp01, easeOut, nameDrift, nameFill, storyReveal } from "./tour";
+import { clamp01, easeOut, floodAmount, floodStep, FLOOD_RANGE, INK_SWITCH } from "./tour";
 
 describe("clamp01", () => {
   it("keeps a value between 0 and 1", () => {
@@ -17,38 +17,29 @@ describe("easeOut", () => {
   });
 });
 
-describe("nameFill", () => {
-  it("is empty while the name is still low on the screen", () => {
-    expect(nameFill(900, 1000)).toBe(0);
+describe("floodAmount", () => {
+  it("is full when the project's middle sits on the screen's middle", () => {
+    expect(floodAmount(0, 1000, 1000)).toBe(1);
   });
 
-  it("is half full halfway between the start and end lines", () => {
-    expect(nameFill(625, 1000)).toBeCloseTo(0.5);
+  it("is empty once the project is a whole range away, above or below", () => {
+    expect(floodAmount(1000 * FLOOD_RANGE, 1000, 1000)).toBe(0);
+    expect(floodAmount(-1000 * FLOOD_RANGE, 1000, 1000)).toBe(0);
+    expect(floodAmount(5000, 1000, 1000)).toBe(0);
   });
 
-  it("is full once the name passes the end line and stays full above it", () => {
-    expect(nameFill(400, 1000)).toBe(1);
-    expect(nameFill(-300, 1000)).toBe(1);
-  });
-});
-
-describe("nameDrift", () => {
-  it("is zero when the name sits in the middle of the screen", () => {
-    expect(nameDrift(500, 1000, 0)).toBeCloseTo(0);
+  it("pours in the same way scrolling down as it drains scrolling back up", () => {
+    expect(floodAmount(300, 1000, 1000)).toBeCloseTo(floodAmount(-300, 1000, 1000));
   });
 
-  it("drifts alternate rows in opposite directions", () => {
-    expect(nameDrift(900, 1000, 0)).toBeLessThan(0);
-    expect(nameDrift(900, 1000, 1)).toBeGreaterThan(0);
+  it("grows as the project nears the middle", () => {
+    expect(floodAmount(200, 1000, 1000)).toBeGreaterThan(floodAmount(500, 1000, 1000));
   });
 });
 
-describe("storyReveal", () => {
-  it("stays hidden until the name is a third filled", () => {
-    expect(storyReveal(0.3)).toBe(0);
-  });
-
-  it("is fully shown once the name is mostly filled", () => {
-    expect(storyReveal(0.85)).toBe(1);
+describe("floodStep", () => {
+  it("swaps straight to full color at the point the text switches, and to none below it", () => {
+    expect(floodStep(INK_SWITCH)).toBe(1);
+    expect(floodStep(INK_SWITCH - 0.01)).toBe(0);
   });
 });

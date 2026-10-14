@@ -51,7 +51,7 @@
   --t-project: clamp(40px, 7vw, 72px);
   --t-article: clamp(32px, 5vw, 48px);
   --t-cover: clamp(32px, 5vw, 56px);
-  --t-index: clamp(72px, 16vw, 220px);
+  --t-flood: clamp(56px, 13vw, 168px);
   --t-quote: clamp(22px, 2.4vw, 30px);
   --t-pull: clamp(24px, 3vw, 34px);
   --t-quote-mark: 56px;
@@ -126,13 +126,13 @@
   --measure-body: 52ch;
   --rail: 120px;
   --preview-min-h: 360px;
-  --index-media-h: min(48svh, 420px);
-  --index-media-h-narrow: 200px;
-  --index-media-max-w: 40vw;
-  --index-rise: 60px;
-  --index-tilt: 4deg;
-  --index-swing: 14deg;
-  --index-dim: 0.2;
+  /* The featured tour: each project gets a screen, flooded with its app's splash color */
+  --flood-logo: clamp(112px, 18vw, 168px);
+  --flood-logo-r: 22%;
+  /* The splash's logo is half its width, so the logo box zooms in until the logo fills it */
+  --flood-logo-zoom: 1.9;
+  --flood-reach: 150%;
+  --flood-turn: -14deg;
   --progress-h: 4px;
   --cue-h: 40px;
   /* Breakpoints can't be variables in media queries; these are the only two, checked by tokens.test.ts:

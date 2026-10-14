@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Block, Media, Section } from "@/types/entry";
-import { entryHref, entryMedia, excerpt, findEntry, highlightQuote, liveEntries, tagsOf, tourEntries } from "./content";
+import { entryHref, entryMedia, entrySplash, excerpt, findEntry, highlightQuote, liveEntries, tagsOf, tourEntries } from "./content";
 import { testEntry } from "./test-entry";
 
 const projects: Section = { slug: "projects", name: "Projects", layout: "grid", order: 1 };
@@ -114,5 +114,16 @@ describe("tagsOf", () => {
 describe("entryHref", () => {
   it("nests the entry under its section", () => {
     expect(entryHref(testEntry({ section: "writing", slug: "post" }))).toBe("/writing/post");
+  });
+});
+
+describe("entrySplash", () => {
+  it("finds the splash screen published beside the entry's live demo", () => {
+    const e = testEntry({ blocks: [{ type: "p", text: "Hi" }, { type: "demo", text: "https://app.example.com/play" }] });
+    expect(entrySplash(e)).toBe("https://app.example.com/splash.svg");
+  });
+
+  it("is null for an entry with no live demo", () => {
+    expect(entrySplash(testEntry({ blocks: [{ type: "p", text: "Hi" }] }))).toBeNull();
   });
 });
